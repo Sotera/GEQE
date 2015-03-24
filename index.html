@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+        <meta charset="utf-8">
+        <title>Control Console</title>
+        <style>
+            html, body, #map-canvas {
+				height: 100%;
+				margin: 0px;
+				padding: 0px;
+				background: #0000bb;
+				background-image: -webkit-linear-gradient(top, #0000bb, #3498db);
+				background-image: -moz-linear-gradient(top, #0000bb, #3498db);
+				background-image: -ms-linear-gradient(top, #0000bb, #3498db);
+				background-image: -o-linear-gradient(top, #0000bb, #3498db);
+				background-image: linear-gradient(to bottom, #0000bb, #3498db);                
+            }
+            b {
+            	color:#990000;
+            }
+            #headBanner {
+            	position:fixed;
+            	top:.5%;
+            	left:2%;
+            	width:96%;
+            	height:2.5%;
+                color:#990000;
+                box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
+                background-color: #EEEEEE;
+                padding-left: 10px;
+                padding-top: 0px;
+                padding-bottom:25px;
+                font-family: Roboto, Arial;
+                font-size: 13px;
+                border: 4px solid;
+                border-color: #990000;
+                border-radius: 5px;
+            }
+            #boldLogo {
+            	position:absolute;
+            	top:40%;
+            	left:86%;
+            }
+            #infoBox {
+                position:fixed;
+                left:2%;
+                width:35%;
+                height:45%;
+                top:9%;
+                box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
+                background-color: #EEEEEE;
+                padding: 10px;
+                font-family: Roboto, Arial;
+                font-size: 16px;
+                overflow: auto;
+                border: 4px solid;
+                border-color: #990000;
+                border-radius: 5px;
+            }
+            #containingBox {
+                position:relative;
+                left:40%;
+                width:58%;
+                top:9.5%;
+                height:59%;
+            }
+            #controlBox {
+                position:fixed;
+                left:2%;
+                width:35%;
+                height:29%;
+                top:66%;
+                box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
+                background-color: #EEEEEE;
+                padding: 10px;
+                font-family: Roboto, Arial;
+                font-size: 13px;
+                border: 4px solid;
+                border-color: #990000;
+                border-radius: 5px;
+            }
+            #resultsBox {
+            	position:fixed;
+            	top:70%;
+            	left:40%;
+            	width:57%;
+            	height:25%;
+            	box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px;
+            	overflow:auto;
+                background-color: #EEEEEE;
+                padding: 10px;
+                font-family: Roboto, Arial;
+                font-size: 13px;
+                border: 4px solid;
+                border-color: #990000;
+                border-radius: 5px;
+            }
+            #resultsText {
+            	position:relative;
+            	top:
+            }
+            
+            .btn {
+			  background: #ff0000;
+			  background-image: -webkit-linear-gradient(top, #ff0000, #330000);
+			  background-image: -moz-linear-gradient(top, #ff0000, #330000);
+			  background-image: -ms-linear-gradient(top, #ff0000, #330000);
+			  background-image: -o-linear-gradient(top, #ff0000, #330000);
+			  background-image: linear-gradient(to bottom, #ff0000, #330000);
+			  -webkit-border-radius: 14;
+			  -moz-border-radius: 14;
+			  border-radius: 14px;
+			  -webkit-box-shadow: 0px 1px 3px #666666;
+			  -moz-box-shadow: 0px 1px 3px #666666;
+			  box-shadow: 0px 1px 3px #666666;
+			  font-family: Arial;
+			  color: #ffffff;
+			  font-size: 12px;
+			  padding: 5px 10px 5px 10px;
+			  text-decoration: none;
+			}
+
+			.btn:hover {
+			  background: #0000bb;
+			  background-image: -webkit-linear-gradient(top, #0000bb, #3498db);
+			  background-image: -moz-linear-gradient(top, #0000bb, #3498db);
+			  background-image: -ms-linear-gradient(top, #0000bb, #3498db);
+			  background-image: -o-linear-gradient(top, #0000bb, #3498db);
+			  background-image: linear-gradient(to bottom, #0000bb, #3498db);
+			  text-decoration: none;
+			}
+			.dictTab{
+				border: 1px solid grey;
+				border-collapse: collapse;
+			}
+			th.dictTab, td.dictTab {
+				padding: 5px;
+				text-align: left;
+			}
+			.tabs {
+				position:fixed;
+                left:2%;
+                width:35%;
+                top:60%;
+			}
+			.tab-links:after {
+				display:block;
+				clear:both;
+				content:'';
+			}
+			.tab-links li {
+				margin:0px 5px;
+				float:left;
+				list-style:none;
+			}
+			.tab-links a {
+				padding:9px 15px;
+				display:inline-block;
+				border-radius:3px 3px 0px 0px;
+				background:#7FB5DA;
+				font-size:16px;
+				font-weight:600;
+				color:#4c4c4c;
+				transition:all linear 0.15s;
+			} 
+			.tab-links a:hover {
+				background:#a7cce5;
+				text-decoration:none;
+			} 
+			li.active a, li.active a:hover {
+				background:#fff;
+				color:#4c4c4c;
+			}
+			.tab-content {
+				padding:15px;
+				border-radius:3px;
+				box-shadow:-1px 1px 1px rgba(0,0,0,0.15);
+			} 
+			.tab {
+				display:none;
+			}
+			.tab.active {
+				display:block;
+			}
+			.invis {
+				display:none;
+			}
+        
+        </style>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>
+            var polygonFileText = "";
+			var map;
+			var scoredTweetArray = [];
+			
+            function initialize() {
+                var myLatlng = new google.maps.LatLng(41.495753190958816,-81.70090198516846);
+                var mapOptions = {
+                    zoom: 10,
+                    center: myLatlng
+                };
+                
+                map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+                var infoDiv = document.getElementById('polyList');
+                //map.controls[google.maps.ControlPosition.TOP_LEFT].push(infoDiv);
+                var contentString = '';
+                var polyNumber = 0;
+                
+                var infowindow = new google.maps.InfoWindow({content: contentString});
+                var pinColor = 'FFFF00';
+                
+                function placeGreenMarker(location) {
+                    var marker = new google.maps.Marker({
+                        position: location,
+                        map: map,
+                        icon: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/24/Map-Marker-Ball-Chartreuse-icon.png'
+                    })
+                }
+                
+                function placeBlueMarker(location) {
+                    var marker = new google.maps.Marker({
+                        position: location,
+                        map: map,
+                        icon: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/24/Map-Marker-Ball-Azure-icon.png'
+                    })
+                }
+                
+                function placeRedMarker(location) {
+                    var marker = new google.maps.Marker({
+                        position: location,
+                        map: map,
+                        icon: 'http://icons.iconarchive.com/icons/icons-land/vista-map-markers/24/Map-Marker-Ball-Pink-icon.png'
+                    })
+                }
+				                
+                google.maps.event.addListener(map, "rightclick", function(event) {
+                    var lat = event.latLng.lat();
+                    var lng = event.latLng.lng();
+                    map.set('disableDoubleClickZoom', true);
+                    if(polyNumber%3==1){
+                      placeGreenMarker(event.latLng);
+                    }else if(polyNumber%3==2){
+                      placeBlueMarker(event.latLng);
+                    }else{
+                      placeRedMarker(event.latLng);
+                    }
+                    // populate yor box/field with lat, lng
+                    infoDiv.innerHTML += "<br>"+polyNumber+","+lat+","+lng;
+                    polygonFileText += polyNumber + ","+lat+","+lng+"\n";
+                });
+
+                google.maps.event.addListener(map, "dblclick", function(event) {
+                    var lat = event.latLng.lat();
+                    var lng = event.latLng.lng();
+                    polyNumber += 1;
+                    if(polyNumber%3==1){
+                        placeGreenMarker(event.latLng);
+                    }else if(polyNumber%3==2){
+                        placeBlueMarker(event.latLng);
+                    }else{
+                        placeRedMarker(event.latLng);
+                    }
+                    map.set('disableDoubleClickZoom', true);
+                    // populate yor box/field with lat, lng
+                    infoDiv.innerHTML += "<br>"+polyNumber+","+lat+","+lng;
+                    polygonFileText += polyNumber + ","+lat+","+lng+"\n";
+                });
+            }
+        
+            google.maps.event.addDomListener(window, 'load', initialize);
+        
+            function saveList() {
+                var pPath = $("#pSavePath").val();
+				var pName = $("#pFileName").val();
+				$.ajax({                
+					url: "./writePoly",
+					data: {
+							filePath: pPath,
+							filePolygon: pName,
+							fileString: polygonFileText
+					},
+					dataType: "text",
+					success: function (response) {
+						$("#resultsText").text(pName + " written");
+					},
+					error: function (jqxhr, testStatus, reason) {
+						$("#resultsText").text(reason);
+					}
+                });
+            }
+            
+                    
+            function lauchTest() {
+            	
+                var pPath = $("#pSavePath").val();
+				var pName = $("#pFileName").val();
+				var tName = $("#tFileName").val();
+				var dSet = $("#dataSetSelect").val();
+				$.ajax({                
+					url: "./launchTest",
+					data: {
+							filePath: pPath,
+							filePolygon: pName,
+							fileTestOut: tName,
+							dataSet: dSet
+					},
+					dataType: "text",
+					success: function (response) {
+						$("#resultsText").text("Test Launched");
+					},
+					error: function (jqxhr, testStatus, reason) {
+						$("#resultsText").text(reason);
+					}
+                });
+            }
+            
+            function gatherTest() {
+            	var pPath = $("#pSavePath").val();
+            	var tName = $("#tFileName").val();
+            	$.ajax({
+            		url: "./getTest",
+            		data: {
+            			filePath: pPath,
+            			fileTestOut: tName
+            		},
+					dataType: "json",
+            		success: function (response) {
+            			$("#inMean").val(response.m);
+            			$("#inVar").val(response.v);
+            			lRes = response.lPas;
+            			lNZ = response.lNZ
+            			var strRet = '';
+            			for( i=1; i<=lRes.length; i++)
+            			{
+            				if(lRes[i-1]!="-1")
+            				{
+	            				strRet = strRet + i + " has " + lRes[i-1] + "% passing a 3 sigma threshold ( from " + lNZ[i-1] + ").<br>";
+	            			} else {
+	            				strRet = strRet + i + " has no non-zero scored tweets in region.<br>";
+	            			}
+            			}
+            			$("#resultsText").html(strRet);
+            		},
+            		error: function (jqxhr, testStatus, reason) {
+            			$("#resultsText").text(reason);
+            		}
+            	});
+            }
+            
+            function applyScores() {
+            	var pPath = $("#pSavePath").val();
+            	var pName = $("#pFileName").val();
+            	var sName = $("#sFileName").val();
+				var dSet = $("#dataSetSelect").val();
+				var bAgg = $("#aggScores").is(":checked");
+ 				//change source based on Checkbox value
+            	var fThresh=$("#sTopN").val();
+				var bPer = $("#bPercent").is(":checked");
+				if(bPer==true){
+					fThresh=$("#sTopPercent").val();
+				}
+            	$.ajax({                
+					url: "./applyScores",
+					data: {
+							filePath: pPath,
+							filePolygon: pName,
+							fileAppOut: sName,
+							fScoreThresh: fThresh,
+							dataSet: dSet,
+							aggScores: bAgg
+							
+					},
+					dataType: "text",
+					success: function (response) {
+						$("#resultsText").text("Job Launched");
+					},
+					error: function (jqxhr, testStatus, reason) {
+						$("#resultsText").text(reason);
+					}
+                });
+            }
+            
+            function gatherScores() {
+            	var pPath = $("#pSavePath").val();
+            	var sName = $("#scoreSelect").val();
+            	var sMaxP = $("#sMaxEntries").val();
+            	$.ajax({
+            		url: "./getScores",
+            		data: {
+            			filePath: pPath,
+            			fileAppOut: sName,
+            			maxOut: sMaxP
+            		},
+					dataType: "json",
+            		success: function (response) {
+            			
+            			//clean old point array, needed to removed points from map if you decrease number of entries
+            			for( ind=0; ind<scoredTweetArray.length; ind++)
+            			{
+            				scoredTweetArray[ind].setMap(null);
+            				scoredTweetArray[ind] = null;
+            			}
+            			scoredTweetArray = [];
+            			
+            			//create new points
+            			var nTot = response.total;
+            			for( i=0; i<nTot; i++)
+            			{
+            				var capPScor = response.cap[i] + "  (" + response.sco[i] + ")";
+            				var tweetLatlng = new google.maps.LatLng(parseFloat(response.lat[i]), parseFloat(response.lon[i]));
+            				m = putScoreMarker(tweetLatlng, capPScor);
+            				scoredTweetArray[i] = m;
+            			}
+            			
+            			//write dictionary to results box
+            			var strRet = '<b>Dictionary</b><table class="dictTab"><tr><th class="dictTab">Term</th><th class="dictTab">Score</th><th class="dictTab">In Count</th><th class="dictTab">Out Count</th></tr>';
+            			for( i=0; i<response.dic.length; i++)
+            			{
+            				strRet = strRet + '<tr><td class="dictTab">' + response.dic[i][0] + '</td><td class="dictTab">' + response.dic[i][3] + '</td><td class="dictTab">' + response.dic[i][1] + '</td><td class="dictTab">' + response.dic[i][2] + '</td></tr>';
+            			}
+            			strRet = strRet + "</table>";
+            			$("#resultsText").html(strRet);
+            		},
+            		error: function (jqxhr, testStatus, reason) {
+            			$("#resultsText").text(reason);
+            		}
+            	});
+            }
+            
+            function popScore() {
+            	var pPath = $("#pSavePath").val();
+            	 $.ajax({
+            		url: "./popScoreList",
+            		data : {
+            			filePath: pPath
+            		},
+            		dataType: "json",
+            		success: function (response) {
+            			var lFiles = response.lFiles;
+            			var nFiles = response.nFiles;
+            			var strRet = '';
+            			var elmSel = document.getElementById("scoreSelect");
+            			elmSel.options.length=1;
+            			
+            			for(i=0; i<nFiles; i++)
+            			{
+	            			elmSel.options[i+1] = new Option(lFiles[i], lFiles[i], false, false);
+            			}
+               		},
+            		error: function(jqxhr, testStatus, reason) {
+						$("#resultsText").text(reason);
+            		}
+             	});
+            }
+            
+            function putScoreMarker(location, caption) {
+				var marker = new google.maps.Marker({
+					position: location,
+					title:caption
+				})
+				marker.setMap(map);
+				return marker;
+			}
+			
+			function newCenter() {
+				var place = $("#dataSetSelect").val();
+				var myLatlng;
+				var zoomVal;
+				if(place=="Cleveland")
+				{
+					myLatlng = new google.maps.LatLng(41.495753,-81.7009019);
+					zoomVal = 10;
+				} else if(place=="Texas") {
+					myLatlng = new google.maps.LatLng(31.907836, -98.644703);
+					zoomVal = 6;
+				} else {
+					alert("No location loaded!");
+					return;
+				}
+				map.setCenter(myLatlng);
+				map.setZoom(zoomVal);
+            }
+            
+            function syncFields(fId) {
+            	switch(fId){
+            		case 1:
+            			var newVal = $("#dop_sFileName").val();
+            			$("#sFileName").val(newVal);
+            		case 2:
+            			var newVal = $("#sFileName").val();
+            			$("#dop_sFileName").val(newVal);
+            		default:
+            			console.log("Wrong Field Value");
+            	}
+            }
+            
+            function modReturn() {
+            	var bChecked = $("#bPercent").is(":checked");
+            	var f1 = $("#rankReturnInput");
+            	var f2 = $("#percentReturnInput");
+            	if(bChecked == true){
+            		f1.addClass("invis");
+            		f2.removeClass("invis");
+            	} else {
+            		f1.removeClass("invis");
+            		f2.addClass("invis");
+            	}
+            }
+            
+            function toggleAdv() {
+            	var bChecked = $("#bAdvanced").is(":checked");
+            	var r1 = $("#hr1");
+				var r2 = $("#hr2");
+				var r3 = $("#hr3");
+            	if( bChecked == true) {
+            		r1.removeClass("invis");
+            		r2.removeClass("invis");
+            		r3.removeClass("invis");
+            	} else {
+            		r1.addClass("invis");
+            		r2.addClass("invis");
+            		r3.addClass("invis");
+            	}
+            }
+            
+            jQuery(document).ready(function() {
+            	jQuery('.tabs .tab-links a').on('click', function(e) {
+            		var currentAttrValue = jQuery(this).attr('href');
+            		jQuery('.tabs ' + currentAttrValue).show().siblings().hide();
+					jQuery(this).parent('li').addClass('active').siblings().removeClass('active');
+            		e.preventDefault();
+            	});
+            });
+        </script>
+    </head>
+    <body>
+    	<div id="headBanner">
+	    		<h2>Geo Event Query by Example</h2>
+	    		<b id="boldLogo">Sotera Defense Solutions</b>
+    	</div>
+        <div id="containingBox">
+            <div id="map-canvas"></div>
+        </div>
+        <div id="infoBox">
+            <b>Bounding Polygons</b><br>
+            Double click to start new polygon, right click to add point.<br>
+            This box will automatically append the text for the shape file.
+            <p id="polyList"></p>
+        </div>
+        <div class="tabs">
+        	<ul class="tab-links">
+        		<li class="active"><a href="#tabRes">Results</a></li>
+        		<li><a href="#tabRun">Run</a></li>
+        		<li><a href="#tabTest">Test</a></li>
+        	</ul>
+			<div id="controlBox" class="tab-content">
+				<div id="tabRes" class="tab active">
+					<table style="width:100%">
+						<tr>
+							<td><button class="btn" onclick="popScore()">Get Score Files</button></td>
+							<td>
+								<select name="scoreSelect" id="scoreSelect">
+									<option value="0">-Select-</option>
+								</select>
+							</td>
+							<td></td>
+						</tr>  
+						<tr>
+							<td><button class="btn" onclick="gatherScores()">Get Scores</button></td>
+							<td>Max Points: <input id="sMaxEntries" value="-1" style="width:40px"></td>
+							<td></td>
+						</tr>
+					</table>
+				</div>
+        		<div id="tabRun" class="tab">
+					<table style="width:100%">
+						<tr>
+							<td><b>Data Set</b></td>
+							<td>
+								<select id="dataSetSelect" onchange="newCenter()">
+									<option value="Cleveland">Cleveland</option>
+									<option value="Texas">Texas</option>
+								</select>
+							</td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><button class="btn" onclick="saveList()">Save Polygon File</button></td>
+							<td><input type="text" id="pSavePath" value="/home/ubuntu/geqe/src/" readonly="True" disabled></td>
+							<td><input type="text" id="pFileName" value="polyFile.txt"></td>
+						</tr>
+						<tr>
+							<td><button class="btn" onclick="applyScores()">Apply Scores</button></td>
+							<td><input id="sFileName" value="scores.csv"></td>
+							<td>
+								<div id="rankReturnInput">
+									Return top: <input id="sTopN" value="300" style="width:50px">
+								</div>
+								<div id="percentReturnInput" class="invis">
+									Return Percent: <input id="sTopPercent" value="0.0001" style="width:50px">
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><b>Show Advanced Options</b></td>
+							<td><input type="checkbox" id="bAdvanced" onclick="toggleAdv()"></td>
+							<td></td>
+						</tr>
+						<tr id="hr1" class="invis">
+							<td>Limit Return by Percent</td>
+							<td><input type="checkbox" id="bPercent" onchange="modReturn()"></td>
+							<td></td>
+						</tr>
+						<tr id="hr2" class="invis">
+							<td>Bin by Lat-Lon</td>
+							<td><input type="checkbox" id="aggScores"></td>
+							<td></td>
+						</tr>
+						<tr id="hr3" class="invis">
+							<td>Time Series polygon</td>
+							<td><input type="checkbox" id="timeSeries"></td>
+							<td></td>
+						</tr>
+					</table>
+				</div>
+				<div id="tabTest" class="tab">
+					<table style="width:100%">
+						<tr>
+							<td><button class="btn" onclick="lauchTest()">Cross Validate</button></td>
+							<td><input type="text" id="tFileName" value="testSummary.csv"></td>
+							<td></td>
+						</tr>
+						<tr>
+							<td><button class="btn" onclick="gatherTest()">Get Results</button></td>
+							<td>Mean: <input id="inMean" type="text" readonly="True" value="Test Mean" style="width:65px"></td>
+							<td>Variance: <input id="inVar" type="text" readonly="True" value="Test Var" style="width:60px"></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+        </div>
+        <div id="resultsBox">
+        	<b>Results</b><br>
+        	<div id="resultsText"></div>
+        </div>
+    </body>
+</html>
+
