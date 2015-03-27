@@ -139,10 +139,7 @@
 				text-align: left;
 			}
 			.tabs {
-				position:fixed;
-                left:2%;
-                width:35%;
-                top:60%;
+				width:100%;
 			}
 			.tab-links:after {
 				display:block;
@@ -355,6 +352,8 @@
             	var sName = $("#sFileName").val();
 				var dSet = $("#dataSetSelect").val();
 				var bAgg = $("#aggScores").is(":checked");
+				var bML  = $("#useML").is(":checked");
+				var bBay = $("#useBayes").is(":checked");
  				//change source based on Checkbox value
             	var fThresh=$("#sTopN").val();
 				var bPer = $("#bPercent").is(":checked");
@@ -369,7 +368,9 @@
 							fileAppOut: sName,
 							fScoreThresh: fThresh,
 							dataSet: dSet,
-							aggScores: bAgg
+							aggScores: bAgg,
+							useML: bML,
+							useBayes: bBay
 							
 					},
 					dataType: "text",
@@ -514,14 +515,20 @@
             	var r1 = $("#hr1");
 				var r2 = $("#hr2");
 				var r3 = $("#hr3");
+				var r4 = $("#hr4");
+				var r5 = $("#hr5");
             	if( bChecked == true) {
             		r1.removeClass("invis");
             		r2.removeClass("invis");
-            		r3.removeClass("invis");
+            		//r3.removeClass("invis");
+            		r4.removeClass("invis");
+            		r5.removeClass("invis");
             	} else {
             		r1.addClass("invis");
             		r2.addClass("invis");
-            		r3.addClass("invis");
+            		//r3.addClass("invis");
+            		r4.addClass("invis");
+            		r5.addClass("invis");
             	}
             }
             
@@ -616,6 +623,16 @@
 						<tr id="hr2" class="invis">
 							<td>Bin by Lat-Lon</td>
 							<td><input type="checkbox" id="aggScores"></td>
+							<td></td>
+						</tr>
+						<tr id="hr4" class="invis">
+							<td>Use M.L. Scoring</td>
+							<td><input type="checkbox" id="useML"></td>
+							<td></td>
+						</tr>
+						<tr id="hr5" class="invis">
+							<td>Sort by Bayes (when ML)</td>
+							<td><input type="checkbox" id="useBayes"></td>
 							<td></td>
 						</tr>
 						<tr id="hr3" class="invis">

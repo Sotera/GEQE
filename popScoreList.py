@@ -1,0 +1,1 @@
+import sysimport jsonimport tangeloimport osimport time@tangelo.restfuldef get(filePath='./'):    scoreDir = filePath + "scoreFiles/"    lFiles = os.listdir(scoreDir)    retDict = {}    retDict["lFiles"] = lFiles    retDict["nFiles"] = len(lFiles)    return json.dumps(retDict)
