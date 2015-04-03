@@ -140,6 +140,7 @@
 			}
 			.tabs {
 				width:100%;
+				
 			}
 			.tab-links:after {
 				display:block;
@@ -351,7 +352,6 @@
             	var pName = $("#pFileName").val();
             	var sName = $("#sFileName").val();
 				var dSet = $("#dataSetSelect").val();
-				var bAgg = $("#aggScores").is(":checked");
 				var bML  = $("#useML").is(":checked");
 				var bBay = $("#useBayes").is(":checked");
  				//change source based on Checkbox value
@@ -368,7 +368,6 @@
 							fileAppOut: sName,
 							fScoreThresh: fThresh,
 							dataSet: dSet,
-							aggScores: bAgg,
 							useML: bML,
 							useBayes: bBay
 							
@@ -387,16 +386,23 @@
             	var pPath = $("#pSavePath").val();
             	var sName = $("#scoreSelect").val();
             	var sMaxP = $("#sMaxEntries").val();
+            	var bDict = $("#noDict").is(":checked");
+				var bAgg = $("#aggScores").is(":checked");
+				var bTim = $("#aggTime").is(":checked");
+				var fBin = $("#sBinSize").val();
             	$.ajax({
             		url: "./getScores",
             		data: {
             			filePath: pPath,
             			fileAppOut: sName,
-            			maxOut: sMaxP
+            			maxOut: sMaxP,
+            			bIgnorDict: bDict,		
+						bBinByLatLon: bAgg,
+						bBinByDate: bTim,
+						fBinSize: fBin
             		},
 					dataType: "json",
             		success: function (response) {
-            			
             			//clean old point array, needed to removed points from map if you decrease number of entries
             			for( ind=0; ind<scoredTweetArray.length; ind++)
             			{
@@ -416,13 +422,19 @@
             			}
             			
             			//write dictionary to results box
-            			var strRet = '<b>Dictionary</b><table class="dictTab"><tr><th class="dictTab">Term</th><th class="dictTab">Score</th><th class="dictTab">In Count</th><th class="dictTab">Out Count</th></tr>';
-            			for( i=0; i<response.dic.length; i++)
+            			if(bDict==false)
             			{
-            				strRet = strRet + '<tr><td class="dictTab">' + response.dic[i][0] + '</td><td class="dictTab">' + response.dic[i][3] + '</td><td class="dictTab">' + response.dic[i][1] + '</td><td class="dictTab">' + response.dic[i][2] + '</td></tr>';
-            			}
-            			strRet = strRet + "</table>";
-            			$("#resultsText").html(strRet);
+							var strRet = '<b>Dictionary</b><table class="dictTab"><tr><th class="dictTab">Term</th><th class="dictTab">Score</th><th class="dictTab">In Count</th><th class="dictTab">Out Count</th></tr>';
+							for( i=0; i<response.dic.length; i++)
+							{
+								strRet = strRet + '<tr><td class="dictTab">' + response.dic[i][0] + '</td><td class="dictTab">' + response.dic[i][3] + '</td><td class="dictTab">' + response.dic[i][1] + '</td><td class="dictTab">' + response.dic[i][2] + '</td></tr>';
+							}
+							strRet = strRet + "</table>";
+							$("#resultsText").html(strRet);
+						} else {
+							var strRet = '<b>Dictionary Ignored</b>'
+							$("#resultsText").html(strRet);
+						}
             		},
             		error: function (jqxhr, testStatus, reason) {
             			$("#resultsText").text(reason);
@@ -476,6 +488,9 @@
 				} else if(place=="Texas") {
 					myLatlng = new google.maps.LatLng(31.907836, -98.644703);
 					zoomVal = 6;
+				} else if(place=="dcArea") {
+					myLatlng = new google.maps.LatLng(39.054812, -76.814139);
+					zoomVal = 9;
 				} else {
 					alert("No location loaded!");
 					return;
@@ -513,19 +528,16 @@
             function toggleAdv() {
             	var bChecked = $("#bAdvanced").is(":checked");
             	var r1 = $("#hr1");
-				var r2 = $("#hr2");
 				var r3 = $("#hr3");
 				var r4 = $("#hr4");
 				var r5 = $("#hr5");
             	if( bChecked == true) {
             		r1.removeClass("invis");
-            		r2.removeClass("invis");
             		//r3.removeClass("invis");
             		r4.removeClass("invis");
             		r5.removeClass("invis");
             	} else {
             		r1.addClass("invis");
-            		r2.addClass("invis");
             		//r3.addClass("invis");
             		r4.addClass("invis");
             		r5.addClass("invis");
@@ -572,12 +584,22 @@
 									<option value="0">-Select-</option>
 								</select>
 							</td>
-							<td></td>
 						</tr>  
 						<tr>
 							<td><button class="btn" onclick="gatherScores()">Get Scores</button></td>
 							<td>Max Points: <input id="sMaxEntries" value="-1" style="width:40px"></td>
+						</tr>
+						<tr>
+							<td>Bin by Lat-Lon<input type="checkbox" id="aggScores"></td>
+							<td>Bin Size <input type="text" id="sBinSize" value=".005"></td>
+						</tr>
+						<tr>
+							<td>Bin as time series<input type="checkbox" id="aggTime"></td>
 							<td></td>
+						</tr>
+						<tr>
+							<td>Ignore Dictionary<input type="checkbox" id="noDict"></td>
+							<td>N.B. this must be used for ML scores</td>
 						</tr>
 					</table>
 				</div>
@@ -589,13 +611,14 @@
 								<select id="dataSetSelect" onchange="newCenter()">
 									<option value="Cleveland">Cleveland</option>
 									<option value="Texas">Texas</option>
+									<option value="dcArea">Washington D.C.</option>
 								</select>
 							</td>
-							<td></td>
+							<td><a href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;">View Progress</a></td>
 						</tr>
 						<tr>
 							<td><button class="btn" onclick="saveList()">Save Polygon File</button></td>
-							<td><input type="text" id="pSavePath" value="/home/ubuntu/geqe/src/" readonly="True" disabled></td>
+							<td><input type="text" id="pSavePath" value="/home/jgartner/findSP/" readonly="True" disabled></td>
 							<td><input type="text" id="pFileName" value="polyFile.txt"></td>
 						</tr>
 						<tr>
@@ -620,11 +643,6 @@
 							<td><input type="checkbox" id="bPercent" onchange="modReturn()"></td>
 							<td></td>
 						</tr>
-						<tr id="hr2" class="invis">
-							<td>Bin by Lat-Lon</td>
-							<td><input type="checkbox" id="aggScores"></td>
-							<td></td>
-						</tr>
 						<tr id="hr4" class="invis">
 							<td>Use M.L. Scoring</td>
 							<td><input type="checkbox" id="useML"></td>
@@ -647,7 +665,7 @@
 						<tr>
 							<td><button class="btn" onclick="lauchTest()">Cross Validate</button></td>
 							<td><input type="text" id="tFileName" value="testSummary.csv"></td>
-							<td></td>
+							<td><a href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;">View Progress</a></td>
 						</tr>
 						<tr>
 							<td><button class="btn" onclick="gatherTest()">Get Results</button></td>
