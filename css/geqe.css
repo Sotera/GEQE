@@ -1,0 +1,123 @@
+.container-full {
+    margin: 0 auto;
+    width: 100%;
+}
+
+#map-canvas {
+    min-height: 384px;
+    min-width: 256px;
+    margin: 0px;
+    padding: 0px;
+    border: 4px solid;
+    border-color: rgba(0, 0, 0, 0.298039);
+}
+#boldLogo {
+    position:absolute;
+    top:40%;
+    left:86%;
+}
+#infoBox {
+    height: 384px;
+    background-color: #EEEEEE;
+    padding: 10px;
+    font-family: Roboto, Arial;
+    font-size: 16px;
+    overflow: auto;
+    border: 4px solid;
+    border-color: rgba(0, 0, 0, 0.298039);
+    border-radius: 5px;
+}
+
+#controlBox {
+    background-color: #EEEEEE;
+    padding: 10px;
+    font-family: Roboto, Arial;
+    font-size: 13px;
+    border: 4px solid;
+    border-color: rgba(0, 0, 0, 0.298039);
+    border-radius: 5px;
+}
+#resultsBox {
+    min-height: 250px;
+    overflow:auto;
+    background-color: #EEEEEE;
+    padding: 10px;
+    margin: 34px 0 0 0;
+    font-family: Roboto, Arial;
+    font-size: 13px;
+    border: 4px solid;
+    border-color: rgba(0, 0, 0, 0.298039);
+    border-radius: 5px;
+}
+#resultsText {
+    position: relative;
+}
+
+#drop_zone {
+    border: 2px dashed #bbb;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 16px;
+    text-align: center;
+    font: 20pt bold;
+    color: #bbb;
+}
+
+.dictTab{
+    border: 1px solid grey;
+    border-collapse: collapse;
+}
+th.dictTab, td.dictTab {
+    padding: 5px;
+    text-align: left;
+}
+.tabs {
+    margin: 4px;
+    width:100%;
+}
+.tab-links{
+    margin-bottom: 0px;
+}
+.tab-links:after {
+    display:block;
+    clear:both;
+    content:'';
+}
+.tab-links li {
+    margin:0px 5px;
+    float:left;
+    list-style:none;
+}
+.tab-links a {
+    padding:4px;
+    display:inline-block;
+    border-radius:3px 3px 0px 0px;
+    background:#7FB5DA;
+    font-size:16px;
+    font-weight:600;
+    color:#4c4c4c;
+    transition:all linear 0.15s;
+}
+.tab-links a:hover {
+    background:#a7cce5;
+    text-decoration:none;
+}
+li.active a, li.active a:hover {
+    background:#fff;
+    color:#4c4c4c;
+}
+.tab-content {
+    padding:8px;
+    border-radius:3px;
+    box-shadow:-1px 1px 1px rgba(0,0,0,0.15);
+}
+.tab {
+    display:none;
+}
+.tab.active {
+    display:block;
+}
+.invis {
+    display:none;
+}

@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Geo Event Query by Example</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="./css/starter-template.css" rel="stylesheet">
+    <link href="./css/geqe.css" rel="stylesheet">
+
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=drawing"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/geqe.utils.js"></script>
+    <script src="./js/geoxml3.js"></script>
+    <script>
+        var polygonFileText = "";
+        var map;
+        var scoredTweetArray = [];
+        var savePath = "/home/jlueders/src/geqe/exSrc/";
+
+        function initialize() {
+            $("#pSavePath").val(savePath);
+
+            var myLatlng = new google.maps.LatLng(41.495753190958816,-81.70090198516846);
+            var mapOptions = {
+                zoom: 10,
+                center: myLatlng
+            };
+
+            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+            var infoDiv = document.getElementById('polyList');
+            //map.controls[google.maps.ControlPosition.TOP_LEFT].push(infoDiv);
+            var contentString = '';
+            var polyNumber = 0;
+
+            var infowindow = new google.maps.InfoWindow({content: contentString});
+            var pinColor = 'FFFF00';
+
+            _handleFileSelect = function(file) {
+                var reader = new FileReader();
+                reader.onload = function(e) {
+                    var kml = e.target.result;
+
+                    var myParser = new geoXML3.parser({map: map});
+                    myParser.parseKmlString(kml);
+                };
+
+                reader.readAsText(file);
+
+            };
+
+            _handleDrop = function(evt) {
+                evt.stopPropagation();
+                evt.preventDefault();
+
+                var files = evt.dataTransfer.files;
+
+                _handleFileSelect(files[0]);
+            };
+
+            _handleDragOver = function(evt) {
+                evt.stopPropagation();
+                evt.preventDefault();
+                evt.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+            };
+
+            _onDropZoneClicked = function(event){
+                var fileSelector = $('<input type="file" />');
+
+                fileSelector.change(function(evt){
+                    _handleFileSelect(evt.target.files[0]);
+                });
+                fileSelector.click();
+            };
+
+            var dropZone = $("#drop_zone").get(0);
+
+            dropZone.addEventListener('dragover', _handleDragOver, false);
+            dropZone.addEventListener('drop', _handleDrop, false);
+            $(dropZone).click(_onDropZoneClicked);
+
+
+            var drawingManager = new google.maps.drawing.DrawingManager({
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: [
+                        google.maps.drawing.OverlayType.POLYGON,
+                        google.maps.drawing.OverlayType.RECTANGLE
+                    ]
+                }
+            });
+
+            drawingManager.setMap(map);
+            var handlePolygon = function(shape) {
+                var vertices = shape.getPath().getArray();
+                polyNumber += 1;
+
+                $.each(vertices,function(idx,vert){
+                    var lat = vert["k"];
+                    var lng = vert["D"];
+                    infoDiv.innerHTML += "<br>"+polyNumber+","+lat+","+lng;
+                    polygonFileText += polyNumber + ","+lat+","+lng+"\n";
+                });
+            };
+
+            var handleRectangle = function(shape) {
+                var vertices =[];
+                var bounds = shape.getBounds();
+                var NE = bounds.getNorthEast();
+                var SW = bounds.getSouthWest();
+                vertices.push(new google.maps.LatLng(NE.lat(),SW.lng()));
+                vertices.push(NE);
+                vertices.push(new google.maps.LatLng(SW.lat(),NE.lng()));
+                vertices.push(SW);
+
+                polyNumber += 1;
+
+                $.each(vertices,function(idx,vert){
+                    var lat = vert["k"];
+                    var lng = vert["D"];
+                    infoDiv.innerHTML += "<br>"+polyNumber+","+lat+","+lng;
+                    polygonFileText += polyNumber + ","+lat+","+lng+"\n";
+                });
+            };
+
+            google.maps.event.addListener(drawingManager, 'polygoncomplete', handlePolygon);
+            google.maps.event.addListener(drawingManager, 'rectanglecomplete', handleRectangle);
+
+
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+        $(document).ready(function() {
+            $('.tabs .tab-links a').on('click', function(e) {
+                var currentAttrValue = $(this).attr('href');
+                $('.tabs ' + currentAttrValue).show().siblings().hide();
+                $(this).parent('li').addClass('active').siblings().removeClass('active');
+                e.preventDefault();
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-full">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Geo Event Query by Example</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div><!--/.nav-collapse -->
+    </div>
+</nav>
+
+<div class="container-full">
+
+    <div class="starter-template">
+        <div class="row">
+            <div class="col-lg-5">
+                <div id="infoBox">
+                    <b>Bounding Polygons</b><br>
+                    Use the drawing tools on the map to draw polygons.<br>
+                    This box will automatically append the text for the shape file.
+                    <p id="polyList"></p>
+                </div>
+
+            </div>
+            <div class="col-lg-7">
+                <div id="map-canvas"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-5">
+                <div class="tabs">
+                    <ul class="tab-links">
+                        <li class="active"><a href="#tabRes">Results</a></li>
+                        <li><a href="#tabRun">Run</a></li>
+                        <li><a href="#tabTest">Test</a></li>
+                    </ul>
+                    <div id="controlBox" class="tab-content">
+                        <div id="tabRes" class="tab active">
+                            <table style="width:100%">
+                                <tr>
+                                    <td><button type="button" class="btn btn-default" onclick="popScore()">Get Score Files</button></td>
+                                    <td>
+                                        <select name="scoreSelect" id="scoreSelect">
+                                            <option value="0">-Select-</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><button type="button" class="btn btn-default" onclick="gatherScores()">Get Scores</button></td>
+                                    <td>Max Points: <input id="sMaxEntries" value="-1" style="width:40px"></td>
+                                </tr>
+                                <tr>
+                                    <td><label><input type="checkbox" id="aggScores"> Bin by Lat-Lon</label></td>
+                                    <td>Bin Size <input type="text" id="sBinSize" value=".005"></td>
+                                </tr>
+                                <tr>
+                                    <td><label><input type="checkbox" id="aggTime"> Bin as time series</label></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td><label><input type="checkbox" id="noDict"> Ignore Dictionary</label></td>
+                                    <td>N.B. this must be used for ML scores</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">
+                                        <div id="drop_zone">Drop kml file here or click to browse.</div>
+                                        <output id="file_list"></output>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="tabRun" class="tab">
+                            <table style="width:100%">
+                                <tr>
+                                    <td><b>Data Set</b></td>
+                                    <td>
+                                        <select id="dataSetSelect" onchange="newCenter()">
+                                            <option value="Cleveland">Cleveland</option>
+                                            <option value="Texas">Texas</option>
+                                            <option value="dcArea">Washington D.C.</option>
+                                        </select>
+                                    </td>
+                                    <td><a href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;">View Progress</a></td>
+                                </tr>
+                                <tr>
+                                    <td><button type="button" class="btn btn-default" onclick="saveList()">Save Polygon File</button></td>
+                                    <td><input type="text" id="pSavePath" readonly="True" disabled></td>
+                                    <td><input type="text" id="pFileName" value="polyFile.txt"></td>
+                                </tr>
+                                <tr>
+                                    <td><button type="button" class="btn btn-default" onclick="applyScores()">Apply Scores</button></td>
+                                    <td><input id="sFileName" value="scores.csv"></td>
+                                    <td>
+                                        <div id="rankReturnInput">
+                                            Return top: <input id="sTopN" value="300" style="width:50px">
+                                        </div>
+                                        <div id="percentReturnInput" class="invis">
+                                            Return Percent: <input id="sTopPercent" value="0.0001" style="width:50px">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>Show Advanced Options</b></td>
+                                    <td><input type="checkbox" id="bAdvanced" onclick="toggleAdv()"></td>
+                                    <td></td>
+                                </tr>
+                                <tr id="hr1" class="invis">
+                                    <td>Limit Return by Percent</td>
+                                    <td><input type="checkbox" id="bPercent" onchange="modReturn()"></td>
+                                    <td></td>
+                                </tr>
+                                <tr id="hr4" class="invis">
+                                    <td>Use M.L. Scoring</td>
+                                    <td><input type="checkbox" id="useML"></td>
+                                    <td></td>
+                                </tr>
+                                <tr id="hr5" class="invis">
+                                    <td>Sort by Bayes (when ML)</td>
+                                    <td><input type="checkbox" id="useBayes"></td>
+                                    <td></td>
+                                </tr>
+                                <tr id="hr3" class="invis">
+                                    <td>Time Series polygon</td>
+                                    <td><input type="checkbox" id="timeSeries"></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div id="tabTest" class="tab">
+                            <table style="width:100%">
+                                <tr>
+                                    <td><button type="button" class="btn btn-default" onclick="lauchTest()">Cross Validate</button></td>
+                                    <td><input type="text" id="tFileName" value="testSummary.csv"></td>
+                                    <td><a href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;">View Progress</a></td>
+                                </tr>
+                                <tr>
+                                    <td><button type="button" class="btn btn-default" onclick="gatherTest()">Get Results</button></td>
+                                    <td>Mean: <input id="inMean" type="text" readonly="True" value="Test Mean" style="width:65px"></td>
+                                    <td>Variance: <input id="inVar" type="text" readonly="True" value="Test Var" style="width:60px"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-7">
+                <div id="resultsBox">
+                    <b>Results</b><br>
+                    <div id="resultsText"></div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+</div><!-- /.container -->
+
+
+</body>
+</html>
