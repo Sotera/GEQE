@@ -24,7 +24,7 @@
     <script src="./js/geqe.utils.js"></script>
     <script src="./js/geoxml3.js"></script>
     <script>
-        var polygonFileText = "";
+        var shapes = [];
         var map;
         var scoredTweetArray = [];
         var savePath = "/home/jlueders/src/geqe/exSrc/";
@@ -40,7 +40,6 @@
             };
 
             map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-            var infoDiv = document.getElementById('polyList');
             var polyNumber = 0;
 
             _handleFileSelect = function(file) {
@@ -99,44 +98,13 @@
             });
 
             drawingManager.setMap(map);
-            var handlePolygon = function(shape) {
-                var vertices = shape.getPath().getArray();
-                polyNumber += 1;
+            var handleShape = function(shape) {
                 shape.setEditable(true);
-
-                $.each(vertices,function(idx,vert){
-                    var lat = vert["k"];
-                    var lng = vert["D"];
-                    infoDiv.innerHTML += "<br>"+polyNumber+","+lat+","+lng;
-                    polygonFileText += polyNumber + ","+lat+","+lng+"\n";
-                });
+                shapes.push(shape);
             };
 
-            var handleRectangle = function(shape) {
-                var vertices =[];
-                var bounds = shape.getBounds();
-                var NE = bounds.getNorthEast();
-                var SW = bounds.getSouthWest();
-
-                shape.setEditable(true);
-
-                vertices.push(new google.maps.LatLng(NE.lat(),SW.lng()));
-                vertices.push(NE);
-                vertices.push(new google.maps.LatLng(SW.lat(),NE.lng()));
-                vertices.push(SW);
-
-                polyNumber += 1;
-
-                $.each(vertices,function(idx,vert){
-                    var lat = vert["k"];
-                    var lng = vert["D"];
-                    infoDiv.innerHTML += "<br>"+polyNumber+","+lat+","+lng;
-                    polygonFileText += polyNumber + ","+lat+","+lng+"\n";
-                });
-            };
-
-            google.maps.event.addListener(drawingManager, 'polygoncomplete', handlePolygon);
-            google.maps.event.addListener(drawingManager, 'rectanglecomplete', handleRectangle);
+            google.maps.event.addListener(drawingManager, 'polygoncomplete', handleShape);
+            google.maps.event.addListener(drawingManager, 'rectanglecomplete', handleShape);
 
 
         }
@@ -181,16 +149,7 @@
 
     <div class="starter-template">
         <div class="row">
-            <div class="col-lg-5">
-                <div id="infoBox">
-                    <b>Bounding Polygons</b><br>
-                    Use the drawing tools on the map to draw polygons.<br>
-                    This box will automatically append the text for the shape file.
-                    <p id="polyList"></p>
-                </div>
-
-            </div>
-            <div class="col-lg-7">
+            <div class="col-lg-12">
                 <div id="map-canvas"></div>
             </div>
         </div>

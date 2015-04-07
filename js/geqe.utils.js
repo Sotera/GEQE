@@ -1,12 +1,14 @@
 function saveList() {
     var pPath = $("#pSavePath").val();
     var pName = $("#pFileName").val();
+    var fString = getShapesText();
+
     $.ajax({
         url: "./writePoly",
         data: {
             filePath: pPath,
             filePolygon: pName,
-            fileString: polygonFileText
+            fileString: fString
         },
         dataType: "text",
         success: function (response) {
@@ -16,6 +18,56 @@ function saveList() {
             $("#resultsText").text(reason);
         }
     });
+}
+
+function getShapesText()
+{
+    var shapesText = "";
+    $.each(shapes, function(index, shape){
+        shapesText += getTextFromShape(index,shape);
+    });
+    return shapesText;
+}
+
+function getTextFromShape(index, shape){
+    if(shape.getBounds != null)
+        return getTextFromRectangle(index, shape);
+    return getTextFromPolygon(index, shape);
+}
+
+function getTextFromPolygon(index, shape) {
+    var vertices = shape.getPath().getArray();
+    var text = "";
+
+    $.each(vertices,function(idx,vert){
+        var lat = vert["k"];
+        var lng = vert["D"];
+        text += index + ","+lat+","+lng+"\n";
+    });
+
+    return text;
+}
+
+function getTextFromRectangle(index, shape) {
+    var vertices =[];
+    var bounds = shape.getBounds();
+    var NE = bounds.getNorthEast();
+    var SW = bounds.getSouthWest();
+
+    vertices.push(new google.maps.LatLng(NE.lat(),SW.lng()));
+    vertices.push(NE);
+    vertices.push(new google.maps.LatLng(SW.lat(),NE.lng()));
+    vertices.push(SW);
+
+    var text = "";
+
+    $.each(vertices,function(idx,vert){
+        var lat = vert["k"];
+        var lng = vert["D"];
+        text += index + ","+lat+","+lng+"\n";
+    });
+
+    return text;
 }
 
 function lauchTest() {
