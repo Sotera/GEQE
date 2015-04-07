@@ -1,31 +1,21 @@
+html{
+    height:100%;
+}
+
 .container-full {
     margin: 0 auto;
     width: 100%;
 }
 
 #map-canvas {
-    min-height: 384px;
-    min-width: 256px;
-    margin: 0px;
-    padding: 0px;
-    border: 4px solid;
-    border-color: rgba(0, 0, 0, 0.298039);
+    width: 100%;
+    height:100%;
+    border: 4px solid rgba(0, 0, 0, 0.298039);
 }
 #boldLogo {
     position:absolute;
     top:40%;
     left:86%;
-}
-#infoBox {
-    height: 384px;
-    background-color: #EEEEEE;
-    padding: 10px;
-    font-family: Roboto, Arial;
-    font-size: 16px;
-    overflow: auto;
-    border: 4px solid;
-    border-color: rgba(0, 0, 0, 0.298039);
-    border-radius: 5px;
 }
 
 #controlBox {
@@ -33,8 +23,7 @@
     padding: 10px;
     font-family: Roboto, Arial;
     font-size: 13px;
-    border: 4px solid;
-    border-color: rgba(0, 0, 0, 0.298039);
+    border: 4px solid rgba(0, 0, 0, 0.298039);
     border-radius: 5px;
 }
 #resultsBox {
@@ -45,8 +34,7 @@
     margin: 34px 0 0 0;
     font-family: Roboto, Arial;
     font-size: 13px;
-    border: 4px solid;
-    border-color: rgba(0, 0, 0, 0.298039);
+    border: 4px solid rgba(0, 0, 0, 0.298039);
     border-radius: 5px;
 }
 #resultsText {
@@ -62,6 +50,18 @@
     text-align: center;
     font: 20pt bold;
     color: #bbb;
+}
+.main{
+    width:100%;
+    height:100%;
+}
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 300px;
+    background-color: #f5f5f5;
 }
 
 .dictTab{

@@ -1,8 +1,9 @@
 body {
   padding-top: 50px;
   background-color: #cad2dd;
+  height:100%;
 }
 .starter-template {
-  padding: 40px 15px;
-
+  height: 100%;
+  padding-bottom:300px;
 }
