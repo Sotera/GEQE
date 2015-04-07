@@ -28,6 +28,7 @@
         var map;
         var scoredTweetArray = [];
         var savePath = "/home/jlueders/src/geqe/exSrc/";
+        var geqe = {};
 
         function initialize() {
             $("#pSavePath").val(savePath);
@@ -40,12 +41,7 @@
 
             map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
             var infoDiv = document.getElementById('polyList');
-            //map.controls[google.maps.ControlPosition.TOP_LEFT].push(infoDiv);
-            var contentString = '';
             var polyNumber = 0;
-
-            var infowindow = new google.maps.InfoWindow({content: contentString});
-            var pinColor = 'FFFF00';
 
             _handleFileSelect = function(file) {
                 var reader = new FileReader();
@@ -106,6 +102,7 @@
             var handlePolygon = function(shape) {
                 var vertices = shape.getPath().getArray();
                 polyNumber += 1;
+                shape.setEditable(true);
 
                 $.each(vertices,function(idx,vert){
                     var lat = vert["k"];
@@ -120,6 +117,9 @@
                 var bounds = shape.getBounds();
                 var NE = bounds.getNorthEast();
                 var SW = bounds.getSouthWest();
+
+                shape.setEditable(true);
+
                 vertices.push(new google.maps.LatLng(NE.lat(),SW.lng()));
                 vertices.push(NE);
                 vertices.push(new google.maps.LatLng(SW.lat(),NE.lng()));
@@ -317,13 +317,8 @@
                     <div id="resultsText"></div>
                 </div>
             </div>
-
         </div>
-
-
-
     </div>
-
 </div><!-- /.container -->
 
 
