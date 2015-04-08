@@ -28,6 +28,8 @@
         var map;
         var scoredTweetArray = [];
         var savePath = "/home/jlueders/src/geqe/exSrc/";
+        //this path MUST be under the origin of the website. http://localhost:8080/execSrc/inputFiles/
+        var polygonFilesPath = "/exSrc/inputFiles/";
         var geqe = {};
 
         function initialize() {
@@ -162,6 +164,15 @@
                     <div id="controlBox" class="tab-content">
                         <div id="tabRes" class="tab active">
                             <table style="width:100%">
+                                <tr>
+                                    <td><button type="button" class="btn btn-default" onclick="populatePolygonSelect()">Get Polygon Files</button></td>
+                                    <td>
+                                        <select name="polygonSelect" id="polygonSelect">
+                                            <option value="0">-Select-</option>
+                                        </select>
+                                    </td>
+                                    <td><button type="button" class="btn btn-default" onclick="drawPolygonFile()">Load File</button></td>
+                                </tr>
                                 <tr>
                                     <td><button type="button" class="btn btn-default" onclick="popScore()">Get Score Files</button></td>
                                     <td>
