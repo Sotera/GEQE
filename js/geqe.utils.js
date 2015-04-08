@@ -99,11 +99,12 @@ function drawPolygonFile(){
 
                 var polygon = new google.maps.Polygon({
                     paths: points,
-                    strokeColor: '#FF0000',
+                    strokeColor: 'black',
                     strokeOpacity: 0.8,
                     strokeWeight: 2,
-                    fillColor: '#FF0000',
-                    fillOpacity: 0.35
+                    fillColor: 'black',
+                    fillOpacity: 0.35,
+                    editable:true
                 });
 
                 shapes.push(polygon);
