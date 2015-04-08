@@ -70,6 +70,54 @@ function getTextFromRectangle(index, shape) {
     return text;
 }
 
+function drawPolygonFile(){
+    var pPath = $("#pSavePath").val();
+    $.ajax({
+        url: "./getFileContents",
+        data : {
+            filePath: pPath,
+            fileName: $("#polygonSelect").val(),
+            subDir:fileSubDir
+        },
+        dataType: "json",
+        success: function (response) {
+            var vertStrings = response.fileData;
+            var latLngs = [];
+
+            $.each(vertStrings, function(idx,vertString){
+                if(vertString === "")
+                    return;
+                var vertData = vertString.split(",");
+                var polyIndex = parseInt(vertData[0]);
+                if(latLngs.length <= polyIndex){
+                    latLngs[polyIndex] = [];
+                }
+                latLngs[polyIndex].push(new google.maps.LatLng(vertData[1],vertData[2]));
+            });
+
+            $.each(latLngs, function(idx,points){
+
+                var polygon = new google.maps.Polygon({
+                    paths: points,
+                    strokeColor: '#FF0000',
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: '#FF0000',
+                    fillOpacity: 0.35
+                });
+
+                shapes.push(polygon);
+
+                polygon.setMap(map);
+            });
+            },
+            error: function(jqxhr, testStatus, reason) {
+                $("#resultsText").text(reason);
+            }
+    });
+
+}
+
 function lauchTest() {
 
     var pPath = $("#pSavePath").val();
@@ -235,6 +283,33 @@ function popScore() {
             var nFiles = response.nFiles;
             var strRet = '';
             var elmSel = document.getElementById("scoreSelect");
+            elmSel.options.length=1;
+
+            for(i=0; i<nFiles; i++)
+            {
+                elmSel.options[i+1] = new Option(lFiles[i], lFiles[i], false, false);
+            }
+        },
+        error: function(jqxhr, testStatus, reason) {
+            $("#resultsText").text(reason);
+        }
+    });
+}
+
+function populatePolygonSelect() {
+    var pPath = $("#pSavePath").val();
+    $.ajax({
+        url: "./popScoreList",
+        data : {
+            filePath: pPath,
+            subDir:fileSubDir
+        },
+        dataType: "json",
+        success: function (response) {
+            var lFiles = response.lFiles;
+            var nFiles = response.nFiles;
+            var strRet = '';
+            var elmSel = $("#polygonSelect").get(0);
             elmSel.options.length=1;
 
             for(i=0; i<nFiles; i++)
