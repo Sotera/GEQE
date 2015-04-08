@@ -27,7 +27,7 @@
 		var shapes = [];
 		var map;
 		var scoredTweetArray = [];
-		var savePath = "/home/jlueders/src/geqe/exSrc/";
+		var savePath = "/home/jgartner/findSP/";
 		var fileSubDir = "inputFiles/";
 		var geqe = {};
 
@@ -205,62 +205,69 @@
 							</table>
 						</div>
 						<div id="tabRun" class="tab">
-							<table style="width:100%">
-								<tr>
-									<td><b>Data Set</b></td>
-									<td>
-										<select id="dataSetSelect" onchange="newCenter()">
-											<option value="Cleveland">Cleveland</option>
-											<option value="Texas">Texas</option>
-											<option value="dcArea">Washington D.C.</option>
-										</select>
-									</td>
-									<td><a href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;">View Progress</a></td>
-								</tr>
-								<tr>
-									<td><button type="button" class="btn btn-default" onclick="saveList()">Save Polygon File</button></td>
-									<td><input type="text" id="pSavePath" readonly="True" disabled></td>
-									<td><input type="text" id="pFileName" value="polyFile.txt"></td>
-								</tr>
-								<tr>
-									<td><button type="button" class="btn btn-default" onclick="applyScores()">Apply Scores</button></td>
-									<td><input id="sFileName" value="scores.csv"></td>
-									<td>
-										<div id="rankReturnInput">
-											Return top: <input id="sTopN" value="300" style="width:50px">
-										</div>
-										<div id="percentReturnInput" class="invis">
-											Return Percent: <input id="sTopPercent" value="0.0001" style="width:50px">
-										</div>
-									</td>
-								</tr>
-								<tr>
-									<td><b>Show Advanced Options</b></td>
-									<td><input type="checkbox" id="bAdvanced" onclick="toggleAdv()"></td>
-									<td></td>
-								</tr>
-								<tr id="hr1" class="invis">
-									<td>Limit Return by Percent</td>
-									<td><input type="checkbox" id="bPercent" onchange="modReturn()"></td>
-									<td></td>
-								</tr>
-								<tr id="hr4" class="invis">
-									<td>Use M.L. Scoring</td>
-									<td><input type="checkbox" id="useML"></td>
-									<td></td>
-								</tr>
-								<tr id="hr5" class="invis">
-									<td>Sort by Bayes (when ML)</td>
-									<td><input type="checkbox" id="useBayes"></td>
-									<td></td>
-								</tr>
-								<tr id="hr3" class="invis">
-									<td>Time Series polygon</td>
-									<td><input type="checkbox" id="timeSeries"></td>
-									<td></td>
-								</tr>
-							</table>
-						</div>
+                            <table style="width:100%">
+                                <tr>
+                                    <td><b>Data Set</b></td>
+                                    <td></td>
+                                    <td>
+                                        <select id="dataSetSelect" onchange="newCenter()">
+                                            <option value="Cleveland">Cleveland</option>
+                                            <option value="Texas">Texas</option>
+                                            <option value="dcArea">Washington D.C.</option>
+                                        </select>
+                                    </td>
+                                    <td><a href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;">View Progress</a></td>
+                                </tr>
+                                <tr>
+                                    <td><button type="button" class="btn btn-default" onclick="saveList()">Save Polygon File</button></td>
+                                    <td></td>
+                                    <td><input type="text" id="pSavePath" readonly="True" disabled></td>
+                                    <td><input type="text" id="pFileName" value="polyFile.txt"></td>
+                                </tr>
+                                <tr>
+                                    <td><button type="button" class="btn btn-default" onclick="applyScores()">Apply Scores</button></td> 
+                                    <td></td>
+                                    <td><input id="sFileName" value="scores.csv"></td>
+                                    <td>
+                                        <div id="rankReturnInput">
+                                            Return top: <input id="sTopN" value="300" style="width:50px">
+                                        </div>
+                                        <div id="percentReturnInput" class="invis">
+                                            Return Percent: <input id="sTopPercent" value="0.0001" style="width:50px">
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><b>Show Advanced Options</b></td>
+                                    <td><input type="checkbox" id="bAdvanced" onclick="toggleAdv()"></td>
+                                    <td></td>
+                                </tr>
+                                <tr id="hr1" class="invis">
+                                    <td>Limit Return by Percent</td>
+                                    <td><input type="checkbox" id="bPercent" onchange="modReturn()"></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr id="hr4" class="invis">
+                                    <td>Use M.L. Scoring</td>
+                                    <td><input type="checkbox" id="useML"></td>
+                                    <td>Feature Vector Max Length</td>
+                                    <td><input type="text" id="nFeat" value="300"></td>
+                                </tr>
+                                <tr id="hr5" class="invis">
+                                    <td>Sort by Bayes (when ML)</td>
+                                    <td><input type="checkbox" id="useBayes"></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr id="hr3" class="invis">
+                                    <td>Time Series polygon</td>
+                                    <td><input type="checkbox" id="timeSeries"></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
 						<div id="tabTest" class="tab">
 							<table style="width:100%">
 								<tr>

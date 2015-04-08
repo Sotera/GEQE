@@ -189,6 +189,7 @@ function applyScores() {
     if(bPer==true){
         fThresh=$("#sTopPercent").val();
     }
+    var nFeat = $("#nFeat").val();
     $.ajax({
         url: "./applyScores",
         data: {
@@ -198,8 +199,8 @@ function applyScores() {
             fScoreThresh: fThresh,
             dataSet: dSet,
             useML: bML,
-            useBayes: bBay
-
+            useBayes: bBay,
+            nFeatures: nFeat
         },
         dataType: "text",
         success: function (response) {
