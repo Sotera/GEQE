@@ -191,6 +191,7 @@ function applyScores() {
         fThresh=$("#sTopPercent").val();
     }
     var nFeat = $("#nFeat").val();
+    var sSWords = $("#cStopW").val();
     $.ajax({
         url: "./applyScores",
         data: {
@@ -201,7 +202,8 @@ function applyScores() {
             dataSet: dSet,
             useML: bML,
             useBayes: bBay,
-            nFeatures: nFeat
+            nFeatures: nFeat,
+            custStopWord: sSWords
         },
         dataType: "text",
         success: function (response) {
