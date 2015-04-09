@@ -216,7 +216,6 @@ function gatherScores() {
     var pPath = $("#pSavePath").val();
     var sName = $("#scoreSelect").val();
     var sMaxP = $("#sMaxEntries").val();
-    var bDict = $("#noDict").is(":checked");
     var bAgg = $("#aggScores").is(":checked");
     var bTim = $("#aggTime").is(":checked");
     var fBin = $("#sBinSize").val();
@@ -226,7 +225,6 @@ function gatherScores() {
             filePath: pPath,
             fileAppOut: sName,
             maxOut: sMaxP,
-            bIgnorDict: bDict,
             bBinByLatLon: bAgg,
             bBinByDate: bTim,
             fBinSize: fBin
@@ -252,19 +250,28 @@ function gatherScores() {
             }
 
             //write dictionary to results box
-            if(bDict==false)
-            {
-                var strRet = '<b>Dictionary</b><table class="dictTab"><tr><th class="dictTab">Term</th><th class="dictTab">Score</th><th class="dictTab">In Count</th><th class="dictTab">Out Count</th></tr>';
-                for( i=0; i<response.dic.length; i++)
-                {
-                    strRet = strRet + '<tr><td class="dictTab">' + response.dic[i][0] + '</td><td class="dictTab">' + response.dic[i][3] + '</td><td class="dictTab">' + response.dic[i][1] + '</td><td class="dictTab">' + response.dic[i][2] + '</td></tr>';
-                }
-                strRet = strRet + "</table>";
-                $("#resultsText").html(strRet);
-            } else {
-                var strRet = '<b>Dictionary Ignored</b>'
-                $("#resultsText").html(strRet);
-            }
+			var strRet = '';
+			if( typeof(response.dic)=="string")
+			{
+				strRet = response.dic;
+			} else {
+				if( response.dic[0][2] != undefined)
+				{
+					strRet = '<b>Dictionary</b><table class="dictTab"><tr><th class="dictTab">Term</th><th class="dictTab">Score</th><th class="dictTab">In Count</th><th class="dictTab">Out Count</th></tr>';
+					for( i=0; i<response.dic.length; i++)
+					{
+						strRet = strRet + '<tr><td class="dictTab">' + response.dic[i][0] + '</td><td class="dictTab">' + response.dic[i][3] + '</td><td class="dictTab">' + response.dic[i][1] + '</td><td class="dictTab">' + response.dic[i][2] + '</td></tr>';
+					}
+				} else {
+					strRet = '<b>Dictionary</b><table class="dictTab"><tr><th class="dictTab">Term</th><th class="dictTab">Rank</th></tr>';
+					for( i=0; i<response.dic.length; i++)
+					{
+						strRet = strRet + '<tr><td class="dictTab">' + response.dic[i][0] + '</td><td class="dictTab">' + response.dic[i][1] + '</td></tr>';
+					}
+				}
+				strRet = strRet + "</table>";
+			}
+			$("#resultsText").html(strRet);
         },
         error: function (jqxhr, testStatus, reason) {
             $("#resultsText").text(reason);
