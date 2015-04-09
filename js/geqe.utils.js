@@ -260,16 +260,16 @@ function gatherScores() {
 			} else {
 				if( response.dic[0][2] != undefined)
 				{
-					strRet = '<b>Dictionary</b><table class="dictTab"><tr><th class="dictTab">Term</th><th class="dictTab">Score</th><th class="dictTab">In Count</th><th class="dictTab">Out Count</th></tr>';
+					strRet = '<table class=table table-striped"><tr><th>Term</th><th>Score</th><th>In Count</th><th>Out Count</th></tr>';
 					for( i=0; i<response.dic.length; i++)
 					{
-						strRet = strRet + '<tr><td class="dictTab">' + response.dic[i][0] + '</td><td class="dictTab">' + response.dic[i][3] + '</td><td class="dictTab">' + response.dic[i][1] + '</td><td class="dictTab">' + response.dic[i][2] + '</td></tr>';
+						strRet = strRet + '<tr><td>' + response.dic[i][0] + '</td><td>' + response.dic[i][3] + '</td><td>' + response.dic[i][1] + '</td><td>' + response.dic[i][2] + '</td></tr>';
 					}
 				} else {
-					strRet = '<b>Dictionary</b><table class="dictTab"><tr><th class="dictTab">Term</th><th class="dictTab">Rank</th></tr>';
+					strRet = '<table class="table table-condensed"><tr><th>Term</th><th>Rank</th></tr>';
 					for( i=0; i<response.dic.length; i++)
 					{
-						strRet = strRet + '<tr><td class="dictTab">' + response.dic[i][0] + '</td><td class="dictTab">' + response.dic[i][1] + '</td></tr>';
+						strRet = strRet + '<tr><td>' + response.dic[i][0] + '</td><td>' + response.dic[i][1] + '</td></tr>';
 					}
 				}
 				strRet = strRet + "</table>";
