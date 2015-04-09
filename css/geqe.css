@@ -27,7 +27,7 @@ html{
     border-radius: 5px;
 }
 #resultsBox {
-    min-height: 250px;
+    height: 258px;
     overflow:auto;
     background-color: #EEEEEE;
     padding: 10px;
