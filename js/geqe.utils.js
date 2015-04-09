@@ -190,6 +190,7 @@ function applyScores() {
     if(bPer==true){
         fThresh=$("#sTopPercent").val();
     }
+    var nFeat = $("#nFeat").val();
     $.ajax({
         url: "./applyScores",
         data: {
@@ -199,8 +200,8 @@ function applyScores() {
             fScoreThresh: fThresh,
             dataSet: dSet,
             useML: bML,
-            useBayes: bBay
-
+            useBayes: bBay,
+            nFeatures: nFeat
         },
         dataType: "text",
         success: function (response) {
@@ -216,7 +217,6 @@ function gatherScores() {
     var pPath = $("#pSavePath").val();
     var sName = $("#scoreSelect").val();
     var sMaxP = $("#sMaxEntries").val();
-    var bDict = $("#noDict").is(":checked");
     var bAgg = $("#aggScores").is(":checked");
     var bTim = $("#aggTime").is(":checked");
     var fBin = $("#sBinSize").val();
@@ -226,7 +226,6 @@ function gatherScores() {
             filePath: pPath,
             fileAppOut: sName,
             maxOut: sMaxP,
-            bIgnorDict: bDict,
             bBinByLatLon: bAgg,
             bBinByDate: bTim,
             fBinSize: fBin
@@ -252,19 +251,28 @@ function gatherScores() {
             }
 
             //write dictionary to results box
-            if(bDict==false)
-            {
-                var strRet = '<b>Dictionary</b><table class="dictTab"><tr><th class="dictTab">Term</th><th class="dictTab">Score</th><th class="dictTab">In Count</th><th class="dictTab">Out Count</th></tr>';
-                for( i=0; i<response.dic.length; i++)
-                {
-                    strRet = strRet + '<tr><td class="dictTab">' + response.dic[i][0] + '</td><td class="dictTab">' + response.dic[i][3] + '</td><td class="dictTab">' + response.dic[i][1] + '</td><td class="dictTab">' + response.dic[i][2] + '</td></tr>';
-                }
-                strRet = strRet + "</table>";
-                $("#resultsText").html(strRet);
-            } else {
-                var strRet = '<b>Dictionary Ignored</b>'
-                $("#resultsText").html(strRet);
-            }
+			var strRet = '';
+			if( typeof(response.dic)=="string")
+			{
+				strRet = response.dic;
+			} else {
+				if( response.dic[0][2] != undefined)
+				{
+					strRet = '<b>Dictionary</b><table class="dictTab"><tr><th class="dictTab">Term</th><th class="dictTab">Score</th><th class="dictTab">In Count</th><th class="dictTab">Out Count</th></tr>';
+					for( i=0; i<response.dic.length; i++)
+					{
+						strRet = strRet + '<tr><td class="dictTab">' + response.dic[i][0] + '</td><td class="dictTab">' + response.dic[i][3] + '</td><td class="dictTab">' + response.dic[i][1] + '</td><td class="dictTab">' + response.dic[i][2] + '</td></tr>';
+					}
+				} else {
+					strRet = '<b>Dictionary</b><table class="dictTab"><tr><th class="dictTab">Term</th><th class="dictTab">Rank</th></tr>';
+					for( i=0; i<response.dic.length; i++)
+					{
+						strRet = strRet + '<tr><td class="dictTab">' + response.dic[i][0] + '</td><td class="dictTab">' + response.dic[i][1] + '</td></tr>';
+					}
+				}
+				strRet = strRet + "</table>";
+			}
+			$("#resultsText").html(strRet);
         },
         error: function (jqxhr, testStatus, reason) {
             $("#resultsText").text(reason);
@@ -385,16 +393,19 @@ function modReturn() {
 function toggleAdv() {
     var bChecked = $("#bAdvanced").is(":checked");
     var r1 = $("#hr1");
+    var r2 = $("#hr2");
     var r3 = $("#hr3");
     var r4 = $("#hr4");
     var r5 = $("#hr5");
     if( bChecked == true) {
         r1.removeClass("invis");
+        r2.removeClass("invis");
         //r3.removeClass("invis");
         r4.removeClass("invis");
         r5.removeClass("invis");
     } else {
         r1.addClass("invis");
+        r2.addClass("invis");
         //r3.addClass("invis");
         r4.addClass("invis");
         r5.addClass("invis");
