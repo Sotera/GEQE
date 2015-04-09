@@ -96,7 +96,8 @@ function drawPolygonFile(){
             });
 
             $.each(latLngs, function(idx,points){
-
+                if(points===null || points === undefined)
+                    return;
                 var polygon = new google.maps.Polygon({
                     paths: points,
                     strokeColor: 'black',
