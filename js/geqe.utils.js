@@ -392,16 +392,19 @@ function modReturn() {
 function toggleAdv() {
     var bChecked = $("#bAdvanced").is(":checked");
     var r1 = $("#hr1");
+    var r2 = $("#hr2");
     var r3 = $("#hr3");
     var r4 = $("#hr4");
     var r5 = $("#hr5");
     if( bChecked == true) {
         r1.removeClass("invis");
+        r2.removeClass("invis");
         //r3.removeClass("invis");
         r4.removeClass("invis");
         r5.removeClass("invis");
     } else {
         r1.addClass("invis");
+        r2.addClass("invis");
         //r3.addClass("invis");
         r4.addClass("invis");
         r5.addClass("invis");
