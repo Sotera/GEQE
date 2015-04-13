@@ -9,9 +9,23 @@ angular.module('NodeWebBase')
 
         $scope.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
         $scope.shapes = [];
+        $scope.markers = [];
 
         $rootScope.$on('drawPolygonFile', function (event, data) {
             $scope.drawPolygonFile(data);
+        });
+
+        $rootScope.$on('putScoreMarker', function (event, data) {
+            var markerLocation = new google.maps.LatLng(data.lat, data.lon);
+            $scope.putScoreMarker(markerLocation, data.caption);
+        });
+
+        $rootScope.$on('clearCurrentMarkers', function (event) {
+            $scope.clearCurrentMarkers();
+        });
+
+        $rootScope.$on('renderKmlFile', function(event, file){
+            $scope.renderKmlFile(file);
         });
 
         var drawingManager = new google.maps.drawing.DrawingManager({
@@ -134,6 +148,32 @@ angular.module('NodeWebBase')
             });
 
         };
+        $scope.clearCurrentMarkers = function(){
+            $.each($scope.markers,function(idx,marker){
+                marker.setMap(null);
+                $scope.markers[idx] = null;
+            });
 
+            $scope.markers = [];
+        };
 
+        $scope.putScoreMarker = function(location, caption) {
+            var marker = new google.maps.Marker({
+                position: location,
+                title:caption
+            });
+            marker.setMap($scope.map);
+            $scope.markers.push(marker);
+        };
+
+        $scope.renderKmlFile = function(file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var kml = e.target.result;
+
+                var myParser = new geoXML3.parser({map: $scope.map});
+                myParser.parseKmlString(kml);
+            };
+            reader.readAsText(file);
+        };
     });
