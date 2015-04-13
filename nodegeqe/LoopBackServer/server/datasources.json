@@ -1,0 +1,13 @@
+{
+  "db": {
+    "name": "db",
+    "connector": "memory"
+  },
+  "testMongoDB": {
+    "host": "localhost",
+    "port": 27017,
+    "database": "products",
+    "name": "testMongoDB",
+    "connector": "mongodb"
+  }
+}

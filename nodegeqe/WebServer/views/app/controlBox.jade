@@ -1,0 +1,118 @@
+div.tabs(id="tabs" ng-controller="tabsController")
+   ul.tab-links
+      li(ng-repeat="tab in tabs" ng-class="{active:isActiveTab(tab.url)}" ng-click="onClickTab(tab)")
+         a {{tab.title}}
+   div( id="mainView")
+      div(id="controlBox" class="tab-content" ng-include="currentTab")
+
+script(type="text/ng-template" id="one.tpl.html")
+   div.tab( id="viewOne")
+      table(style="width:100%")
+         tr
+            td
+               button(type="button" class="btn btn-default" ng-click='populatePolygonSelect()') Get Polygon Files
+            td
+               select(name="polygonSelect" id="polygonSelect")
+                  option(value="0") -Select-
+               button(type="button" class="btn btn-default btn-xs" ng-click="drawPolygonFile()") Load File
+         tr
+            td
+               button( type="button" class="btn btn-default" ng-click="popScore()") Get Score Files
+            td
+               select( name="scoreSelect" id="scoreSelect")
+                  option( value="0") -Select-
+         tr
+            td
+               button(type="button" class="btn btn-default" onclick="gatherScores()") Get Scores
+            td
+               | Max Points:
+               input( id="sMaxEntries" value="-1" style="width:40px")
+         tr
+            td
+               label(for='aggScores') Bin by Lat-Lon
+               input(type="checkbox" id="aggScores" name="aggScores")
+            td
+               label(for="sBinSize") Bin Size
+               input(type="text" id="sBinSize" value=".005")
+         tr
+            td
+               label(for='aggTime') Bin as time series
+               input( type="checkbox" id="aggTime" name="aggTime")
+         tr
+            td(colspan="3")
+               div(id="drop_zone") Drop kml file here or click to browse.
+                  output( id="file_list")
+script( type="text/ng-template" id="two.tpl.html")
+   div.tab( id="viewTwo")
+      table( style="width:100%")
+         tr
+            td
+               b Data Set
+            td
+               select( id="dataSetSelect" onchange="newCenter()")
+                  option( value="Cleveland") Cleveland
+                  option( value="Texas") Texas
+                  option(value="dcArea") Washington D.C.
+            td
+               a(href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;") View Progress
+         tr
+            td
+               button(type="button" class="btn btn-default" onclick="saveList()") Save Polygon File
+            td
+               input(type="text" id="pSavePath" readonly="True" disabled)
+            td
+               input( type="text" id="pFileName" value="polyFile.txt")
+         tr
+            td
+               button( type="button" class="btn btn-default" onclick="applyScores()") Apply Scores
+            td
+               input(id="sFileName" value="scores.csv")
+            td
+               div(id="rankReturnInput") Return top:
+                  input(id="sTopN" value="300" style="width:50px")
+               div( id="percentReturnInput" class="invis") Return Percent:
+                  input( id="sTopPercent" value="0.0001" style="width:50px")
+         tr
+            td
+               b Show Advanced Options
+            td
+               input( type="checkbox" id="bAdvanced" onclick="toggleAdv()")
+         tr(id="hr1" class="invis")
+            td Limit Return by Percent
+            td
+               input(type="checkbox" id="bPercent" onchange="modReturn()")
+         tr( id="hr4" class="invis")
+            td see M.L. Scoring
+            td
+               input(type="checkbox" id="useML")
+            td Feature Vector Max Length
+            td
+               input( type="text" id="nFeat" value="300")
+         tr( id="hr5" class="invis")
+            td Sort by Bayes (when ML)
+            td
+               input( type="checkbox" id="useBayes")
+         tr( id="hr3" class="invis")
+            td Time Series polygon
+            tdinput( type="checkbox" id="timeSeries")
+         tr( id="hr2" class="invis")
+            td Custom Stop Words
+            td
+               input( type="text" id="cStopW")
+script( type="text/ng-template" id="three.tpl.html")
+   div.tab( id="viewThree")
+      table( style="width:100%")
+         tr
+            td
+               button( type="button" class="btn btn-default" onclick="lauchTest()") Cross Validate
+            td
+               input( type="text" id="tFileName" value="testSummary.csv")
+            td
+               a(href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;") View Progress
+         tr
+            td
+               button(type="button" class="btn btn-default" onclick="gatherTest()") Get Results
+            td Mean:
+               input( id="inMean" type="text" readonly="True" value="Test Mean" style="width:65px")
+            td Variance:
+               input( id="inVar" type="text" readonly="True" value="Test Var" style="width:60px")

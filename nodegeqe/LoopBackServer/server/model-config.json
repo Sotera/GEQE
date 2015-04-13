@@ -1,0 +1,34 @@
+{
+  "_meta": {
+    "sources": [
+      "loopback/common/models",
+      "loopback/server/models",
+      "../common/models",
+      "./models"
+    ]
+  },
+  "AccessToken": {
+    "dataSource": "testMongoDB",
+    "public": false
+  },
+  "ACL": {
+    "dataSource": "testMongoDB",
+    "public": false
+  },
+  "RoleMapping": {
+    "dataSource": "testMongoDB",
+    "public": false
+  },
+  "Role": {
+    "dataSource": "testMongoDB",
+    "public": false
+  },
+  "product": {
+    "dataSource": "testMongoDB",
+    "public": true
+  },
+  "user": {
+    "dataSource": "testMongoDB",
+    "public": true
+  }
+}

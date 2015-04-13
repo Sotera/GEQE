@@ -1,0 +1,23 @@
+doctype html
+html(ng-app='NodeWebBase', lang='en')
+	head
+		title= title
+		base(href='/')
+		meta(charset='uft-8')
+		meta(name='viewport' content='width=device-width, initial-scale=1')
+		script(src='/javascripts/vendor/angular/angular.min.js')
+		link(rel='stylesheet', href='/javascripts/vendor/bootstrap/dist/css/bootstrap.min.css')
+		link(rel='stylesheet', href='/javascripts/vendor/bootstrap/dist/css/bootstrap-theme.min.css')
+		link(rel='stylesheet', href='/javascripts/vendor/ngDialog/css/ngDialog.min.css')
+		link(rel='stylesheet', href='/javascripts/vendor/ngDialog/css/ngDialog-theme-default.min.css')
+		link(rel='stylesheet', href='/stylesheets/style.css')
+
+		link(rel='stylesheet', href='/stylesheets/app/geqe.css')
+
+		script(src='/javascripts/vendor/angular-resource/angular-resource.min.js')
+		script(src='/javascripts/vendor/angular-route/angular-route.min.js')
+		script(src='/javascripts/vendor/angular-cookies/angular-cookies.min.js')
+		script(src='/javascripts/vendor/ngDialog/js/ngDialog.min.js')
+		block scripts
+	body
+		block content

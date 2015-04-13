@@ -1,0 +1,24 @@
+extends layout
+
+block content
+	#login-container
+		form(ng-controller='loginController' novalidate)#login-form.well.span4
+			h1= title
+			label Username
+			input.form-control.span4.required(ng-model='data.username')
+			label Password
+			input.form-control.span4.required(ng-model='data.password',type='password')
+			button.btn.btn-primary(ng-click='authenticate()')
+				i.icon-lock.icon-white
+				| Sign in
+			label#rememberMeLabel.checkbox-label(for='rememberMeCheckbox')
+				input#rememberMeCheckbox(type='checkbox', checked='checked', ng-model='data.rememberMe')
+				|Remember Me
+			.clear-fix
+			hr
+			.btm-links
+				a(href='#')#forgot-password Forgot Your Password?
+				a(href='/login/signup')#create-account Create An Account
+
+block scripts
+	script(src='/javascripts/controllers/loginController.js')

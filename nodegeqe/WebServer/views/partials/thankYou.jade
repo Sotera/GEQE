@@ -1,0 +1,7 @@
+.alert.alert-danger(ng-show='data.orderError')
+	|Error ({{data.orderError.status}}). The order could not be placed.
+	a.alert-link(href='#/placeorder') Click here to try again
+.well(ng-hide='data.orderError')
+	h2 Thanks!
+	|Thanks for placing your order. We'll ship your goods as soon as possible.
+	|If you need to contact us, use reference {{data.orderId}}.

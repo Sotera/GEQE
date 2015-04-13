@@ -1,0 +1,35 @@
+extends layout
+
+block content
+	#login-container
+		form(ng-controller='signupController' novalidate)#signup-form.well.span4
+			h1= title
+			p.subheading Please tell us a little about yourself.
+			hr
+			fieldset
+				.control-group
+					label.control-label(for='nameTextBox') Name
+					.controls
+						input#nameTextBox.input-xlarge(type='text', ng-model='data.fullname')
+				.control-group
+					label.control-label(for='emailTextBox') Email
+					.controls
+						input#emailTextBox.input-xlarge(type='text', ng-model='data.email')
+				hr
+				p.subheading Choose a Username and Password
+				.control-group
+					label.control-label(for='usernameTextBox') Username
+					.controls
+						input#usernameTextBox.input-xlarge.disabled(type='text', ng-model='data.username')
+				.control-group
+					label.control-label(for='passwordTextBox') Password
+					.controls
+						input#passwordTextBox.input-xlarge(type='password', ng-model='data.password')
+				.control-group
+					button.btn.btn-primary(ng-click='createAccount()')
+						| Create
+					button.btn(ng-click='cancel()')
+						| Cancel
+
+block scripts
+	script(src='/javascripts/controllers/signupController.js')

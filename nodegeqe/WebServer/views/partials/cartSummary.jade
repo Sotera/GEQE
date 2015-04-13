@@ -1,0 +1,20 @@
+style.
+	.navbar-right{
+		float: right !important;
+		margin-right: 5px;
+	}
+	.navbar-text{
+		margin-right: 10px;
+	}
+	.p-spacer{
+		margin-right: 10px;
+	}
+	.b-spacer{
+		margin-right: 10px;
+	}
+
+.navbar-right
+	.navbar-text
+		b.b-spacer Your cart:
+		b.p-spacer {{itemCount()}} item(s), {{total() | currency}}
+		a.btn.btn-default.navbar-btn(href='#/checkout') Checkout
