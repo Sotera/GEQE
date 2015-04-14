@@ -6,7 +6,7 @@ div.tabs(id="tabs" ng-controller="tabsController")
       div(id="controlBox" class="tab-content" ng-include="currentTab")
 
 script(type="text/ng-template" id="one.tpl.html")
-   div.tab( id="viewOne")
+   div.tab( id="viewOne" ng-controller="resultsTabController")
       table(style="width:100%")
          tr
             td
@@ -23,7 +23,7 @@ script(type="text/ng-template" id="one.tpl.html")
                   option( value="0") -Select-
          tr
             td
-               button(type="button" class="btn btn-default" onclick="gatherScores()") Get Scores
+               button(type="button" class="btn btn-default" ng-click="gatherScores()") Get Scores
             td
                | Max Points:
                input( id="sMaxEntries" value="-1" style="width:40px")
@@ -40,7 +40,7 @@ script(type="text/ng-template" id="one.tpl.html")
                input( type="checkbox" id="aggTime" name="aggTime")
          tr
             td(colspan="3")
-               div(id="drop_zone") Drop kml file here or click to browse.
+               div(id="drop_zone" drop-target ng-click="onDropZoneClicked()") Drop kml file here or click to browse.
                   output( id="file_list")
 script( type="text/ng-template" id="two.tpl.html")
    div.tab( id="viewTwo")
@@ -60,7 +60,7 @@ script( type="text/ng-template" id="two.tpl.html")
                button(type="button" class="btn btn-default" onclick="saveList()") Save Polygon File
             td
                input(type="text" id="pSavePath" readonly="True" disabled)
-            td
+            tdonDropZoneClicked
                input( type="text" id="pFileName" value="polyFile.txt")
          tr
             td

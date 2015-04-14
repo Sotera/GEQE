@@ -25,5 +25,15 @@ router.get('/getFileContents', function (req, res) {
     })
 });
 
+router.get('/getScores', function (req, res) {
+    netHelpers.performAjaxRequest('localhost', 8080, '/getScores', 'GET', req.query, function (resultObject) {
+        if (resultObject.error) {
+            res.status(resultObject.error.status).send(resultObject.error.message);
+            return;
+        }
+
+        res.status(200).send(resultObject);
+    })
+});
 
 module.exports = router;
