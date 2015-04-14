@@ -59,6 +59,7 @@ angular.module('NodeWebBase')
             var bAgg = $("#aggScores").is(":checked");
             var bTim = $("#aggTime").is(":checked");
             var fBin = $("#sBinSize").val();
+            var bCUU = $("#uniqueUser").is(":checked");
             $.ajax({
                 url: $rootScope.baseUrl + "app/controlBox/getScores",
                 data: {
@@ -67,7 +68,9 @@ angular.module('NodeWebBase')
                     maxOut: sMaxP,
                     bBinByLatLon: bAgg,
                     bBinByDate: bTim,
-                    fBinSize: fBin
+                    fBinSize: fBin,
+                    fBinSize: fBin,
+                    bCountUniqueUser: bCUU
                 },
                 dataType: "json",
                 success: function (response) {
@@ -78,13 +81,20 @@ angular.module('NodeWebBase')
                     var nTot = response.total;
                     for( i=0; i<nTot; i++)
                     {
-                        var capPScor = response.cap[i] + "  (" + response.sco[i] + ")";
-                        $rootScope.$emit("putScoreMarker",{
-                                "lat":parseFloat(response.lat[i]),
-                                "lon":parseFloat(response.lon[i]),
-                                "caption": capPScor
-                            }
-                        );
+                        var capPScor = response.cap[i] + " (" + response.lUser[i] + ") (" + response.sco[i] + ")";
+                        var shiftLat = parseFloat(response.lat[i])+fBin/2;
+                        if(parseFloat(response.lat[i]) < 0.0)
+                        {
+                            shiftLat = parseFloat(response.lat[i])-fBin/2;
+                        }
+                        var shiftLon = parseFloat(response.lon[i])+fBin/2;
+                        if(parseFloat(response.lon[i]) < 0.0)
+                        {
+                            shiftLon = parseFloat(response.lon[i])-fBin/2;
+                        }
+                        var tweetLatlng = new google.maps.LatLng(shiftLat, shiftLon);
+                        m = putScoreMarker(tweetLatlng, capPScor);
+                        scoredTweetArray[i] = m;
                     }
 
                     //write dictionary to results box
