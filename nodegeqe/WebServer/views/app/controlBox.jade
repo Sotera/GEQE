@@ -113,18 +113,18 @@ script( type="text/ng-template" id="two.tpl.html")
             td
                input( type="text" id="cStopW")
 script( type="text/ng-template" id="three.tpl.html")
-   div.tab( id="viewThree")
+   div.tab( id="viewThree" ng-controller="testTabController")
       table( style="width:100%")
          tr
             td
-               button( type="button" class="btn btn-default" onclick="lauchTest()") Cross Validate
+               button( type="button" class="btn btn-default" ng-click="launchTest()") Cross Validate
             td
                input( type="text" id="tFileName" value="testSummary.csv")
             td
                a(href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;") View Progress
          tr
             td
-               button(type="button" class="btn btn-default" onclick="gatherTest()") Get Results
+               button(type="button" class="btn btn-default" ng-click="gatherTest()") Get Results
             td Mean:
                input( id="inMean" type="text" readonly="True" value="Test Mean" style="width:65px")
             td Variance:
