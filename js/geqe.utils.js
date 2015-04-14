@@ -222,6 +222,7 @@ function gatherScores() {
     var bAgg = $("#aggScores").is(":checked");
     var bTim = $("#aggTime").is(":checked");
     var fBin = $("#sBinSize").val();
+    var bCUU = $("#uniqueUser").is(":checked");
     $.ajax({
         url: "./getScores",
         data: {
@@ -230,7 +231,8 @@ function gatherScores() {
             maxOut: sMaxP,
             bBinByLatLon: bAgg,
             bBinByDate: bTim,
-            fBinSize: fBin
+            fBinSize: fBin,
+            bCountUniqueUser: bCUU
         },
         dataType: "json",
         success: function (response) {
@@ -246,8 +248,18 @@ function gatherScores() {
             var nTot = response.total;
             for( i=0; i<nTot; i++)
             {
-                var capPScor = response.cap[i] + "  (" + response.sco[i] + ")";
-                var tweetLatlng = new google.maps.LatLng(parseFloat(response.lat[i]), parseFloat(response.lon[i]));
+                var capPScor = response.cap[i] + " (" + response.lUser[i] + ") (" + response.sco[i] + ")";
+                var shiftLat = parseFloat(response.lat[i])+fBin/2;
+                if(parseFloat(response.lat[i]) < 0.0)
+                {
+                	shiftLat = parseFloat(response.lat[i])-fBin/2;
+                }
+                var shiftLon = parseFloat(response.lon[i])+fBin/2;
+                if(parseFloat(response.lon[i]) < 0.0)
+                {
+                	shiftLon = parseFloat(response.lon[i])-fBin/2;
+                }
+                var tweetLatlng = new google.maps.LatLng(shiftLat, shiftLon);
                 m = putScoreMarker(tweetLatlng, capPScor);
                 scoredTweetArray[i] = m;
             }
