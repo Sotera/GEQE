@@ -28,6 +28,12 @@ angular.module('NodeWebBase')
             $scope.renderKmlFile(file);
         });
 
+        $rootScope.$on('getShapesText', function(event, callbackInfo){
+            var params = [];
+            params.push($scope.getShapesText());
+            callbackInfo.callback.apply(callbackInfo.scope, params);
+        });
+
         var drawingManager = new google.maps.drawing.DrawingManager({
             drawingControl: true,
             drawingControlOptions: {
@@ -48,21 +54,19 @@ angular.module('NodeWebBase')
         google.maps.event.addListener(drawingManager, 'polygoncomplete', handleShape);
         google.maps.event.addListener(drawingManager, 'rectanglecomplete', handleShape);
 
-
-
         $scope.getShapesText = function()
         {
             var shapesText = "";
-            $.each(shapes, function(index, shape){
-                shapesText += getTextFromShape(index,shape);
+            $.each($scope.shapes, function(index, shape){
+                shapesText += $scope.getTextFromShape(index,shape);
             });
             return shapesText;
         };
 
         $scope.getTextFromShape = function(index, shape){
             if(shape.getBounds != null)
-                return getTextFromRectangle(index, shape);
-            return getTextFromPolygon(index, shape);
+                return $scope.getTextFromRectangle(index, shape);
+            return $scope.getTextFromPolygon(index, shape);
         };
 
         $scope.getTextFromPolygon = function(index, shape) {

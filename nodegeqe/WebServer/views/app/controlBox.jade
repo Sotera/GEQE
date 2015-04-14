@@ -43,7 +43,7 @@ script(type="text/ng-template" id="one.tpl.html")
                div(id="drop_zone" drop-target ng-click="onDropZoneClicked()") Drop kml file here or click to browse.
                   output( id="file_list")
 script( type="text/ng-template" id="two.tpl.html")
-   div.tab( id="viewTwo")
+   div.tab( id="viewTwo" ng-controller="runTabController")
       table( style="width:100%")
          tr
             td
@@ -57,14 +57,14 @@ script( type="text/ng-template" id="two.tpl.html")
                a(href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;") View Progress
          tr
             td
-               button(type="button" class="btn btn-default" onclick="saveList()") Save Polygon File
+               button(type="button" class="btn btn-default" ng-click="saveList()") Save Polygon File
             td
                input(type="text" id="pSavePath" readonly="True" disabled)
             tdonDropZoneClicked
                input( type="text" id="pFileName" value="polyFile.txt")
          tr
             td
-               button( type="button" class="btn btn-default" onclick="applyScores()") Apply Scores
+               button( type="button" class="btn btn-default" ng-click="applyScores()") Apply Scores
             td
                input(id="sFileName" value="scores.csv")
             td
@@ -76,11 +76,11 @@ script( type="text/ng-template" id="two.tpl.html")
             td
                b Show Advanced Options
             td
-               input( type="checkbox" id="bAdvanced" onclick="toggleAdv()")
+               input( type="checkbox" id="bAdvanced" ng-click="toggleAdv()")
          tr(id="hr1" class="invis")
             td Limit Return by Percent
             td
-               input(type="checkbox" id="bPercent" onchange="modReturn()")
+               input(type="checkbox" id="bPercent" ng-click="modReturn()")
          tr( id="hr4" class="invis")
             td see M.L. Scoring
             td
