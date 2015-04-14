@@ -15,6 +15,13 @@ script(type="text/ng-template" id="one.tpl.html")
                select(name="polygonSelect" id="polygonSelect")
                   option(value="0") -Select-
                button(type="button" class="btn btn-default btn-xs" ng-click="drawPolygonFile()") Load File
+            td
+               |Clear:
+               button(type="button" class="btn btn-default btn-xs" ng-click="clearResults()") Results
+               button(type="button" class="btn btn-default btn-xs" ng-click="clearShapes()") Shapes
+               button(type="button" class="btn btn-default btn-xs" ng-click="clearMarkers()") Markers
+               button(type="button" class="btn btn-default btn-xs" ng-click="clearAll()") All
+
          tr
             td
                button( type="button" class="btn btn-default" ng-click="popScore()") Get Score Files

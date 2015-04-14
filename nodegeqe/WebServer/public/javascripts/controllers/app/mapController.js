@@ -15,13 +15,26 @@ angular.module('NodeWebBase')
             $scope.drawPolygonFile(data);
         });
 
-        $rootScope.$on('putScoreMarker', function (event, data) {
-            var markerLocation = new google.maps.LatLng(data.lat, data.lon);
-            $scope.putScoreMarker(markerLocation, data.caption);
+        $rootScope.$on('putScoreMarkers', function (event, data) {
+            var locations = [];
+            $.each(data,function(idx,markerData){
+                var markerLocation = new google.maps.LatLng(markerData.lat, markerData.lon);
+                locations.push(markerLocation);
+                $scope.putScoreMarker(markerLocation, markerData.caption);
+            });
+            $scope.calculateBounds(locations);
         });
 
         $rootScope.$on('clearCurrentMarkers', function (event) {
             $scope.clearCurrentMarkers();
+        });
+
+        $rootScope.$on('clearCurrentShapes', function (event) {
+            $scope.clearCurrentShapes();
+        });
+
+        $rootScope.$on('clearAll', function (event) {
+            $scope.clearAll();
         });
 
         $rootScope.$on('renderKmlFile', function(event, file){
@@ -53,6 +66,14 @@ angular.module('NodeWebBase')
 
         google.maps.event.addListener(drawingManager, 'polygoncomplete', handleShape);
         google.maps.event.addListener(drawingManager, 'rectanglecomplete', handleShape);
+
+        $scope.calculateBounds = function(locations){
+            var bounds = new google.maps.LatLngBounds();
+            $.each(locations,function(idx,location){
+                bounds.extend(location);
+            });
+            $scope.map.fitBounds(bounds);
+        };
 
         $scope.getShapesText = function()
         {
@@ -116,6 +137,7 @@ angular.module('NodeWebBase')
                 success: function (response) {
                     var vertStrings = response.fileData;
                     var latLngs = [];
+                    var latLngList = [];
 
                     $.each(vertStrings, function(idx,vertString){
                         if(vertString === "")
@@ -125,7 +147,10 @@ angular.module('NodeWebBase')
                         if(latLngs.length <= polyIndex){
                             latLngs[polyIndex] = [];
                         }
-                        latLngs[polyIndex].push(new google.maps.LatLng(vertData[1],vertData[2]));
+                        var latlng = new google.maps.LatLng(vertData[1],vertData[2]);
+
+                        latLngs[polyIndex].push(latlng);
+                        latLngList.push(latlng);
                     });
 
                     $.each(latLngs, function(idx,points){
@@ -145,6 +170,8 @@ angular.module('NodeWebBase')
 
                         polygon.setMap($scope.map);
                     });
+
+                    $scope.calculateBounds(latLngList);
                 },
                 error: function(jqxhr, testStatus, reason) {
                     $("#resultsText").text(reason);
@@ -152,6 +179,21 @@ angular.module('NodeWebBase')
             });
 
         };
+
+        $scope.clearAll = function(){
+            $scope.clearCurrentMarkers();
+            $scope.clearCurrentShapes();
+        };
+
+        $scope.clearCurrentShapes = function(){
+            $.each($scope.shapes,function(idx,shape){
+                shape.setMap(null);
+                $scope.shapes[idx] = null;
+            });
+
+            $scope.shapes = [];
+        };
+
         $scope.clearCurrentMarkers = function(){
             $.each($scope.markers,function(idx,marker){
                 marker.setMap(null);

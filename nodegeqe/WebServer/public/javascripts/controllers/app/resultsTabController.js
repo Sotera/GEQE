@@ -69,7 +69,6 @@ angular.module('NodeWebBase')
                     bBinByLatLon: bAgg,
                     bBinByDate: bTim,
                     fBinSize: fBin,
-                    fBinSize: fBin,
                     bCountUniqueUser: bCUU
                 },
                 dataType: "json",
@@ -79,6 +78,7 @@ angular.module('NodeWebBase')
 
                     //create new points
                     var nTot = response.total;
+                    var markerData = [];
                     for( i=0; i<nTot; i++)
                     {
                         var capPScor = response.cap[i] + " (" + response.lUser[i] + ") (" + response.sco[i] + ")";
@@ -92,10 +92,15 @@ angular.module('NodeWebBase')
                         {
                             shiftLon = parseFloat(response.lon[i])-fBin/2;
                         }
-                        var tweetLatlng = new google.maps.LatLng(shiftLat, shiftLon);
-                        m = putScoreMarker(tweetLatlng, capPScor);
-                        scoredTweetArray[i] = m;
+                        markerData.push({"lat":parseFloat(shiftLat),
+                            "lon":parseFloat(shiftLon),
+                            "caption": capPScor});
                     }
+
+                    if(markerData.length > 0){
+                        $rootScope.$emit("putScoreMarkers",markerData);
+                    }
+
 
                     //write dictionary to results box
                     var strRet = '';
@@ -125,6 +130,23 @@ angular.module('NodeWebBase')
                     $rootScope.$emit("displayResults",reason)
                 }
             });
+        };
+
+        $scope.clearMarkers = function(){
+            $rootScope.$emit("clearCurrentMarkers");
+        };
+
+        $scope.clearShapes = function(){
+            $rootScope.$emit("clearCurrentShapes");
+        };
+
+        $scope.clearResults = function(){
+            $rootScope.$emit("displayResults","")
+        };
+
+        $scope.clearAll = function(){
+            $rootScope.$emit("clearAll");
+            $scope.clearResults();
         };
 
         $scope.drawPolygonFile = function(){
