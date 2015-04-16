@@ -59,6 +59,7 @@ angular.module('NodeWebBase')
             var bAgg = $("#aggScores").is(":checked");
             var bTim = $("#aggTime").is(":checked");
             var fBin = $("#sBinSize").val();
+            var bCUU = $("#uniqueUser").is(":checked");
             $.ajax({
                 url: $rootScope.baseUrl + "app/controlBox/getScores",
                 data: {
@@ -67,7 +68,8 @@ angular.module('NodeWebBase')
                     maxOut: sMaxP,
                     bBinByLatLon: bAgg,
                     bBinByDate: bTim,
-                    fBinSize: fBin
+                    fBinSize: fBin,
+                    bCountUniqueUser: bCUU
                 },
                 dataType: "json",
                 success: function (response) {
@@ -76,16 +78,29 @@ angular.module('NodeWebBase')
 
                     //create new points
                     var nTot = response.total;
+                    var markerData = [];
                     for( i=0; i<nTot; i++)
                     {
-                        var capPScor = response.cap[i] + "  (" + response.sco[i] + ")";
-                        $rootScope.$emit("putScoreMarker",{
-                                "lat":parseFloat(response.lat[i]),
-                                "lon":parseFloat(response.lon[i]),
-                                "caption": capPScor
-                            }
-                        );
+                        var capPScor = response.cap[i] + " (" + response.lUser[i] + ") (" + response.sco[i] + ")";
+                        var shiftLat = parseFloat(response.lat[i])+fBin/2;
+                        if(parseFloat(response.lat[i]) < 0.0)
+                        {
+                            shiftLat = parseFloat(response.lat[i])-fBin/2;
+                        }
+                        var shiftLon = parseFloat(response.lon[i])+fBin/2;
+                        if(parseFloat(response.lon[i]) < 0.0)
+                        {
+                            shiftLon = parseFloat(response.lon[i])-fBin/2;
+                        }
+                        markerData.push({"lat":parseFloat(shiftLat),
+                            "lon":parseFloat(shiftLon),
+                            "caption": capPScor});
                     }
+
+                    if(markerData.length > 0){
+                        $rootScope.$emit("putScoreMarkers",markerData);
+                    }
+
 
                     //write dictionary to results box
                     var strRet = '';
@@ -115,6 +130,23 @@ angular.module('NodeWebBase')
                     $rootScope.$emit("displayResults",reason)
                 }
             });
+        };
+
+        $scope.clearMarkers = function(){
+            $rootScope.$emit("clearCurrentMarkers");
+        };
+
+        $scope.clearShapes = function(){
+            $rootScope.$emit("clearCurrentShapes");
+        };
+
+        $scope.clearResults = function(){
+            $rootScope.$emit("displayResults","")
+        };
+
+        $scope.clearAll = function(){
+            $rootScope.$emit("clearAll");
+            $scope.clearResults();
         };
 
         $scope.drawPolygonFile = function(){

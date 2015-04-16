@@ -15,6 +15,13 @@ script(type="text/ng-template" id="one.tpl.html")
                select(name="polygonSelect" id="polygonSelect")
                   option(value="0") -Select-
                button(type="button" class="btn btn-default btn-xs" ng-click="drawPolygonFile()") Load File
+            td
+               |Clear:
+               button(type="button" class="btn btn-default btn-xs" ng-click="clearResults()") Results
+               button(type="button" class="btn btn-default btn-xs" ng-click="clearShapes()") Shapes
+               button(type="button" class="btn btn-default btn-xs" ng-click="clearMarkers()") Markers
+               button(type="button" class="btn btn-default btn-xs" ng-click="clearAll()") All
+
          tr
             td
                button( type="button" class="btn btn-default" ng-click="popScore()") Get Score Files
@@ -29,21 +36,28 @@ script(type="text/ng-template" id="one.tpl.html")
                input( id="sMaxEntries" value="-1" style="width:40px")
          tr
             td
-               label(for='aggScores') Bin by Lat-Lon
-               input(type="checkbox" id="aggScores" name="aggScores")
+               label(for='aggScores')
+                  input(type="checkbox" id="aggScores" name="aggScores")
+                  | Bin by Lat-Lon
             td
-               label(for="sBinSize") Bin Size
-               input(type="text" id="sBinSize" value=".005")
+               label(for="sBinSize")
+                  input(type="text" id="sBinSize" value=".005")
+                  | Bin Size
          tr
             td
-               label(for='aggTime') Bin as time series
-               input( type="checkbox" id="aggTime" name="aggTime")
+               label(for='aggTime')
+                  input( type="checkbox" id="aggTime" name="aggTime")
+                  | Bin as time series
+            td
+               label(for='uniqueUser')
+                  input(type="checkbox" id="uniqueUser")
+                  | Count only unique users
          tr
             td(colspan="3")
                div(id="drop_zone" drop-target ng-click="onDropZoneClicked()") Drop kml file here or click to browse.
                   output( id="file_list")
 script( type="text/ng-template" id="two.tpl.html")
-   div.tab( id="viewTwo")
+   div.tab( id="viewTwo" ng-controller="runTabController")
       table( style="width:100%")
          tr
             td
@@ -57,14 +71,14 @@ script( type="text/ng-template" id="two.tpl.html")
                a(href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;") View Progress
          tr
             td
-               button(type="button" class="btn btn-default" onclick="saveList()") Save Polygon File
+               button(type="button" class="btn btn-default" ng-click="saveList()") Save Polygon File
             td
                input(type="text" id="pSavePath" readonly="True" disabled)
-            tdonDropZoneClicked
+            td
                input( type="text" id="pFileName" value="polyFile.txt")
          tr
             td
-               button( type="button" class="btn btn-default" onclick="applyScores()") Apply Scores
+               button( type="button" class="btn btn-default" ng-click="applyScores()") Apply Scores
             td
                input(id="sFileName" value="scores.csv")
             td
@@ -74,44 +88,50 @@ script( type="text/ng-template" id="two.tpl.html")
                   input( id="sTopPercent" value="0.0001" style="width:50px")
          tr
             td
-               b Show Advanced Options
-            td
-               input( type="checkbox" id="bAdvanced" onclick="toggleAdv()")
+               label(for='bAdvanced')
+                  input( type="checkbox" id="bAdvanced" ng-click="toggleAdv()")
+                  | Show Advanced Options
          tr(id="hr1" class="invis")
-            td Limit Return by Percent
             td
-               input(type="checkbox" id="bPercent" onchange="modReturn()")
+               label(for='bPercent')
+                  input(type="checkbox" id="bPercent" ng-click="modReturn()")
+                  | Limit Return by Percent
          tr( id="hr4" class="invis")
-            td see M.L. Scoring
             td
-               input(type="checkbox" id="useML")
+               label(for='useML')
+                  input(type="checkbox" id="useML")
+                  | see M.L. Scoring
             td Feature Vector Max Length
             td
                input( type="text" id="nFeat" value="300")
          tr( id="hr5" class="invis")
-            td Sort by Bayes (when ML)
             td
-               input( type="checkbox" id="useBayes")
+               label(for='useBayes')
+                  input( type="checkbox" id="useBayes")
+                  | Sort by Bayes (when ML)
          tr( id="hr3" class="invis")
-            td Time Series polygon
-            tdinput( type="checkbox" id="timeSeries")
+            td
+               label(for='timeSeries')
+                  input( type="checkbox" id="timeSeries")
+                  | Time Series polygon
+
          tr( id="hr2" class="invis")
             td Custom Stop Words
             td
                input( type="text" id="cStopW")
 script( type="text/ng-template" id="three.tpl.html")
-   div.tab( id="viewThree")
+   div.tab( id="viewThree" ng-controller="testTabController")
       table( style="width:100%")
          tr
             td
-               button( type="button" class="btn btn-default" onclick="lauchTest()") Cross Validate
+               button( type="button" class="btn btn-default" ng-click="launchTest()") Cross Validate
             td
                input( type="text" id="tFileName" value="testSummary.csv")
             td
                a(href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;") View Progress
          tr
             td
-               button(type="button" class="btn btn-default" onclick="gatherTest()") Get Results
+               button(type="button" class="btn btn-default" ng-click="gatherTest()") Get Results
             td Mean:
                input( id="inMean" type="text" readonly="True" value="Test Mean" style="width:65px")
             td Variance:
