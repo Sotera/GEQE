@@ -1,6 +1,6 @@
 angular.module('NodeWebBase', ['ngRoute', 'logout'])
-		.constant('dataUrl', 'http://localhost:3000/products')
-		.constant('orderUrl', 'http://localhost:3000/orders')
+    .constant('dataUrl', 'http://geqe.local/products')
+    .constant('orderUrl', 'http://geqe.local/orders')
 		.config(function ($routeProvider) {
 			$routeProvider
 			.otherwise({templateUrl: '/views/app/main'})

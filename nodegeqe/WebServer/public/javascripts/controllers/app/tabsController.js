@@ -11,8 +11,8 @@ angular.module('NodeWebBase')
             url: 'three.tpl.html'
         }];
 
-        $rootScope.baseUrl = "http://localhost:3000/";
-        $rootScope.savePath = "/home/jlueders/src/geqe/exSrc/";
+        $rootScope.baseUrl = "http://geqe.local/";
+        $rootScope.savePath = "exSrc/";
         //$scope.savePath = "/home/jgartner/findSP/";
         $rootScope.fileSubDir = "inputFiles/";
 

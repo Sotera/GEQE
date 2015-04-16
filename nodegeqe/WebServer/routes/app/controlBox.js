@@ -1,10 +1,14 @@
 var express = require('express');
+var config = require('config');
+var netHelpers = require('netHelpers');
+var util = require('util');
+
 var router = express.Router();
 
-var netHelpers = require('../../utilExports/netHelpers');
 
 router.get('/popScoreList', function (req, res) {
-    netHelpers.performAjaxRequest('localhost', 8080, '/popScoreList', 'GET', req.query, function (resultObject) {
+
+    netHelpers.performAjaxRequest(config.remote.host, config.remote.port, '/popScoreList', 'GET', req.query, function (resultObject) {
         if (resultObject.error) {
             res.status(resultObject.error.status).send(resultObject.error.message);
             return;
@@ -15,7 +19,7 @@ router.get('/popScoreList', function (req, res) {
 });
 
 router.get('/getFileContents', function (req, res) {
-    netHelpers.performAjaxRequest('localhost', 8080, '/getFileContents', 'GET', req.query, function (resultObject) {
+    netHelpers.performAjaxRequest(config.remote.host, config.remote.port, '/getFileContents', 'GET', req.query, function (resultObject) {
         if (resultObject.error) {
             res.status(resultObject.error.status).send(resultObject.error.message);
             return;
@@ -26,7 +30,7 @@ router.get('/getFileContents', function (req, res) {
 });
 
 router.get('/getScores', function (req, res) {
-    netHelpers.performAjaxRequest('localhost', 8080, '/getScores', 'GET', req.query, function (resultObject) {
+    netHelpers.performAjaxRequest(config.remote.host, config.remote.port, '/getScores', 'GET', req.query, function (resultObject) {
         if (resultObject.error) {
             res.status(resultObject.error.status).send(resultObject.error.message);
             return;
@@ -35,5 +39,25 @@ router.get('/getScores', function (req, res) {
         res.status(200).send(resultObject);
     })
 });
+
+
+// TODO: Make more readable, maybe we can replace
+//["/popScoreList",
+//    "/getFileContents",
+//    "/getScores"].forEach(function (name) {
+//
+//        router.get(name, function (req, res) {
+//
+//            netHelpers.performAjaxRequest(config.remote.host, config.remote.port, name, 'GET', req.query, function (resultObject) {
+//                if (resultObject.error) {
+//                    res.status(resultObject.error.status).send(resultObject.error.message);
+//                    return;
+//                }
+//
+//                res.status(200).send(resultObject);
+//            })
+//        });
+//
+//    });
 
 module.exports = router;
