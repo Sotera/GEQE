@@ -19,6 +19,7 @@ html{
 }
 
 #controlBox {
+    height: 258px;
     background-color: #EEEEEE;
     padding: 10px;
     font-family: Roboto, Arial;

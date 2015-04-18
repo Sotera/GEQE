@@ -4,7 +4,9 @@ block content
 	div.fill(ng-controller='indexController')
 		.navbar.navbar-inverse
 			a.navbar-brand(href='#') Geo Event Query by Example
+			nb-settings
 			logout
+
 		ng-view.fill
 
 block scripts
@@ -12,6 +14,7 @@ block scripts
 	script(src='/javascripts/component/logout/logout.js')
 	script(src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=drawing")
 	script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js")
+	script(src='/javascripts/component/app/nbSettings.js')
 	script(src="/javascripts/component/app/geoxml3.js")
 	script(src='/javascripts/controllers/app/mapController.js')
 	script(src='/javascripts/controllers/app/tabsController.js')

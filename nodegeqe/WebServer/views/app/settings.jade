@@ -1,0 +1,20 @@
+.modal-header
+   h3 Settings
+.modal-body
+   form(novalidate)#signup-form.well.span4
+      p.subheading User Settings
+      fieldset
+         .control-group
+            label.control-label(for='nameTextBox') Name
+            .controls
+               input#nameTextBox.input-xlarge(type='text', ng-model='data.fullname')
+         .control-group
+            label.control-label(for='emailTextBox') Email
+            .controls
+               input#emailTextBox.input-xlarge(type='text', ng-model='data.email')
+
+div.modal-footer
+   button.btn.btn-primary(ng-click="save()")
+      | Save
+   button.btn
+      | Cancel

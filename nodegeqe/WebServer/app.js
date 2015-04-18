@@ -24,8 +24,10 @@ app.use('/', require('./routes/index'));
 app.use('/login', require('./routes/login'));
 app.use('/logout', require('./routes/logout'));
 app.use('/views/partials', require('./routes/partials'));
+
+app.use('/views/app', require('./routes/app/app'));
 app.use('/app/controlBox', require('./routes/app/controlBox'));
-app.use('/views/app', require('./routes/app'));
+app.use('/app/users', require('./routes/app/users'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

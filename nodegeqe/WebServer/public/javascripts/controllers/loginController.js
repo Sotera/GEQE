@@ -17,6 +17,8 @@ angular.module('NodeWebBase', ['ngCookies', 'ngDialog'])
 					withCredentials: true
 				})
 						.success(function (res) {
+							$cookies.userId = res.userId;
+							$cookies.access_token = res.id;
 							$cookies.lastUsername = $scope.data.username;
 							$cookies.rememberMe = $scope.data.rememberMe;
 							$window.location.href = '/';
