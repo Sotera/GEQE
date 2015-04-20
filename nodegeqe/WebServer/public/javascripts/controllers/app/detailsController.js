@@ -2,6 +2,7 @@ angular.module('NodeWebBase')
     .controller('detailsController', ['$scope','$rootScope', function ($scope, $rootScope) {
         $scope.data = null;
         $scope.currentItemIndex = null;
+        $scope.displayIndex = null;
         $scope.currentItem = {"usr":"unknown",
                                 "cap":"none",
                                 "sco":"0"};
@@ -10,17 +11,20 @@ angular.module('NodeWebBase')
             $scope.$apply(function () {
                 $scope.data = data;
                 $scope.currentItemIndex = 0;
+                $scope.displayIndex = 1;
                 $scope.currentItem = $scope.data.posts[0];
             });
         });
 
         $scope.next = function(){
             $scope.currentItemIndex++;
+            $scope.displayIndex = $scope.currentItemIndex+1;
             $scope.currentItem = $scope.data.posts[$scope.currentItemIndex];
         };
 
         $scope.previous = function(){
             $scope.currentItemIndex--;
+            $scope.displayIndex = $scope.currentItemIndex+1;
             $scope.currentItem = $scope.data.posts[$scope.currentItemIndex];
         };
 

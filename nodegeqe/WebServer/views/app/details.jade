@@ -2,7 +2,7 @@ div.fill.starter(ng-controller='detailsController')
    div.fill(id='details')
       div.fill-width
          nav.fill-width
-            h3 {{data.nTotal}} Items
+            h3 {{displayIndex}} of {{data.nTotal}} Items
             ul.pagination.resultsNav
                li(ng-click="previous()")
                   a(href="#" aria-label="Previous")
