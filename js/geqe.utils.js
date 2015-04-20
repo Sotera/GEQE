@@ -237,6 +237,7 @@ function gatherScores() {
         dataType: "json",
         success: function (response) {
             //clean old point array, needed to removed points from map if you decrease number of entries
+            debugger;
             for( ind=0; ind<scoredTweetArray.length; ind++)
             {
                 scoredTweetArray[ind].setMap(null);
@@ -248,16 +249,18 @@ function gatherScores() {
             var nTot = response.total;
             for( i=0; i<nTot; i++)
             {
-                var capPScor = response.cap[i] + " (" + response.lUser[i] + ") (" + response.sco[i] + ")";
-                var shiftLat = parseFloat(response.lat[i])+fBin/2;
-                if(parseFloat(response.lat[i]) < 0.0)
+                var capPScor = response.sco[i]['index'].toString();
+                var strLat = response.sco[i]['lat'];
+                var strLon = response.sco[i]['lon']
+                var shiftLat = parseFloat(strLat)+fBin/2;
+                if(parseFloat(strLat) < 0.0)
                 {
-                	shiftLat = parseFloat(response.lat[i])-fBin/2;
+                	shiftLat = parseFloat(strLat)-fBin/2;
                 }
-                var shiftLon = parseFloat(response.lon[i])+fBin/2;
-                if(parseFloat(response.lon[i]) < 0.0)
+                var shiftLon = parseFloat(strLon)+fBin/2;
+                if(parseFloat(strLon) < 0.0)
                 {
-                	shiftLon = parseFloat(response.lon[i])-fBin/2;
+                	shiftLon = parseFloat(strLon)-fBin/2;
                 }
                 var tweetLatlng = new google.maps.LatLng(shiftLat, shiftLon);
                 m = putScoreMarker(tweetLatlng, capPScor);
