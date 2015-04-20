@@ -27,7 +27,14 @@ html{
     width: 100%;
     height:100%;
     border: 4px solid rgba(0, 0, 0, 0.298039);
+    overflow: auto;
 }
+
+.detailsImg{
+    display:block;
+    margin:auto;
+}
+
 #controlBox {
     height: 258px;
     padding: 10px;
@@ -74,6 +81,8 @@ html{
     /* Set the fixed height of the footer here */
     height: 300px;
 }
+
+
 
 .tabs {
     margin: 4px;

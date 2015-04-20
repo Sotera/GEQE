@@ -1,2 +1,38 @@
-div.fill.starter
+div.fill.starter(ng-controller='detailsController')
    div.fill(id='details')
+      div.container-full
+         div.row
+            div.col-lg-3
+            div.col-lg-6
+               nav.detailsImg
+                  ul.pagination
+                     li
+                        a(href="#" aria-label="Previous")
+                           span( aria-hidden="true") &laquo;
+                     li
+                        a(href="#") 1
+                     li
+                        a(href="#") 2
+                     li
+                        a(href="#") 3
+                     li
+                        a(href="#") 4
+                     li
+                        a(href="#" aria-label="Next")
+                           span( aria-hidden="true") &raquo;
+            div.col-lg-3
+         div.row
+            div.col-lg-1
+            div.col-lg-10
+               img.img-responsive.detailsImg(src="http://localhost:3000/images/blank.png")
+            div.col-lg-1
+         div.row
+            div.col-lg-1
+            div.col-lg-10
+                  h3 John Doe
+                  div.caption
+                  p Details or caption will go here.  This will be filled with useful information.
+                  p
+                     a.btn.btn-xs.btn-primary(href="#" role="button") Button
+                     a.btn.btn-xs.btn-default(href="#" role="button") Button
+            div.col-lg-1

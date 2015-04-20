@@ -166,6 +166,10 @@ label {
     height:100%;
 }
 
+.fill-width{
+    width:100%;
+}
+
 button i {
     padding-left: 8px;
 }
