@@ -4,7 +4,7 @@ var router = express.Router();
 var netHelpers = require('../../utilExports/netHelpers');
 
 router.get('/:vp', function (req, res) {
-    netHelpers.performAjaxRequest('0.0.0.0', 5500, '/api/1users' + req.url, 'GET', null,function (resultObject) {
+    netHelpers.performAjaxRequest('0.0.0.0', 5500, '/api/users' + req.url, 'GET', null,function (resultObject) {
         if (resultObject.error) {
             res.status(resultObject.error.status).send(resultObject.error.message);
             return;

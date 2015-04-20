@@ -35,6 +35,12 @@ html{
     margin:auto;
 }
 
+.detailssNav
+{
+    width: 70%;
+    margin: auto;
+}
+
 #controlBox {
     height: 258px;
     padding: 10px;

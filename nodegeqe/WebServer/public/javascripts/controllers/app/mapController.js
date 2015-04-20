@@ -15,16 +15,6 @@ angular.module('NodeWebBase')
             $scope.drawPolygonFile(data);
         });
 
-        $rootScope.$on('putScoreMarkers', function (event, data) {
-            var locations = [];
-            angular.forEach(data,function(markerData){
-                var markerLocation = new google.maps.LatLng(markerData.lat, markerData.lon);
-                locations.push(markerLocation);
-                $scope.putScoreMarker(markerLocation, markerData.caption);
-            });
-            $scope.calculateBounds(locations);
-        });
-
         $rootScope.$on('clearCurrentMarkers', function () {
             $scope.clearCurrentMarkers();
         });
@@ -63,6 +53,7 @@ angular.module('NodeWebBase')
             shape.setEditable(true);
             $scope.shapes.push(shape);
         };
+
 
         google.maps.event.addListener(drawingManager, 'polygoncomplete', handleShape);
         google.maps.event.addListener(drawingManager, 'rectanglecomplete', handleShape);
@@ -245,14 +236,43 @@ angular.module('NodeWebBase')
             $scope.markers = [];
         };
 
-        $scope.putScoreMarker = function(location, caption) {
+        $scope.putScoreMarker = function(location, caption, item) {
             var marker = new google.maps.Marker({
                 position: location,
                 title:caption
             });
             marker.setMap($scope.map);
             $scope.markers.push(marker);
+            google.maps.event.addListener(marker, 'click', function() {
+                $rootScope.$emit("loadItemData",item);
+            });
         };
+
+        $rootScope.$on('putScoreMarkers', function (event, data, binSize) {
+            var locations = [];
+            angular.forEach(data, function(item){
+                var capPScor = item['index'].toString();
+                var strLat = item['lat'];
+                var strLon = item['lon'];
+
+                var shiftLat = parseFloat(strLat)+binSize/2;
+                if(parseFloat(strLat) < 0.0){
+                    shiftLat = parseFloat(strLat)-binSize/2;
+                }
+
+                var shiftLon = parseFloat(strLon)+binSize/2;
+                if(parseFloat(strLon) < 0.0){
+                    shiftLon = parseFloat(strLon)-binSize/2;
+                }
+
+                var markerLocation = new google.maps.LatLng(shiftLat, shiftLon);
+                locations.push(markerLocation);
+                $scope.putScoreMarker(markerLocation, capPScor, item);
+
+            });
+
+            $scope.calculateBounds(locations);
+        });
 
         $scope.renderKmlFile = function(file) {
             var reader = new FileReader();

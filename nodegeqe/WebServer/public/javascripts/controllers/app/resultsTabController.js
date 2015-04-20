@@ -71,33 +71,7 @@ angular.module('NodeWebBase')
                 success: function (response) {
                     //clean old point array, needed to removed points from map if you decrease number of entries
                     $rootScope.$emit("clearCurrentMarkers");
-
-                    //create new points
-                    var markerData = [];
-                    angular.forEach(response.sco, function(item){
-                        var capPScor = item['index'].toString();
-                        var strLat = item['lat'];
-                        var strLon = item['lon']
-                        var shiftLat = parseFloat(strLat)+fBin/2;
-                        if(parseFloat(strLat) < 0.0)
-                        {
-                            shiftLat = parseFloat(strLat)-fBin/2;
-                        }
-                        var shiftLon = parseFloat(strLon)+fBin/2;
-                        if(parseFloat(strLon) < 0.0)
-                        {
-                            shiftLon = parseFloat(strLon)-fBin/2;
-                        }
-
-                        markerData.push({"lat":parseFloat(shiftLat),
-                            "lon":parseFloat(shiftLon),
-                            "caption": capPScor});
-                    });
-
-                    if(markerData.length > 0){
-                        $rootScope.$emit("putScoreMarkers",markerData);
-                    }
-
+                    $rootScope.$emit("putScoreMarkers",response.sco, fBin);
 
                     //write dictionary to results box
                     var strRet = '';
