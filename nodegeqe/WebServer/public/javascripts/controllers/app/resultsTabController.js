@@ -73,25 +73,26 @@ angular.module('NodeWebBase')
                     $rootScope.$emit("clearCurrentMarkers");
 
                     //create new points
-                    var nTot = response.total;
                     var markerData = [];
-                    for( i=0; i<nTot; i++)
-                    {
-                        var capPScor = response.cap[i] + " (" + response.lUser[i] + ") (" + response.sco[i] + ")";
-                        var shiftLat = parseFloat(response.lat[i])+fBin/2;
-                        if(parseFloat(response.lat[i]) < 0.0)
+                    angular.forEach(response.sco, function(item){
+                        var capPScor = item['index'].toString();
+                        var strLat = item['lat'];
+                        var strLon = item['lon']
+                        var shiftLat = parseFloat(strLat)+fBin/2;
+                        if(parseFloat(strLat) < 0.0)
                         {
-                            shiftLat = parseFloat(response.lat[i])-fBin/2;
+                            shiftLat = parseFloat(strLat)-fBin/2;
                         }
-                        var shiftLon = parseFloat(response.lon[i])+fBin/2;
-                        if(parseFloat(response.lon[i]) < 0.0)
+                        var shiftLon = parseFloat(strLon)+fBin/2;
+                        if(parseFloat(strLon) < 0.0)
                         {
-                            shiftLon = parseFloat(response.lon[i])-fBin/2;
+                            shiftLon = parseFloat(strLon)-fBin/2;
                         }
+
                         markerData.push({"lat":parseFloat(shiftLat),
                             "lon":parseFloat(shiftLon),
                             "caption": capPScor});
-                    }
+                    });
 
                     if(markerData.length > 0){
                         $rootScope.$emit("putScoreMarkers",markerData);
