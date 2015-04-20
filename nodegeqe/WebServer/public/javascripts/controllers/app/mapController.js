@@ -241,9 +241,15 @@ angular.module('NodeWebBase')
                 position: location,
                 title:caption
             });
+            marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
             marker.setMap($scope.map);
             $scope.markers.push(marker);
             google.maps.event.addListener(marker, 'click', function() {
+                marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+                if($scope.selectedMarker){
+                    $scope.selectedMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+                }
+                $scope.selectedMarker = marker;
                 $rootScope.$emit("loadItemData",item);
             });
         };
