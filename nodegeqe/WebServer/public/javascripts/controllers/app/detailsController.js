@@ -2,7 +2,9 @@ angular.module('NodeWebBase')
     .controller('detailsController', ['$scope','$rootScope', function ($scope, $rootScope) {
         $scope.data = null;
         $scope.currentItemIndex = null;
-        $scope.currentItem = {"usr":"unknown"};
+        $scope.currentItem = {"usr":"unknown",
+                                "cap":"none",
+                                "sco":"0"};
 
         $rootScope.$on('loadItemData', function (event, data) {
             $scope.$apply(function () {

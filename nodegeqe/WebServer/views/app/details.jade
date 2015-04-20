@@ -2,6 +2,7 @@ div.fill.starter(ng-controller='detailsController')
    div.fill(id='details')
       div.fill-width
          nav.fill-width
+            h3 {{data.nTotal}} Items
             ul.pagination.resultsNav
                li(ng-click="previous()")
                   a(href="#" aria-label="Previous")
@@ -19,9 +20,7 @@ div.fill.starter(ng-controller='detailsController')
             div.col-lg-1
             div.col-lg-10
                   h3 {{currentItem.usr}}
+                  p score: {{currentItem.sco}}
                   div.caption
-                  p Details or caption will go here.  This will be filled with useful information.
-                  p
-                     a.btn.btn-xs.btn-primary(href="#" role="button" ng-click="getUser()") Button
-                     a.btn.btn-xs.btn-default(href="#" role="button" ng-click="next()") Button
+                  p {{currentItem.cap}}
             div.col-lg-1
