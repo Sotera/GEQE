@@ -1,7 +1,7 @@
 var querystring = require('querystring');
 var http = require('http');
 
-exports.performAjaxRequest = function (hostname, port, path, method, data, success) {
+exports.performAjaxRequest = function (hostname, port, path, method, data, success, error) {
 	var dataString = null;
 	var headers = {};
 
@@ -51,8 +51,13 @@ exports.performAjaxRequest = function (hostname, port, path, method, data, succe
 		req.write(dataString);
 	}
 
+	req.on('error', function(e) {
+		if(error)
+			error(e);
+	});
+
 	req.end();
-}
+};
 
 exports.getHostname = function (cb) {
 	var interfaces = require('os').networkInterfaces();
@@ -68,7 +73,7 @@ exports.getHostname = function (cb) {
 			}
 		}
 	}
-}
+};
 
 exports.getCookies = function (req) {
 	var cookies = {};
@@ -77,14 +82,14 @@ exports.getCookies = function (req) {
 		cookies[parts[0].trim()] = (parts[1] || '').trim();
 	});
 	return cookies;
-}
+};
 
 exports.setCookies = function (res, cookies) {
 	//Example only, this won't work right !!
 	res.writeHead(200, {
 		'Set-Cookie': 'mycookie=test'
 	});
-}
+};
 
 //JReeme sez: I lifted this from the http-proxy NPM and modified it a taste so I could get the complete
 //POST buffer before making the proxyRequest.

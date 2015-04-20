@@ -3,7 +3,7 @@ angular.module('NodeWebBase', ['ngCookies', 'ngDialog'])
 			//$locationProvider.html5Mode(true);
 		})
 		.constant('authUrl', 'http://localhost:3000/login')
-		.controller('loginController', function ($scope, $http, $window, $cookies, authUrl, ngDialog) {
+		.controller('loginController', function ($scope, $http, $window, $cookies, $rootScope, authUrl, ngDialog) {
 			// Do the whole check cookies for last username, etc.
 			$scope.data = {
 				rememberMe: $cookies.rememberMe === 'true',

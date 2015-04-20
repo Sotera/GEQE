@@ -17,7 +17,7 @@ angular.module('NodeWebBase')
 
         $rootScope.$on('putScoreMarkers', function (event, data) {
             var locations = [];
-            $.each(data,function(idx,markerData){
+            angular.forEach(data,function(markerData){
                 var markerLocation = new google.maps.LatLng(markerData.lat, markerData.lon);
                 locations.push(markerLocation);
                 $scope.putScoreMarker(markerLocation, markerData.caption);
@@ -25,15 +25,15 @@ angular.module('NodeWebBase')
             $scope.calculateBounds(locations);
         });
 
-        $rootScope.$on('clearCurrentMarkers', function (event) {
+        $rootScope.$on('clearCurrentMarkers', function () {
             $scope.clearCurrentMarkers();
         });
 
-        $rootScope.$on('clearCurrentShapes', function (event) {
+        $rootScope.$on('clearCurrentShapes', function () {
             $scope.clearCurrentShapes();
         });
 
-        $rootScope.$on('clearAll', function (event) {
+        $rootScope.$on('clearAll', function () {
             $scope.clearAll();
         });
 
@@ -111,7 +111,7 @@ angular.module('NodeWebBase')
 
         $scope.calculateBounds = function(locations){
             var bounds = new google.maps.LatLngBounds();
-            $.each(locations,function(idx,location){
+            angular.forEach(locations,function(location,idx){
                 bounds.extend(location);
             });
             $scope.map.fitBounds(bounds);
@@ -120,7 +120,7 @@ angular.module('NodeWebBase')
         $scope.getShapesText = function()
         {
             var shapesText = "";
-            $.each($scope.shapes, function(index, shape){
+            angular.forEach($scope.shapes, function(shape, index){
                 shapesText += $scope.getTextFromShape(index,shape);
             });
             return shapesText;
@@ -136,7 +136,7 @@ angular.module('NodeWebBase')
             var vertices = shape.getPath().getArray();
             var text = "";
 
-            $.each(vertices,function(idx,vert){
+            angular.forEach(vertices,function(vert,idx){
                 var lat = vert["k"];
                 var lng = vert["D"];
                 text += index + ","+lat+","+lng+"\n";
@@ -158,7 +158,7 @@ angular.module('NodeWebBase')
 
             var text = "";
 
-            $.each(vertices,function(idx,vert){
+            angular.forEach(vertices,function(vert,idx){
                 var lat = vert["k"];
                 var lng = vert["D"];
                 text += index + ","+lat+","+lng+"\n";
@@ -181,7 +181,7 @@ angular.module('NodeWebBase')
                     var latLngs = [];
                     var latLngList = [];
 
-                    $.each(vertStrings, function(idx,vertString){
+                    angular.forEach(vertStrings, function(vertString,idx){
                         if(vertString === "")
                             return;
                         var vertData = vertString.split(",");
@@ -195,7 +195,7 @@ angular.module('NodeWebBase')
                         latLngList.push(latlng);
                     });
 
-                    $.each(latLngs, function(idx,points){
+                    angular.forEach(latLngs, function(points,idx){
                         if(points===null || points === undefined)
                             return;
                         var polygon = new google.maps.Polygon({
@@ -228,7 +228,7 @@ angular.module('NodeWebBase')
         };
 
         $scope.clearCurrentShapes = function(){
-            $.each($scope.shapes,function(idx,shape){
+            angular.forEach($scope.shapes,function(shape,idx){
                 shape.setMap(null);
                 $scope.shapes[idx] = null;
             });
@@ -237,7 +237,7 @@ angular.module('NodeWebBase')
         };
 
         $scope.clearCurrentMarkers = function(){
-            $.each($scope.markers,function(idx,marker){
+            angular.forEach($scope.markers,function(marker,idx){
                 marker.setMap(null);
                 $scope.markers[idx] = null;
             });

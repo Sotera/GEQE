@@ -22,9 +22,7 @@ angular.module('NodeWebBase')
                         elmSel.options[i+1] = new Option(lFiles[i], lFiles[i], false, false);
                     }
                 },
-                error: function(jqxhr, testStatus, reason) {
-                    $("#resultsText").text(reason);
-                }
+                error: $rootScope.showError
             });
         };
 
@@ -47,9 +45,7 @@ angular.module('NodeWebBase')
                         elmSel.options[i+1] = new Option(lFiles[i], lFiles[i], false, false);
                     }
                 },
-                error: function(jqxhr, testStatus, reason) {
-                    $("#resultsText").text(reason);
-                }
+                error: $rootScope.showError
             });
         };
 
@@ -126,9 +122,7 @@ angular.module('NodeWebBase')
                     }
                     $rootScope.$emit("displayResults",strRet)
                 },
-                error: function (jqxhr, testStatus, reason) {
-                    $rootScope.$emit("displayResults",reason)
-                }
+                error: $rootScope.showError
             });
         };
 
@@ -161,26 +155,5 @@ angular.module('NodeWebBase')
             });
             fileSelector.click();
         };
-    })
-    .directive('dropTarget', function($rootScope){
-        return{
-            link:function(scope, element, attrs){
-
-                element.bind('dragover', function(evt){
-                    evt.stopPropagation();
-                    evt.preventDefault();
-                    evt.dropEffect = 'copy'; // Explicitly show this is a copy.
-                });
-
-                element.bind('drop', function(evt){
-                    evt.stopPropagation();
-                    evt.preventDefault();
-
-                    var files = evt.dataTransfer.files;
-
-                    $rootScope.$emit("renderKmlFile",files[0])
-                });
-            }
-        }
-
     });
+

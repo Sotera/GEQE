@@ -1,4 +1,4 @@
-angular.module('logout', [])
+angular.module('logout', ['ngCookies'])
 	.factory('logout', function () {
 		return {
 
@@ -8,8 +8,7 @@ angular.module('logout', [])
 		return{
 			restrict: 'E',
 			templateUrl: '/views/partials/logout',
-			controller: function($scope){
-
-			}
+			controller: ['$scope',function($scope){
+			}]
 		};
 	});

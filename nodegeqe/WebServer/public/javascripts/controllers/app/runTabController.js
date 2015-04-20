@@ -22,9 +22,7 @@ angular.module('NodeWebBase')
                         success: function (response) {
                             $("#resultsText").text(pName + " written");
                         },
-                        error: function (jqxhr, testStatus, reason) {
-                            $("#resultsText").text(reason);
-                        }
+                        error: $rootScope.showError
                     });
                 }
             });
@@ -61,9 +59,7 @@ angular.module('NodeWebBase')
                 success: function (response) {
                     $("#resultsText").text("Job Launched");
                 },
-                error: function (jqxhr, testStatus, reason) {
-                    $("#resultsText").text(reason);
-                }
+                error: $rootScope.showError
             });
         };
         $scope.modReturn = function() {

@@ -24,6 +24,9 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
                             controller: ['$scope', function ($scope) {
                                 $scope.url = userUrl + "/" + $cookies.userId ;
                                 $scope.data = res;
+                                $scope.cancel = function(){
+                                    $scope.closeThisDialog(null);
+                                };
                                 $scope.save = function(){
                                     $http.post($scope.url,{
                                         "fullname": $scope.data.fullname,
@@ -32,21 +35,31 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
                                         params: {
                                             access_token: $cookies.access_token
                                         }
-                                    })
+                                    }).success(function (res) {
+                                        $scope.closeThisDialog(null);
+                                    }).error(function (error) {
+                                        ngDialog.openConfirm({
+                                            template: '/views/app/genericError',
+                                            controller: ['$scope', function ($scope) {
+                                                $scope.errorMessage = error;
+                                                $scope.close = function () {
+                                                    $scope.closeThisDialog(null);
+                                                }
+                                            }]
+                                        });
+                                    });
                                 }
 
                             }]
                         });
                     })
                     .error(function (error) {
-                        $scope.authenticationError = error;
                         ngDialog.openConfirm({
-                            template: '/views/partials/error',
+                            template: '/views/app/genericError',
                             controller: ['$scope', function ($scope) {
-                                $scope.message1 = 'hello!!!!';
-                                $scope.logout = function () {
+                                $scope.errorMessage = error;
+                                $scope.close = function () {
                                     $scope.closeThisDialog(null);
-                                    window.location.href = '/';
                                 }
                             }]
                         });

@@ -22,9 +22,7 @@ angular.module('NodeWebBase')
                 success: function (response) {
                     $("#resultsText").text("Test Launched");
                 },
-                error: function (jqxhr, testStatus, reason) {
-                    $("#resultsText").text(reason);
-                }
+                error: $rootScope.showError
             });
         };
 
@@ -54,9 +52,7 @@ angular.module('NodeWebBase')
                     }
                     $("#resultsText").html(strRet);
                 },
-                error: function (jqxhr, testStatus, reason) {
-                    $("#resultsText").text(reason);
-                }
+                error: $rootScope.showError
             });
         }
 

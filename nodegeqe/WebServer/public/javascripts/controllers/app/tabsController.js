@@ -1,5 +1,5 @@
 angular.module('NodeWebBase')
-    .controller('tabsController', function ($scope, $rootScope) {
+    .controller('tabsController', function ($scope) {
         $scope.tabs = [{
             title: 'Results',
             url: 'one.tpl.html'
@@ -10,11 +10,6 @@ angular.module('NodeWebBase')
             title: 'Test',
             url: 'three.tpl.html'
         }];
-
-        $rootScope.baseUrl = "http://localhost:3000/";
-        $rootScope.savePath = "/home/jlueders/src/geqe/exSrc/";
-        //$scope.savePath = "/home/jgartner/findSP/";
-        $rootScope.fileSubDir = "inputFiles/";
 
         $scope.currentTab = 'one.tpl.html';
 

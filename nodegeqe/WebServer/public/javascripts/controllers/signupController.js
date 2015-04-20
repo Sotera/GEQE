@@ -1,4 +1,4 @@
-angular.module('NodeWebBase', [])
+angular.module('NodeWebBase')
 		.constant('signupUrl', 'http://localhost:3000/login/signup')
 		.config(function($locationProvider){
 			//$locationProvider.html5Mode(true);
