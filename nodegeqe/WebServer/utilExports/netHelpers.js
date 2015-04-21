@@ -42,6 +42,7 @@ exports.performAjaxRequest = function (hostname, port, path, method, data, succe
 				responseObject = JSON.parse(responseString);
 			}catch(e){
 				responseObject = responseString;
+				console.log(responseString);
 			}
 			success(responseObject);
 		});

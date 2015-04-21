@@ -1,5 +1,6 @@
 angular.module('NodeWebBase')
     .controller('mainController', function ($scope, $rootScope,ngDialog) {
+        $scope.scopeName = "mainController";
         $rootScope.baseUrl = "http://localhost:3000/";
         $rootScope.savePath = "/home/jlueders/src/geqe/exSrc/";
         //$scope.savePath = "/home/jgartner/findSP/";
@@ -15,5 +16,15 @@ angular.module('NodeWebBase')
                     }
                 }]
             });
+        };
+        $scope.sizes = [];
+        $scope.setStyle = function(style)
+        {
+            $scope.$apply(function () {
+                $scope.style = style;
+                $scope.sizes.push(style.height);
+            });
+
+
         };
     });

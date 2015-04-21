@@ -1,5 +1,6 @@
 angular.module('NodeWebBase')
     .controller('detailsController', ['$scope','$rootScope', function ($scope, $rootScope) {
+        $scope.scopeName = 'detailsController';
         $scope.data = null;
         $scope.currentItemIndex = null;
         $scope.displayIndex = null;
@@ -43,6 +44,8 @@ angular.module('NodeWebBase')
         };
 
         $scope.next = function(){
+            if(!$scope.data || !$scope.data.posts)
+                return;
             $scope.currentItemIndex++;
 
             if($scope.currentItemIndex >= $scope.data.posts.length)
@@ -55,6 +58,8 @@ angular.module('NodeWebBase')
         };
 
         $scope.previous = function(){
+            if(!$scope.data || !$scope.data.posts)
+                return;
             $scope.currentItemIndex--;
 
             if($scope.currentItemIndex < 0)

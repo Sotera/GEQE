@@ -7,51 +7,51 @@ div.tabs(id="tabs" ng-controller="tabsController")
 
 script(type="text/ng-template" id="one.tpl.html")
    div.tab( id="viewOne" ng-controller="resultsTabController")
-      table(style="width:100%")
-         tr
-            td
+      div.container-fluid
+         div.row
+            div.col-lg-4
                button(type="button" class="btn btn-default" ng-click='populatePolygonSelect()') Get Polygon Files
-            td
+            div.col-lg-4
                select(name="polygonSelect" id="polygonSelect")
                   option(value="0") -Select-
                button(type="button" class="btn btn-default btn-xs" ng-click="drawPolygonFile()") Load File
-            td
+            div.col-lg-4
                |Clear:
                button(type="button" class="btn btn-default btn-xs" ng-click="clearResults()") Results
                button(type="button" class="btn btn-default btn-xs" ng-click="clearShapes()") Shapes
                button(type="button" class="btn btn-default btn-xs" ng-click="clearMarkers()") Markers
                button(type="button" class="btn btn-default btn-xs" ng-click="clearAll()") All
-
-         tr
-            td
+         div.row
+            div.col-lg-4
                button( type="button" class="btn btn-default" ng-click="popScore()") Get Score Files
-            td
+            div.col-lg-4
                select( name="scoreSelect" id="scoreSelect")
                   option( value="0") -Select-
-         tr
-            td
+         div.row
+            div.col-lg-4
                button(type="button" class="btn btn-default" ng-click="gatherScores()") Get Scores
-            td
+            div.col-lg-4
                | Max Points:
                input( id="sMaxEntries" value="-1" style="width:40px")
-         tr
-            td
+         div.row
+            div.col-lg-4
                label(for='aggScores')
-                  input(type="checkbox" id="aggScores" name="aggScores")
-                  | Bin by Lat-Lon
-            td
+               input(type="checkbox" id="aggScores" name="aggScores")
+               | Bin by Lat-Lon
+            div.col-lg-4
                label(for="sBinSize")
                   input(type="text" id="sBinSize" value=".005")
                   | Bin Size
-         tr
-            td
+         div.row
+            div.col-lg-4
                label(for='aggTime')
                   input( type="checkbox" id="aggTime" name="aggTime")
                   | Bin as time series
-            td
+            div.col-lg-4
                label(for='uniqueUser')
                   input(type="checkbox" id="uniqueUser")
                   | Count only unique users
+
 script( type="text/ng-template" id="two.tpl.html")
    div.tab( id="viewTwo" ng-controller="runTabController")
       table( style="width:100%")

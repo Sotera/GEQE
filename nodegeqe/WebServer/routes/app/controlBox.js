@@ -13,6 +13,7 @@ router.get('/:vp', function (req, res) {
 
         res.status(200).send(resultObject);
     },function (error) {
+            console.log(error.message);
             res.status(500).send(error.message);
     })
 });

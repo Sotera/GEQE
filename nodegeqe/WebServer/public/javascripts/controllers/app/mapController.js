@@ -1,6 +1,7 @@
 angular.module('NodeWebBase')
    .controller('mapController', function ($scope, $rootScope) {
         $scope.data = {};
+        $scope.scopeName = 'mapController';
         var myLatlng = new google.maps.LatLng(41.495753190958816,-81.70090198516846);
         var mapOptions = {
             zoom: 10,
