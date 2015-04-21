@@ -15,6 +15,8 @@ angular.module('NodeWebBase')
                 $scope.currentItemIndex = 0;
                 $scope.displayIndex = 1;
                 $scope.currentItem = $scope.data.posts[0];
+                $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
+                $("#caption").html($scope.displayCaptionHtml);
             });
         });
 
