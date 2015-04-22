@@ -65,14 +65,14 @@ script( type="text/ng-template" id="two.tpl.html")
                a(href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;") View Progress
          tr
             td
-               button(type="button" class="btn btn-default" ng-click="saveList()") Save Polygon File
+               button.btn.btn-default.btn-xs(ng-click="saveList()") Save Polygon File
             td
                input(type="text" id="pSavePath" readonly="True" disabled)
             td
                input( type="text" id="pFileName" value="polyFile.txt")
          tr
             td
-               button( type="button" class="btn btn-default" ng-click="applyScores()") Apply Scores
+               button.btn.btn-default.btn-xs(ng-click="applyScores()") Apply Scores
             td
                input(id="sFileName" value="scores.csv")
             td
@@ -118,14 +118,14 @@ script( type="text/ng-template" id="three.tpl.html")
       table( style="width:100%")
          tr
             td
-               button( type="button" class="btn btn-default" ng-click="launchTest()") Cross Validate
+               button.btn.btn-default.btn-xs(ng-click="launchTest()") Cross Validate
             td
                input( type="text" id="tFileName" value="testSummary.csv")
             td
                a(href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;") View Progress
          tr
             td
-               button(type="button" class="btn btn-default" ng-click="gatherTest()") Get Results
+               button.btn.btn-default.btn-xs(ng-click="gatherTest()") Get Results
             td Mean:
                input( id="inMean" type="text" readonly="True" value="Test Mean" style="width:65px")
             td Variance:
