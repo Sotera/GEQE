@@ -3,7 +3,7 @@
  */
 angular.module('NodeWebBase')
     .controller('runTabController', function ($scope, $rootScope) {
-        $scope.dataSets= ["Cleveland","Texas","dcArea"];
+        $scope.dataSets= [];
 
         $scope.getDataSets = function(){
             $.ajax({

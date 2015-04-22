@@ -121,5 +121,9 @@ angular.module('NodeWebBase')
             });
             fileSelector.click();
         };
+
+        ///INIT
+        $scope.popScore();
+        $scope.populatePolygonSelect();
     });
 
