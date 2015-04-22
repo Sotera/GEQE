@@ -1,10 +1,21 @@
 angular.module('NodeWebBase')
-    .controller('mainController', function ($scope, $rootScope,ngDialog) {
+    .constant('userUrl', 'app/users')
+    .controller('mainController', function ($scope, $rootScope, $http, $cookies, ngDialog) {
         $scope.scopeName = "mainController";
         $rootScope.baseUrl = "http://localhost:3000/";
-        $rootScope.savePath = "/home/jlueders/src/geqe/exSrc/";
+
+        //THESE ARE IN SETTINGS NOW..Please set them in the settings dialog
+        //$rootScope.savePath = "/home/jlueders/src/geqe/exSrc/";
         //$scope.savePath = "/home/jgartner/findSP/";
-        $rootScope.fileSubDir = "inputFiles/";
+        //$rootScope.fileSubDir = "inputFiles/";
+
+        $scope.initWithSettings = function(res){
+            $rootScope.savePath = res.savePath;
+            $rootScope.fileSubDir = res.inputSubDir;
+            $rootScope.fullname = res.fullname;
+
+            $rootScope.$emit("setfullname");
+        };
 
         $rootScope.showError = function(jqxhr, testStatus, reason){
             ngDialog.openConfirm({
@@ -27,4 +38,17 @@ angular.module('NodeWebBase')
 
 
         };
+
+        ///INIT
+        var url = $rootScope.baseUrl + "app/users/" + $cookies.userId ;
+
+        $http.get(url,{
+            params: {
+                access_token: $cookies.access_token
+            }
+        })
+            .success($scope.initWithSettings)
+            .error($rootScope.showError);
+        ///END INIT
+
     });

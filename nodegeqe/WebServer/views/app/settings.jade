@@ -12,6 +12,16 @@
             label.control-label(for='emailTextBox') Email
             .controls
                input#emailTextBox.input-xlarge(type='text', ng-model='data.email')
+      p.subheading System Configuration
+      fieldset
+         .control-group
+            label.control-label(for='savePathTextBox') Save Path
+            .controls
+               input#savePathTextBox.input-xlarge(type='text', ng-model='data.savePath')
+         .control-group
+            label.control-label(for='inputSubDirTextBox') Input Sub Dir
+            .controls
+               input#inputSubDirTextBox.input-xlarge(type='text', ng-model='data.inputSubDir')
 
 div.modal-footer
    button.btn.btn-primary(ng-click="save()")

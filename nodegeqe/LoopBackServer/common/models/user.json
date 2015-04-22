@@ -6,6 +6,12 @@
   "properties": {
     "rememberMe": {
       "type": "boolean"
+    },
+    "savePath": {
+      "type": "string"
+    },
+    "inputSubDir": {
+      "type": "string"
     }
   },
   "validations": [],

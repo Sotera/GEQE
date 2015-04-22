@@ -1,5 +1,5 @@
 angular.module('nbSettings', ['ngCookies','ngDialog'])
-    .constant('userUrl', 'http://localhost:3000/app/users')
+    .constant('userUrl', 'app/users')
     .factory('nbSettings', function () {
         return {
         };
@@ -8,62 +8,50 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
         return{
             restrict: 'E',
             templateUrl: '/views/app/settingsLink',
-            controller: function($scope, ngDialog, $http, $cookies){
-                $scope.openSettings = function(){
-                    var url = userUrl + "/" + $cookies.userId ;
+            controller: function($scope, ngDialog, $http, $cookies,$rootScope){
+
+                $scope.openSettings = function(res){
+                    ngDialog.openConfirm({
+                        template: '/views/app/settings',
+                        controller: ['$scope', function ($scope) {
+                            $scope.url = userUrl + "/" + $cookies.userId ;
+                            $scope.data = res;
+                            $scope.cancel = function(){
+                                $scope.closeThisDialog(null);
+                            };
+                            $scope.save = function(){
+                                $http.post($scope.url,{
+                                    "fullname": $scope.data.fullname,
+                                    "email": $scope.data.email,
+                                    "inputSubDir": $scope.data.inputSubDir,
+                                    "savePath":$scope.savePath
+                                },{
+                                    params: {
+                                        access_token: $cookies.access_token
+                                    }
+                                }).success(function (res) {
+                                    //update our root config vars
+                                    $rootScope.savePath = $scope.savePath;
+                                    $rootScope.fileSubDir = $scope.data.inputSubDir;
+                                    $rootScope.fullname = $scope.data.fullname;
+                                    $rootScope.$emit("setfullname");
+                                    $scope.closeThisDialog(null);
+                                }).error($rootScope.showError);
+                            };
+                        }]
+                    });
+                };
+
+                $scope.requestSettings = function(){
+                    var url = $rootScope.baseUrl + userUrl + "/" + $cookies.userId ;
 
                     $http.get(url,{
                         params: {
                             access_token: $cookies.access_token
                         }
                     })
-                    .success(function (res) {
-
-                        ngDialog.openConfirm({
-                            template: '/views/app/settings',
-                            controller: ['$scope', function ($scope) {
-                                $scope.url = userUrl + "/" + $cookies.userId ;
-                                $scope.data = res;
-                                $scope.cancel = function(){
-                                    $scope.closeThisDialog(null);
-                                };
-                                $scope.save = function(){
-                                    $http.post($scope.url,{
-                                        "fullname": $scope.data.fullname,
-                                        "email": $scope.data.email
-                                    },{
-                                        params: {
-                                            access_token: $cookies.access_token
-                                        }
-                                    }).success(function (res) {
-                                        $scope.closeThisDialog(null);
-                                    }).error(function (error) {
-                                        ngDialog.openConfirm({
-                                            template: '/views/app/genericError',
-                                            controller: ['$scope', function ($scope) {
-                                                $scope.errorMessage = error;
-                                                $scope.close = function () {
-                                                    $scope.closeThisDialog(null);
-                                                }
-                                            }]
-                                        });
-                                    });
-                                }
-
-                            }]
-                        });
-                    })
-                    .error(function (error) {
-                        ngDialog.openConfirm({
-                            template: '/views/app/genericError',
-                            controller: ['$scope', function ($scope) {
-                                $scope.errorMessage = error;
-                                $scope.close = function () {
-                                    $scope.closeThisDialog(null);
-                                }
-                            }]
-                        });
-                    });
+                    .success($scope.openSettings)
+                    .error($rootScope.showError);
                 };
             }
         };

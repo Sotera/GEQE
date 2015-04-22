@@ -4,11 +4,14 @@ angular.module('logout', ['ngCookies'])
 
 		};
 	})
-	.directive('logout', function () {
+	.directive('logout', function ($rootScope) {
 		return{
 			restrict: 'E',
 			templateUrl: '/views/partials/logout',
 			controller: ['$scope',function($scope){
+				$rootScope.$on('setfullname', function(){
+						$scope.fullname = $rootScope.fullname;
+				});
 			}]
 		};
 	});
