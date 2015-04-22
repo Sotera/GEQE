@@ -24,14 +24,14 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
                                     "fullname": $scope.data.fullname,
                                     "email": $scope.data.email,
                                     "inputSubDir": $scope.data.inputSubDir,
-                                    "savePath":$scope.savePath
+                                    "savePath":$scope.data.savePath
                                 },{
                                     params: {
                                         access_token: $cookies.access_token
                                     }
                                 }).success(function (res) {
                                     //update our root config vars
-                                    $rootScope.savePath = $scope.savePath;
+                                    $rootScope.savePath = $scope.data.savePath;
                                     $rootScope.fileSubDir = $scope.data.inputSubDir;
                                     $rootScope.fullname = $scope.data.fullname;
                                     $rootScope.$emit("setfullname");
