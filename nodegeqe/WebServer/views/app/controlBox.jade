@@ -10,26 +10,26 @@ script(type="text/ng-template" id="one.tpl.html")
       div.container-fluid
          div.row
             div.col-lg-4
-               button(type="button" class="btn btn-default" ng-click='populatePolygonSelect()') Get Polygon Files
+               button.btn.btn-default.btn-xs(ng-click='populatePolygonSelect()') Get Polygon Files
             div.col-lg-4
                select(name="polygonSelect" id="polygonSelect")
                   option( ng-repeat="item in polygonFiles" value="{{item}}") {{item}}
-               button(type="button" class="btn btn-default btn-xs" ng-click="drawPolygonFile()") Load File
+               button.btn.btn-default.btn-xs(ng-click="drawPolygonFile()") Draw File
             div.col-lg-4
                |Clear:
-               button(type="button" class="btn btn-default btn-xs" ng-click="clearResults()") Results
-               button(type="button" class="btn btn-default btn-xs" ng-click="clearShapes()") Shapes
-               button(type="button" class="btn btn-default btn-xs" ng-click="clearMarkers()") Markers
-               button(type="button" class="btn btn-default btn-xs" ng-click="clearAll()") All
+               button.btn.btn-default.btn-xs(ng-click="clearResults()") Results
+               button.btn.btn-default.btn-xs(ng-click="clearShapes()") Shapes
+               button.btn.btn-default.btn-xs(ng-click="clearMarkers()") Markers
+               button.btn.btn-default.btn-xs(ng-click="clearAll()") All
          div.row
             div.col-lg-4
-               button( type="button" class="btn btn-default" ng-click="popScore()") Get Score Files
+               button.btn.btn-default.btn-xs(ng-click="popScore()") Get Score Files
             div.col-lg-4
                select( name="scoreSelect" id="scoreSelect")
                   option( ng-repeat="item in scoreFiles" value="{{item}}") {{item}}
          div.row
             div.col-lg-4
-               button(type="button" class="btn btn-default" ng-click="gatherScores()") Get Scores
+               button.btn.btn-default.btn-xs(ng-click="gatherScores()") Get Scores
             div.col-lg-4
                | Max Points:
                input( id="sMaxEntries" value="-1" style="width:40px")
