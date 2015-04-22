@@ -64,8 +64,6 @@ div[class^="col-"]{
     font-family: Roboto, Arial;
     font-size: 13px;
     border-top: 1px solid lightblue;
-    border-right: 1px solid lightblue;
-    border-left: 1px solid lightblue;
 }
 #resultsBox {
     height: 228px;
@@ -75,8 +73,6 @@ div[class^="col-"]{
     font-family: Roboto, Arial;
     font-size: 13px;
     border-top: 1px solid lightblue;
-    border-right: 1px solid lightblue;
-    border-left: 1px solid lightblue;
 }
 #resultsText {
     position: relative;

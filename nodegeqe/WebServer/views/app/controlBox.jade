@@ -10,33 +10,33 @@ script(type="text/ng-template" id="one.tpl.html")
       div.container-fluid
          div.row
             div.col-lg-4
-               button(type="button" class="btn btn-default" ng-click='populatePolygonSelect()') Get Polygon Files
+               button.btn.btn-default.btn-xs(ng-click='populatePolygonSelect()') Get Polygon Files
             div.col-lg-4
                select(name="polygonSelect" id="polygonSelect")
-                  option(value="0") -Select-
-               button(type="button" class="btn btn-default btn-xs" ng-click="drawPolygonFile()") Load File
+                  option( ng-repeat="item in polygonFiles" value="{{item}}") {{item}}
+               button.btn.btn-default.btn-xs(ng-click="drawPolygonFile()") Draw File
             div.col-lg-4
                |Clear:
-               button(type="button" class="btn btn-default btn-xs" ng-click="clearResults()") Results
-               button(type="button" class="btn btn-default btn-xs" ng-click="clearShapes()") Shapes
-               button(type="button" class="btn btn-default btn-xs" ng-click="clearMarkers()") Markers
-               button(type="button" class="btn btn-default btn-xs" ng-click="clearAll()") All
+               button.btn.btn-default.btn-xs(ng-click="clearResults()") Results
+               button.btn.btn-default.btn-xs(ng-click="clearShapes()") Shapes
+               button.btn.btn-default.btn-xs(ng-click="clearMarkers()") Markers
+               button.btn.btn-default.btn-xs(ng-click="clearAll()") All
          div.row
             div.col-lg-4
-               button( type="button" class="btn btn-default" ng-click="popScore()") Get Score Files
+               button.btn.btn-default.btn-xs(ng-click="popScore()") Get Score Files
             div.col-lg-4
                select( name="scoreSelect" id="scoreSelect")
-                  option( value="0") -Select-
+                  option( ng-repeat="item in scoreFiles" value="{{item}}") {{item}}
          div.row
             div.col-lg-4
-               button(type="button" class="btn btn-default" ng-click="gatherScores()") Get Scores
+               button.btn.btn-default.btn-xs(ng-click="gatherScores()") Get Scores
             div.col-lg-4
                | Max Points:
                input( id="sMaxEntries" value="-1" style="width:40px")
          div.row
             div.col-lg-4
                label(for='aggScores')
-               input(type="checkbox" id="aggScores" name="aggScores")
+               input(type="checkbox" checked=true id="aggScores" name="aggScores")
                | Bin by Lat-Lon
             div.col-lg-4
                label(for="sBinSize")
@@ -59,22 +59,20 @@ script( type="text/ng-template" id="two.tpl.html")
             td
                b Data Set
             td
-               select( id="dataSetSelect" onchange="newCenter()")
-                  option( value="Cleveland") Cleveland
-                  option( value="Texas") Texas
-                  option(value="dcArea") Washington D.C.
+               select(id="dataSetSelect" onchange="newCenter()")
+                  option( ng-repeat="item in dataSets" value="{{item}}") {{item}}
             td
                a(href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;") View Progress
          tr
             td
-               button(type="button" class="btn btn-default" ng-click="saveList()") Save Polygon File
+               button.btn.btn-default.btn-xs(ng-click="saveList()") Save Polygon File
             td
                input(type="text" id="pSavePath" readonly="True" disabled)
             td
                input( type="text" id="pFileName" value="polyFile.txt")
          tr
             td
-               button( type="button" class="btn btn-default" ng-click="applyScores()") Apply Scores
+               button.btn.btn-default.btn-xs(ng-click="applyScores()") Apply Scores
             td
                input(id="sFileName" value="scores.csv")
             td
@@ -95,8 +93,8 @@ script( type="text/ng-template" id="two.tpl.html")
          tr( id="hr4" class="invis")
             td
                label(for='useML')
-                  input(type="checkbox" id="useML")
-                  | see M.L. Scoring
+                  input(type="checkbox" checked=true id="useML")
+                  | Use M.L. Scoring
             td Feature Vector Max Length
             td
                input( type="text" id="nFeat" value="300")
@@ -120,14 +118,14 @@ script( type="text/ng-template" id="three.tpl.html")
       table( style="width:100%")
          tr
             td
-               button( type="button" class="btn btn-default" ng-click="launchTest()") Cross Validate
+               button.btn.btn-default.btn-xs(ng-click="launchTest()") Cross Validate
             td
                input( type="text" id="tFileName" value="testSummary.csv")
             td
                a(href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;") View Progress
          tr
             td
-               button(type="button" class="btn btn-default" ng-click="gatherTest()") Get Results
+               button.btn.btn-default.btn-xs(ng-click="gatherTest()") Get Results
             td Mean:
                input( id="inMean" type="text" readonly="True" value="Test Mean" style="width:65px")
             td Variance:

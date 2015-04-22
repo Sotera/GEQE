@@ -3,7 +3,8 @@
  */
 angular.module('NodeWebBase')
     .controller('resultsTabController', function ($scope, $rootScope) {
-
+        $scope.scoreFiles = ["--select--"];
+        $scope.polygonFiles = ["--select--"];
         $scope.popScore = function() {
             $.ajax({
                 url:  $rootScope.baseUrl + "app/controlBox/popScoreList",
@@ -12,15 +13,10 @@ angular.module('NodeWebBase')
                 },
                 dataType: "json",
                 success: function (response) {
-                    var lFiles = response.lFiles;
-                    var nFiles = response.nFiles;
-                    var elmSel = document.getElementById("scoreSelect");
-                    elmSel.options.length=1;
+                    $scope.$apply(function(){
+                        $scope.scoreFiles = response.lFiles;
+                    });
 
-                    for(i=0; i<nFiles; i++)
-                    {
-                        elmSel.options[i+1] = new Option(lFiles[i], lFiles[i], false, false);
-                    }
                 },
                 error: $rootScope.showError
             });
@@ -35,15 +31,9 @@ angular.module('NodeWebBase')
                 },
                 dataType: "json",
                 success: function (response) {
-                    var lFiles = response.lFiles;
-                    var nFiles = response.nFiles;
-                    var elmSel = $("#polygonSelect").get(0);
-                    elmSel.options.length=1;
-
-                    for(i=0; i<nFiles; i++)
-                    {
-                        elmSel.options[i+1] = new Option(lFiles[i], lFiles[i], false, false);
-                    }
+                    $scope.$apply(function() {
+                        $scope.polygonFiles = response.lFiles;
+                    });
                 },
                 error: $rootScope.showError
             });
