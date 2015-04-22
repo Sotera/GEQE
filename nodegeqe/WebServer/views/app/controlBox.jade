@@ -13,7 +13,7 @@ script(type="text/ng-template" id="one.tpl.html")
                button(type="button" class="btn btn-default" ng-click='populatePolygonSelect()') Get Polygon Files
             div.col-lg-4
                select(name="polygonSelect" id="polygonSelect")
-                  option(value="0") -Select-
+                  option( ng-repeat="item in polygonFiles" value="{{item}}") {{item}}
                button(type="button" class="btn btn-default btn-xs" ng-click="drawPolygonFile()") Load File
             div.col-lg-4
                |Clear:
@@ -26,7 +26,7 @@ script(type="text/ng-template" id="one.tpl.html")
                button( type="button" class="btn btn-default" ng-click="popScore()") Get Score Files
             div.col-lg-4
                select( name="scoreSelect" id="scoreSelect")
-                  option( value="0") -Select-
+                  option( ng-repeat="item in scoreFiles" value="{{item}}") {{item}}
          div.row
             div.col-lg-4
                button(type="button" class="btn btn-default" ng-click="gatherScores()") Get Scores
@@ -59,10 +59,8 @@ script( type="text/ng-template" id="two.tpl.html")
             td
                b Data Set
             td
-               select( id="dataSetSelect" onchange="newCenter()")
-                  option( value="Cleveland") Cleveland
-                  option( value="Texas") Texas
-                  option(value="dcArea") Washington D.C.
+               select(id="dataSetSelect" onchange="newCenter()")
+                  option( ng-repeat="item in dataSets" value="{{item}}") {{item}}
             td
                a(href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;") View Progress
          tr
@@ -95,8 +93,8 @@ script( type="text/ng-template" id="two.tpl.html")
          tr( id="hr4" class="invis")
             td
                label(for='useML')
-                  input(type="checkbox" id="useML")
-                  | see M.L. Scoring
+                  input(type="checkbox" checked=true id="useML")
+                  | Use M.L. Scoring
             td Feature Vector Max Length
             td
                input( type="text" id="nFeat" value="300")
