@@ -5,9 +5,10 @@ div( ng-controller='detailsController')
                 h4.navbar-brand.my-navbar-brand {{displayIndex}} of {{data.nTotal}} Items
                 span(ng-click='previous()' title='Previous').noselect.navbar-button.btn-lg.glyphicon.glyphicon-backward.navbar-left.navbar-text
                 span(ng-click='next()' title='Next').noselect.navbar-button.btn-lg.glyphicon.glyphicon-forward.navbar-right.navbar-text
-            img.img-responsive.detailsImg(src="http://localhost:3000/images/blank.png")
+            img.img-responsive.detailsImg(ng-src="{{currentItem.img}}")
             h3.text-center {{currentItem.usr}}
         div
             p score: {{currentItem.sco}}
+            p date: {{currentItem.datetime}}
             div.caption
             p(id="caption")

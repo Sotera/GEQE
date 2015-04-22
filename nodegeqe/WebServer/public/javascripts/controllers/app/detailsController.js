@@ -6,10 +6,13 @@ angular.module('NodeWebBase')
         $scope.displayIndex = 0;
         $scope.displayCaptionHtml = "None";
         $scope.termArray = [];
-        $scope.currentItem = {"usr":"None Selected",
+        $scope.defaultItem = {  "img":"http://localhost:3000/images/blank.png",
+                                "usr":"None Selected",
                                 "cap":"",
                                 "sco":"",
-                                "nTotal":0};
+                                "nTotal":0,
+                                "datetime":""};
+        $scope.currentItem = $scope.defaultItem;
 
         $rootScope.$on('loadItemData', function (event, data) {
             $scope.$apply(function () {
