@@ -6,6 +6,9 @@ angular.module('NodeWebBase')
         $scope.scoreFiles = ["--select--"];
         $scope.polygonFiles = ["--select--"];
         $scope.popScore = function() {
+            if(!$rootScope.savePath)
+                return;
+
             $.ajax({
                 url:  $rootScope.baseUrl + "app/controlBox/popScoreList",
                 data : {
@@ -23,6 +26,8 @@ angular.module('NodeWebBase')
         };
 
         $scope.populatePolygonSelect = function() {
+            if(!$rootScope.savePath || !$rootScope.fileSubDir)
+                return;
             $.ajax({
                 url: $rootScope.baseUrl + "app/controlBox/popScoreList",
                 data : {
