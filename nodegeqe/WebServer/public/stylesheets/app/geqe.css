@@ -112,7 +112,7 @@ div[class^="col-"]{
     -ms-user-select: none;
     user-select: none;
 }
-.navbar-brand
+.my-navbar-brand
 {
     position: absolute;
     width: 100%;
