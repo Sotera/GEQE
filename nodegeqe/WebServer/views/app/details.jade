@@ -1,22 +1,13 @@
 div( ng-controller='detailsController')
-   div(ng-style="$parent.style" id='details')
-      div
-         nav.navbar.navbar-default.navbar-inverse
-            h4.navbar-brand.my-navbar-brand {{displayIndex}} of {{data.nTotal}} Items
-            span(ng-click='previous()' title='Previous').noselect.navbar-button.btn-lg.glyphicon.glyphicon-backward.navbar-left.navbar-text
-            span(ng-click='next()' title='Next').noselect.navbar-button.btn-lg.glyphicon.glyphicon-forward.navbar-right.navbar-text
-
-      div.container-fluid
-         div.row
-            div.col-lg-1
-            div.col-lg-10
-               img.img-responsive.detailsImg(src="http://localhost:3000/images/blank.png")
-            div.col-lg-1
-         div.row
-            div.col-lg-1
-            div.col-lg-10
-                  h3.text-center {{currentItem.usr}}
-                  p score: {{currentItem.sco}}
-                  div.caption
-                  p(id="caption")
-            div.col-lg-1
+    div(ng-style="$parent.style" id='details')
+        div
+            nav.navbar.navbar-default.navbar-inverse
+                h4.navbar-brand.my-navbar-brand {{displayIndex}} of {{data.nTotal}} Items
+                span(ng-click='previous()' title='Previous').noselect.navbar-button.btn-lg.glyphicon.glyphicon-backward.navbar-left.navbar-text
+                span(ng-click='next()' title='Next').noselect.navbar-button.btn-lg.glyphicon.glyphicon-forward.navbar-right.navbar-text
+            img.img-responsive.detailsImg(src="http://localhost:3000/images/blank.png")
+            h3.text-center {{currentItem.usr}}
+        div
+            p score: {{currentItem.sco}}
+            div.caption
+            p(id="caption")

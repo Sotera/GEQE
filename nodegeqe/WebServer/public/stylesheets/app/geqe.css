@@ -25,15 +25,16 @@ html{
 }
 
 #details{
-    overflow: auto;
     border: 1px solid lightblue;
     padding: 10px;
+    overflow: auto;
 }
 
 .detailsImg{
     display:block;
     margin:auto;
 }
+
 .container-fluid {
     margin:4px;
 }
@@ -56,11 +57,7 @@ div[class^="col-"]{
 .highlight{
     background-color: lightblue;
 }
-.detailsNav
-{
-    width: 70%;
-    margin: auto;
-}
+
 
 #controlBox {
     padding: 10px;
