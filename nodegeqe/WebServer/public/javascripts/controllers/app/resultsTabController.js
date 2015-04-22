@@ -3,8 +3,8 @@
  */
 angular.module('NodeWebBase')
     .controller('resultsTabController', function ($scope, $rootScope) {
-        $scope.scoreFiles = null;
-        $scope.polygonFiles = null;
+        $scope.scoreFiles = ["--select--"];
+        $scope.polygonFiles = ["--select--"];
         $scope.popScore = function() {
             $.ajax({
                 url:  $rootScope.baseUrl + "app/controlBox/popScoreList",

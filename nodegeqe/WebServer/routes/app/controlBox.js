@@ -7,10 +7,13 @@ router.get('/:vp', function (req, res) {
     var routeName = req.params.vp;
     netHelpers.performAjaxRequest('localhost', 8080, '/' + routeName, 'GET', req.query, function (resultObject) {
         if (resultObject.error) {
-            if(!resultObject || !resultObject.error || !resultObject.error.message){
-                res.status(501).send("Error processing request.");
+            if(!resultObject.error.message){
+                console.log(resultObject.traceback);
+                res.status(500).send(":" + resultObject.error);
+                return;
             }
-            res.status(resultObject.error.status).send(resultObject.error.message);
+            res.status(500).send(resultObject.error.message);
+            console.log(resultObject.traceback);
             return;
         }
 
