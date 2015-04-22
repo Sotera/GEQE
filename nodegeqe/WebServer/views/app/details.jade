@@ -1,15 +1,11 @@
 div( ng-controller='detailsController')
    div(ng-style="$parent.style" id='details')
       div
-         nav
-            h3 {{displayIndex}} of {{data.nTotal}} Items
-            ul.pagination.resultsNav
-               li(ng-click="previous()")
-                  a(href="#" aria-label="Previous")
-                     span( aria-hidden="true" ) &laquo;
-               li(ng-click="next()")
-                  a(href="#" aria-label="Next")
-                     span( aria-hidden="true" ) &raquo;
+         nav.navbar.navbar-default.navbar-inverse
+            h4.navbar-brand {{displayIndex}} of {{data.nTotal}} Items
+            span(ng-click='previous()' title='Previous').noselect.navbar-button.btn-lg.glyphicon.glyphicon-backward.navbar-left.navbar-text
+            span(ng-click='next()' title='Next').noselect.navbar-button.btn-lg.glyphicon.glyphicon-forward.navbar-right.navbar-text
+
       div.container-fluid
          div.row
             div.col-lg-1
@@ -19,7 +15,7 @@ div( ng-controller='detailsController')
          div.row
             div.col-lg-1
             div.col-lg-10
-                  h3 {{currentItem.usr}}
+                  h3.text-center {{currentItem.usr}}
                   p score: {{currentItem.sco}}
                   div.caption
                   p(id="caption")

@@ -1,14 +1,15 @@
 angular.module('NodeWebBase')
     .controller('detailsController', ['$scope','$rootScope', function ($scope, $rootScope) {
         $scope.scopeName = 'detailsController';
-        $scope.data = null;
+        $scope.data = {"nTotal":0};
         $scope.currentItemIndex = null;
-        $scope.displayIndex = null;
+        $scope.displayIndex = 0;
         $scope.displayCaptionHtml = "None";
         $scope.termArray = [];
-        $scope.currentItem = {"usr":"unknown",
-                                "cap":"none",
-                                "sco":"0"};
+        $scope.currentItem = {"usr":"None Selected",
+                                "cap":"",
+                                "sco":"",
+                                "nTotal":0};
 
         $rootScope.$on('loadItemData', function (event, data) {
             $scope.$apply(function () {

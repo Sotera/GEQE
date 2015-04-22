@@ -101,6 +101,25 @@ div[class^="col-"]{
     clear:both;
     content:'';
 }
+.navbar-button{
+    margin: auto;
+}
+.noselect {
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+.navbar-brand
+{
+    position: absolute;
+    width: 100%;
+    left: 0;
+    text-align: center;
+    margin: auto;
+}
 .tab-links li {
     margin:0px 5px;
     float:left;
