@@ -11,7 +11,7 @@ angular.module('NodeWebBase')
                                 "cap":"",
                                 "sco":"",
                                 "nTotal":0,
-                                "datetime":""};
+                                "date":""};
         $scope.currentItem = $scope.defaultItem;
 
         $rootScope.$on('loadItemData', function (event, data) {

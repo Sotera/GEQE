@@ -33,6 +33,7 @@ html{
 .detailsImg{
     display:block;
     margin:auto;
+    max-height: 256px;
 }
 
 .container-fluid {

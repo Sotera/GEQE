@@ -10,26 +10,28 @@ script(type="text/ng-template" id="one.tpl.html")
       div.container-fluid
          div.row
             div.col-lg-4
-               button.btn.btn-default.btn-xs(ng-click='populatePolygonSelect()') Get Polygon Files
-            div.col-lg-4
-               select(name="polygonSelect" id="polygonSelect")
+               | Polygon Files: &nbsp &nbsp
+               select.input-xs(name="polygonSelect" id="polygonSelect")
                   option( ng-repeat="item in polygonFiles" value="{{item}}") {{item}}
-               button.btn.btn-default.btn-xs(ng-click="drawPolygonFile()") Draw File
+               button.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='populatePolygonSelect()' title="Refresh file list.")
+               button.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="drawPolygonFile()" title="Draw polygons to the map.")
+
             div.col-lg-4
-               |Clear:
+               |Clear:&nbsp &nbsp
                button.btn.btn-default.btn-xs(ng-click="clearResults()") Results
                button.btn.btn-default.btn-xs(ng-click="clearShapes()") Shapes
                button.btn.btn-default.btn-xs(ng-click="clearMarkers()") Markers
                button.btn.btn-default.btn-xs(ng-click="clearAll()") All
          div.row
             div.col-lg-4
-               button.btn.btn-default.btn-xs(ng-click="popScore()") Get Score Files
-            div.col-lg-4
-               select( name="scoreSelect" id="scoreSelect")
+               |Score Files:&nbsp &nbsp
+               select.input-xs( name="scoreSelect" id="scoreSelect")
                   option( ng-repeat="item in scoreFiles" value="{{item}}") {{item}}
-         div.row
+               button.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="popScore()" title="Refresh file list.")
+               button.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="gatherScores()" title="Load scores.")
             div.col-lg-4
-               button.btn.btn-default.btn-xs(ng-click="gatherScores()") Get Scores
+
+         div.row
             div.col-lg-4
                | Max Points:
                input( id="sMaxEntries" value="-1" style="width:40px")
@@ -40,8 +42,8 @@ script(type="text/ng-template" id="one.tpl.html")
                | Bin by Lat-Lon
             div.col-lg-4
                label(for="sBinSize")
+                  |Bin Size:&nbsp &nbsp
                   input(type="text" id="sBinSize" value=".005")
-                  | Bin Size
          div.row
             div.col-lg-4
                label(for='aggTime')
