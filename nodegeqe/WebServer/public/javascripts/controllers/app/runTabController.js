@@ -5,6 +5,19 @@ angular.module('NodeWebBase')
     .controller('runTabController', function ($scope, $rootScope) {
         $scope.dataSets= ["Cleveland","Texas","dcArea"];
 
+        $scope.getDataSets = function(){
+            $.ajax({
+                url:  $rootScope.baseUrl + "app/controlBox/getDataSets",
+                dataType: "json",
+                success: function (response) {
+                    $scope.$apply(function(){
+                        $scope.dataSets= response;
+                    });
+
+                },
+                error: $rootScope.showError
+            });
+        };
         $scope.saveList = function(){
 
             $rootScope.$emit("getShapesText",
@@ -96,5 +109,8 @@ angular.module('NodeWebBase')
                 r4.addClass("invis");
                 r5.addClass("invis");
             }
-        }
+        };
+
+        //go ahead and get the data sets from the server
+        $scope.getDataSets();
     });
