@@ -1,0 +1,24 @@
+.modal-header
+    h3 Details
+.modal-body
+    form(novalidate)#signup-form.well.span4
+        p.subheading Shape Details
+        fieldset
+            .control-group
+                label.control-label(for='nameTextBox') Name
+                .controls
+                    input#nameTextBox.input-xlarge(type='text', ng-model='name')
+            .control-group
+                label.control-label(for='minDtTextBox') Minimum Date Time
+                .controls
+                    input#minDtTextBox.input-xlarge(type='text', ng-model='minDt')
+           .control-group
+              label.control-label(for='maxDtTextBox') Maximum Date Time
+              .controls
+                 input#maxDtTextBox.input-xlarge(type='text', ng-model='maxDt')
+
+div.modal-footer
+    button.btn.btn-primary(ng-click="save()")
+        | Save
+    button.btn(ng-click="cancel()")
+        | Cancel
