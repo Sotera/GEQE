@@ -6,7 +6,7 @@ angular.module('NodeWebBase')
         $scope.scoreFiles = ["--select--"];
         $scope.polygonFiles = ["--select--"];
         $scope.popScore = function() {
-            if(!$rootScope.savePath)
+            if(!$rootScope.isAppConfigured())
                 return;
 
             $.ajax({
@@ -26,7 +26,7 @@ angular.module('NodeWebBase')
         };
 
         $scope.populatePolygonSelect = function() {
-            if(!$rootScope.savePath || !$rootScope.fileSubDir)
+            if(!$rootScope.isAppConfigured())
                 return;
             $.ajax({
                 url: $rootScope.baseUrl + "app/controlBox/popScoreList",
@@ -45,6 +45,8 @@ angular.module('NodeWebBase')
         };
 
         $scope.gatherScores = function() {
+            if(!$rootScope.isAppConfigured())
+                return;
             var sName = $("#scoreSelect").val();
             var sMaxP = $("#sMaxEntries").val();
             var bAgg = $("#aggScores").is(":checked");

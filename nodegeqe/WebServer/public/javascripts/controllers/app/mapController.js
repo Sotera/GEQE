@@ -109,8 +109,7 @@ angular.module('NodeWebBase')
             $scope.map.fitBounds(bounds);
         };
 
-        $scope.getShapesText = function()
-        {
+        $scope.getShapesText = function(){
             var shapesText = "";
             angular.forEach($scope.shapes, function(shape, index){
                 shapesText += $scope.getTextFromShape(index,shape);

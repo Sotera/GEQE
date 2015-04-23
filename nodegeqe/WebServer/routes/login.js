@@ -14,6 +14,7 @@ router.post('/', function (req, res) {
 			return;
 		}
 		req.session.loopbackId = resultObject.id;
+		req.session.userId = resultObject.userId;
 		res.status(200).send(resultObject);
 	});
 });

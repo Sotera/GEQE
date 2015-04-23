@@ -24,7 +24,9 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
                                     "fullname": $scope.data.fullname,
                                     "email": $scope.data.email,
                                     "inputSubDir": $scope.data.inputSubDir,
-                                    "savePath":$scope.data.savePath
+                                    "savePath":$scope.data.savePath,
+                                    "serviceHostName":$scope.data.serviceHostName,
+                                    "servicePort":$scope.data.servicePort
                                 },{
                                     params: {
                                         access_token: $cookies.access_token
@@ -34,6 +36,8 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
                                     $rootScope.savePath = $scope.data.savePath;
                                     $rootScope.fileSubDir = $scope.data.inputSubDir;
                                     $rootScope.fullname = $scope.data.fullname;
+                                    $rootScope.serviceHostName = $scope.data.serviceHostName;
+                                    $rootScope.servicePort = $scope.data.servicePort;
                                     $rootScope.$emit("setfullname");
                                     $scope.closeThisDialog(null);
                                 }).error($rootScope.showError);

@@ -6,6 +6,8 @@ angular.module('NodeWebBase')
         $scope.dataSets= [];
 
         $scope.getDataSets = function(){
+            if(!$rootScope.isAppConfigured())
+                return;
             $.ajax({
                 url:  $rootScope.baseUrl + "app/controlBox/getDataSets",
                 dataType: "json",
@@ -24,6 +26,8 @@ angular.module('NodeWebBase')
             {
                 "scope":this,
                 "callback":function(resultsText){
+                    if(!$rootScope.isAppConfigured())
+                        return;
                     var pName = $("#pFileName").val();
                     $.ajax({
                         url:  $rootScope.baseUrl + "app/controlBox/writePoly",
@@ -43,6 +47,9 @@ angular.module('NodeWebBase')
         };
 
         $scope.applyScores = function() {
+            if(!$rootScope.isAppConfigured())
+                return;
+            
             var pName = $("#pFileName").val();
             var sName = $("#sFileName").val();
             var dSet = $("#dataSetSelect").val();

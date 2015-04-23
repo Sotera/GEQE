@@ -22,6 +22,14 @@
             label.control-label(for='inputSubDirTextBox') Input Sub Dir
             .controls
                input#inputSubDirTextBox.input-xlarge(type='text', ng-model='data.inputSubDir')
+         .control-group
+            label.control-label(for='serviceHostNameTextBox') Service Host Name
+            .controls
+               input#serviceHostNameTextBox.input-xlarge(type='text', ng-model='data.serviceHostName')
+         .control-group
+            label.control-label(for='servicePortTextBox') Service Port
+            .controls
+               input#servicePortTextBox.input-xlarge(type='text', ng-model='data.servicePort')
 
 div.modal-footer
    button.btn.btn-primary(ng-click="save()")

@@ -13,8 +13,18 @@ angular.module('NodeWebBase')
             $rootScope.savePath = res.savePath;
             $rootScope.fileSubDir = res.inputSubDir;
             $rootScope.fullname = res.fullname;
+            $rootScope.serviceHostName = res.serviceHostName;
+            $rootScope.servicePort = res.servicePort;
 
             $rootScope.$emit("setfullname");
+        };
+
+        $rootScope.isAppConfigured = function(){
+          return   $rootScope.savePath &&
+            $rootScope.fileSubDir &&
+            $rootScope.fullname &&
+            $rootScope.serviceHostName &&
+            $rootScope.servicePort;
         };
 
         $rootScope.showError = function(jqxhr, testStatus, reason){

@@ -12,7 +12,14 @@
     },
     "inputSubDir": {
       "type": "string"
+    },
+    "serviceHostName": {
+      "type": "string"
+    },
+    "servicePort": {
+      "type": "string"
     }
+
   },
   "validations": [],
   "relations": {},
