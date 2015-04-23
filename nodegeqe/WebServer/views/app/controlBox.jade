@@ -60,7 +60,7 @@ script( type="text/ng-template" id="two.tpl.html")
       div.container-fluid
          div.row
             div.col-lg-4
-               b.inputItem Data Set:
+               span.inputItem Data Set:
                select(id="dataSetSelect" onchange="newCenter()")
                   option( ng-repeat="item in dataSets" value="{{item}}") {{item}}
             div.col-lg-4
@@ -70,7 +70,7 @@ script( type="text/ng-template" id="two.tpl.html")
                div.input-group
                   span.inputItem Polygon File:
                   div.input-group-btn
-                     button.pull-right.btn.btn-xs.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" aria-expanded="false")
+                     button.btn.btn-xs.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" aria-expanded="false")
                         span.caret
                      ul.scrollable-menu.dropdown-menu(role="menu")
                         li(ng-repeat="item in polygonFiles" ng-click="polyFileSelected(item)" value="{{item}}") {{item}}
