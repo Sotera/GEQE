@@ -9,50 +9,51 @@ script(type="text/ng-template" id="one.tpl.html")
    div.tab( id="viewOne" ng-controller="resultsTabController")
       div.container-fluid
          div.row
-            div.col-lg-4
-               | Polygon Files: &nbsp &nbsp
+            div.col-lg-6
+               span.inputItem Polygon Files:
                select.input-xs(name="polygonSelect" id="polygonSelect")
                   option( ng-repeat="item in polygonFiles" value="{{item}}") {{item}}
-               button.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='populatePolygonSelect()' title="Refresh file list.")
-               button.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="drawPolygonFile()" title="Draw polygons to the map.")
+               button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='populatePolygonSelect()' title="Refresh file list.")
+               button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="drawPolygonFile()" title="Draw polygons to the map.")
 
-            div.col-lg-4
-               |Clear:&nbsp &nbsp
-               button.btn.btn-default.btn-xs(ng-click="clearResults()") Results
-               button.btn.btn-default.btn-xs(ng-click="clearShapes()") Shapes
-               button.btn.btn-default.btn-xs(ng-click="clearMarkers()") Markers
-               button.btn.btn-default.btn-xs(ng-click="clearAll()") All
+            div.col-lg-6
+               span.inputItem Clear:
+               button.inputItem.btn.btn-default.btn-xs(ng-click="clearResults()") Results
+               button.inputItem.btn.btn-default.btn-xs(ng-click="clearShapes()") Shapes
+               button.inputItem.btn.btn-default.btn-xs(ng-click="clearMarkers()") Markers
+               button.inputItem.btn.btn-default.btn-xs(ng-click="clearAll()") All
          div.row
-            div.col-lg-4
-               |Score Files:&nbsp &nbsp
+            div.col-lg-6
+               span.inputItem Score Files:
                select.input-xs( name="scoreSelect" id="scoreSelect")
                   option( ng-repeat="item in scoreFiles" value="{{item}}") {{item}}
-               button.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="popScore()" title="Refresh file list.")
-               button.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="gatherScores()" title="Load scores.")
-            div.col-lg-4
+               button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="popScore()" title="Refresh file list.")
+               button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="gatherScores()" title="Load scores.")
 
          div.row
-            div.col-lg-4
-               | Max Points:
+            div.col-lg-2
+               span.inputItem  Max Points:
                input( id="sMaxEntries" value="-1" style="width:40px")
-         div.row
-            div.col-lg-4
-               label(for='aggScores')
-               input(type="checkbox" checked=true id="aggScores" name="aggScores")
-               | Bin by Lat-Lon
             div.col-lg-4
                label(for="sBinSize")
-                  |Bin Size:&nbsp &nbsp
-                  input(type="text" id="sBinSize" value=".005")
+                  span.inputItem Bin Size:
+                  input(type="text" id="sBinSize" value=".005" style="width:40px")
          div.row
-            div.col-lg-4
+            div.col-lg-2
+               input(type="checkbox" checked=true id="aggScores" name="aggScores")
+               label(for='aggScores')
+                  span.inputItem  Bin by Lat-Lon
+            div.col-lg-2
                label(for='aggTime')
                   input( type="checkbox" id="aggTime" name="aggTime")
-                  | Bin as time series
+                  span.inputItem  Bin as time series
+
+         div.row
             div.col-lg-4
                label(for='uniqueUser')
                   input(type="checkbox" id="uniqueUser")
-                  | Count only unique users
+                  span.inputItem  Count only unique users
+
 
 script( type="text/ng-template" id="two.tpl.html")
    div.tab( id="viewTwo" ng-controller="runTabController")

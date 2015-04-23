@@ -36,6 +36,10 @@ html{
     max-height: 256px;
 }
 
+.inputItem{
+    margin: 4px 4px 9px;
+}
+
 .container-fluid {
     margin:4px;
 }
