@@ -34,7 +34,7 @@ angular.module('NodeWebBase')
 
         $rootScope.$on('getShapesText', function(event, callbackInfo){
             var params = [];
-            params.push($scope.getShapesText());
+            params.push($scope.getSitesJson());
             callbackInfo.callback.apply(callbackInfo.scope, params);
         });
 
@@ -109,34 +109,41 @@ angular.module('NodeWebBase')
             $scope.map.fitBounds(bounds);
         };
 
-        $scope.getShapesText = function(){
-            var shapesText = "";
+        $scope.getSitesJson = function(){
+            var sites = {
+                "sites":[]
+            };
             angular.forEach($scope.shapes, function(shape, index){
-                shapesText += $scope.getTextFromShape(index,shape);
+                sites.sites.push($scope.getSiteFromShape(index,shape));
             });
-            return shapesText;
+            return JSON.stringify(sites);
         };
 
-        $scope.getTextFromShape = function(index, shape){
+        $scope.getSiteFromShape = function(index, shape){
             if(shape.getBounds != null)
-                return $scope.getTextFromRectangle(index, shape);
-            return $scope.getTextFromPolygon(index, shape);
+                return $scope.getSiteFromRectangle(index, shape);
+            return $scope.getSiteFromPolygon(index, shape);
         };
 
-        $scope.getTextFromPolygon = function(index, shape) {
+        $scope.getSiteFromPolygon = function(index, shape) {
             var vertices = shape.getPath().getArray();
-            var text = "";
+            var site = {
+                "name":"site",
+                "lats":[],
+                "lons":[],
+                "minDt":"1994-01-01",
+                "maxDt":"3000-01-01"
+            };
 
-            angular.forEach(vertices,function(vert,idx){
-                var lat = vert["k"];
-                var lng = vert["D"];
-                text += index + ","+lat+","+lng+"\n";
+            angular.forEach(vertices,function(vert){
+                site.lats.push(vert["k"]);
+                site.lons.push(vert["D"]);
             });
 
-            return text;
+            return site;
         };
 
-        $scope.getTextFromRectangle = function(index, shape) {
+        $scope.getSiteFromRectangle = function(index, shape) {
             var vertices =[];
             var bounds = shape.getBounds();
             var NE = bounds.getNorthEast();
@@ -147,15 +154,20 @@ angular.module('NodeWebBase')
             vertices.push(new google.maps.LatLng(SW.lat(),NE.lng()));
             vertices.push(SW);
 
-            var text = "";
+            var site = {
+                "name":"site",
+                "lats":[],
+                "lons":[],
+                "minDt":"1994-01-01",
+                "maxDt":"3000-01-01"
+            };
 
-            angular.forEach(vertices,function(vert,idx){
-                var lat = vert["k"];
-                var lng = vert["D"];
-                text += index + ","+lat+","+lng+"\n";
+            angular.forEach(vertices,function(vert){
+                site.lats.push(vert["k"]);
+                site.lons.push(vert["D"]);
             });
 
-            return text;
+            return site;
         };
 
         $scope.drawPolygonFile = function(fileName){
@@ -168,22 +180,18 @@ angular.module('NodeWebBase')
                 },
                 dataType: "json",
                 success: function (response) {
-                    var vertStrings = response.fileData;
                     var latLngs = [];
                     var latLngList = [];
+                    var sites = JSON.parse(response.fileData);
 
-                    angular.forEach(vertStrings, function(vertString,idx){
-                        if(vertString === "")
-                            return;
-                        var vertData = vertString.split(",");
-                        var polyIndex = parseInt(vertData[0]);
-                        if(latLngs.length <= polyIndex){
-                            latLngs[polyIndex] = [];
+                    angular.forEach(sites.sites, function(site,idx){
+                        latLngs[idx] = [];
+                        for(var i = 0; i<site.lats.length; i++)
+                        {
+                            var latlng = new google.maps.LatLng(site.lats[i],site.lons[i]);
+                            latLngs[idx].push(latlng);
+                            latLngList.push(latlng);
                         }
-                        var latlng = new google.maps.LatLng(vertData[1],vertData[2]);
-
-                        latLngs[polyIndex].push(latlng);
-                        latLngList.push(latlng);
                     });
 
                     angular.forEach(latLngs, function(points,idx){
