@@ -57,64 +57,69 @@ script(type="text/ng-template" id="one.tpl.html")
 
 script( type="text/ng-template" id="two.tpl.html")
    div.tab( id="viewTwo" ng-controller="runTabController")
-      table( style="width:100%")
-         tr
-            td
-               b Data Set
-            td
+      div.container-fluid
+         div.row
+            div.col-lg-4
+               b.inputItem Data Set:
                select(id="dataSetSelect" onchange="newCenter()")
                   option( ng-repeat="item in dataSets" value="{{item}}") {{item}}
-            td
+            div.col-lg-4
                a(href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;") View Progress
-         tr
-            td
-               button.btn.btn-default.btn-xs(ng-click="saveList()") Save Polygon File
-            td
+         div.row
+            div.col-lg-4
+               div.input-group.inputItem
+                  div.input-group-btn
+                     button.pull-right.btn.btn-xs.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" aria-expanded="false")
+                        span.caret
+                     ul.scrollable-menu.dropdown-menu(role="menu")
+                        li(ng-repeat="item in polygonFiles" ng-click="polyFileSelected(item)" value="{{item}}") {{item}}
+                  input.input-xs(type="text" ng-model="polyFile" id="pFileName" value="polyFile.json")
+                  button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="populatePolygonSelect()" title="Refresh file list.")
+                  button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-floppy-disk(ng-click="saveList()" title= "Save Polygon File")
+            div.col-lg-4
                input(type="text" id="pSavePath" readonly="True" disabled)
-            td
-               input( type="text" id="pFileName" value="polyFile.txt")
-         tr
-            td
+         div.row
+            div.col-lg-4
                button.btn.btn-default.btn-xs(ng-click="applyScores()") Apply Scores
-            td
+            div.col-lg-4
                input(id="sFileName" value="scores.csv")
-            td
+            div.col-lg-4
                div(id="rankReturnInput") Return top:
                   input(id="sTopN" value="300" style="width:50px")
                div( id="percentReturnInput" class="invis") Return Percent:
                   input( id="sTopPercent" value="0.0001" style="width:50px")
-         tr
-            td
+         div.row
+            div.col-lg-4
                label(for='bAdvanced')
                   input( type="checkbox" id="bAdvanced" ng-click="toggleAdv()")
                   | Show Advanced Options
-         tr(id="hr1" class="invis")
-            td
+         div.row(id="hr1" class="invis")
+            div.col-lg-4
                label(for='bPercent')
                   input(type="checkbox" id="bPercent" ng-click="modReturn()")
                   | Limit Return by Percent
-         tr( id="hr4" class="invis")
-            td
+         div.row( id="hr4" class="invis")
+            div.col-lg-4
                label(for='useML')
                   input(type="checkbox" checked=true id="useML")
                   | Use M.L. Scoring
-            td Feature Vector Max Length
-            td
+            div.col-lg-4 Feature Vector Max Length
+            div.col-lg-4
                input( type="text" id="nFeat" value="300")
-         tr( id="hr5" class="invis")
-            td
+         div.row( id="hr5" class="invis")
+            div.col-lg-4
                label(for='useBayes')
                   input( type="checkbox" id="useBayes")
                   | Sort by Bayes (when ML)
-         tr( id="hr3" class="invis")
-            td
+         div.row( id="hr3" class="invis")
+            div.col-lg-4
                label(for='timeSeries')
                   input( type="checkbox" id="timeSeries")
                   | Time Series polygon
 
-         tr( id="hr2" class="invis")
-            td Custom Stop Words
-            td
+         div.row( id="hr2" class="invis")
+            div.col-lg-4 Custom Stop Words
+            div.col-lg-4
                input( type="text" id="cStopW")
 script( type="text/ng-template" id="three.tpl.html")
    div.tab( id="viewThree" ng-controller="testTabController")

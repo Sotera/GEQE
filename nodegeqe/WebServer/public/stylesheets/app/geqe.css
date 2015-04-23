@@ -41,6 +41,13 @@ html{
     max-height: 256px;
 }
 
+.scrollable-menu {
+    height: auto;
+    max-height: 100px;
+    overflow:auto;
+    overflow-x: hidden;
+}
+
 .inputItem{
     margin: 4px 4px 9px;
 }

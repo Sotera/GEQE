@@ -3,7 +3,31 @@
  */
 angular.module('NodeWebBase')
     .controller('runTabController', function ($scope, $rootScope) {
-        $scope.dataSets= [];
+        $scope.dataSets= ["--select--"];
+        $scope.polygonFiles = ["--select--"];
+        $scope.polyFile = "polyfile.json";
+        $scope.polyFileSelected = function(item){
+            $scope.polyFile = item;
+        };
+
+        $scope.populatePolygonSelect = function() {
+            if(!$rootScope.isAppConfigured())
+                return;
+            $.ajax({
+                url: $rootScope.baseUrl + "app/controlBox/popScoreList",
+                data : {
+                    filePath: $rootScope.savePath,
+                    subDir:$scope.fileSubDir
+                },
+                dataType: "json",
+                success: function (response) {
+                    $scope.$apply(function() {
+                        $scope.polygonFiles = response.lFiles;
+                    });
+                },
+                error: $rootScope.showError
+            });
+        };
 
         $scope.getDataSets = function(){
             if(!$rootScope.isAppConfigured())
