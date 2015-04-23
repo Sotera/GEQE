@@ -1,5 +1,5 @@
 angular.module('NodeWebBase')
-    .controller('detailsController', ['$scope','$rootScope', function ($scope, $rootScope) {
+    .controller('detailsController', ['$scope','$rootScope','ngDialog', function ($scope, $rootScope, ngDialog) {
         $scope.scopeName = 'detailsController';
         $scope.data = {"nTotal":0};
         $scope.currentItemIndex = null;
@@ -32,6 +32,18 @@ angular.module('NodeWebBase')
                     })
                 });
         });
+
+        $scope.showImage = function(url){
+            ngDialog.openConfirm({
+                template: '/views/app/imageView',
+                controller: ['$scope', function ($scope) {
+                    $scope.url = url;
+                    $scope.close = function () {
+                        $scope.closeThisDialog(null);
+                    }
+                }]
+            });
+        };
 
         $scope.highlightText = function(text){
             var words = text.split(' ');

@@ -30,6 +30,11 @@ html{
     overflow: auto;
 }
 
+.detailsImgDialog{
+    display:block;
+    margin:auto;
+    max-width: 400px;
+}
 .detailsImg{
     display:block;
     margin:auto;
