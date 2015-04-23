@@ -66,8 +66,9 @@ script( type="text/ng-template" id="two.tpl.html")
             div.col-lg-4
                a(href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;") View Progress
          div.row
-            div.col-lg-4
+            div.col-lg-6
                div.input-group
+                  span.inputItem Polygon File:
                   div.input-group-btn
                      button.pull-right.btn.btn-xs.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" aria-expanded="false")
                         span.caret
@@ -79,11 +80,11 @@ script( type="text/ng-template" id="two.tpl.html")
             div.col-lg-4
                input(type="text" id="pSavePath" readonly="True" disabled)
          div.row
-            div.col-lg-4
+            div.col-lg-2
                button.btn.btn-default.btn-xs(ng-click="applyScores()") Apply Scores
-            div.col-lg-4
+            div.col-lg-3
                input(id="sFileName" value="scores.csv")
-            div.col-lg-4
+            div.col-lg-3
                div(id="rankReturnInput") Return top:
                   input(id="sTopN" value="300" style="width:50px")
                div( id="percentReturnInput" class="invis") Return Percent:
