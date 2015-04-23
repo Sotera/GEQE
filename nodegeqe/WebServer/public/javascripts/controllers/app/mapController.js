@@ -13,6 +13,7 @@ angular.module('NodeWebBase')
         $scope.markers = [];
 
         $rootScope.$on('drawPolygonFile', function (event, data) {
+            $scope.clearCurrentShapes();
             $scope.drawPolygonFile(data);
         });
 
