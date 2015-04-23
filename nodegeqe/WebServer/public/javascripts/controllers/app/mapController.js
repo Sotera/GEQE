@@ -219,7 +219,7 @@ angular.module('NodeWebBase')
                         polygon.geqeData = {
                             "name":sites.sites[idx].name,
                             "minDt":sites.sites[idx].minDt,
-                            "maxDt":sites.sites[idx].maxDt,
+                            "maxDt":sites.sites[idx].maxDt
                         };
                         $scope.addShapeClickListener(polygon);
                         polygon.setMap($scope.map);
