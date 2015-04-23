@@ -144,4 +144,5 @@ angular.module('NodeWebBase')
 
         //go ahead and get the data sets from the server
         $scope.getDataSets();
+        $scope.populatePolygonSelect();
     });
