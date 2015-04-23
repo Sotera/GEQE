@@ -108,7 +108,7 @@ angular.module('NodeWebBase')
         };
 
         $scope.clearResults = function(){
-            $rootScope.$emit("displayResults","")
+            $rootScope.$emit("clearResults");
         };
 
         $scope.clearAll = function(){

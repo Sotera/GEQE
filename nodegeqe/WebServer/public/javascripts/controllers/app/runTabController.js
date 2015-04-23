@@ -49,7 +49,7 @@ angular.module('NodeWebBase')
         $scope.applyScores = function() {
             if(!$rootScope.isAppConfigured())
                 return;
-            
+
             var pName = $("#pFileName").val();
             var sName = $("#sFileName").val();
             var dSet = $("#dataSetSelect").val();

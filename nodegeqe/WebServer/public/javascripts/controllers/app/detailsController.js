@@ -33,6 +33,23 @@ angular.module('NodeWebBase')
                 });
         });
 
+        $rootScope.$on('clearResults', function (event) {
+            $scope.clearAll();
+        });
+        $rootScope.$on('clearAll', function () {
+            $scope.clearAll();
+        });
+
+        $scope.clearAll = function(){
+            $scope.data = {"nTotal":0};
+            $scope.currentItemIndex = null;
+            $scope.displayIndex = 0;
+            $scope.displayCaptionHtml = "None";
+            $scope.termArray = [];
+            $scope.currentItem = $scope.defaultItem;
+            $("#caption").html("None");
+        };
+
         $scope.showImage = function(url){
             ngDialog.openConfirm({
                 template: '/views/app/imageView',
