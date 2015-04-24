@@ -171,11 +171,11 @@ angular.module('NodeWebBase')
             vertices.push(SW);
 
             var site = {
-                "name":"site",
+                "name":shape.geqeData.name,
                 "lats":[],
                 "lons":[],
-                "minDt":"1994-01-01",
-                "maxDt":"3000-01-01"
+                "minDt":shape.geqeData.minDt,
+                "maxDt":shape.geqeData.maxDt
             };
 
             angular.forEach(vertices,function(vert){
@@ -292,15 +292,30 @@ angular.module('NodeWebBase')
                 ngDialog.openConfirm({
                     template: '/views/app/shapeDetails',
                     controller: ['$scope', function ($scope) {
-                        $scope.minDt = shape.geqeData.minDt;
-                        $scope.maxDt = shape.geqeData.maxDt;
+                        try{
+                            $scope.minDt = new Date(shape.geqeData.minDt);
+                            $scope.maxDt = new Date(shape.geqeData.maxDt);
+                        }
+                        catch(err){
+                            console.log(err);
+                        }
                         $scope.name = shape.geqeData.name;
                         $scope.cancel = function(){
                             $scope.closeThisDialog(null);
                         };
+
                         $scope.save = function(){
-                            shape.geqeData.minDt = $scope.minDt;
-                            shape.geqeData.maxDt = $scope.maxDt;
+                            if($scope.minDt > $scope.maxDt){
+                                $rootScope.showErrorMessage("Date range", "Minimum date cannot be after maximum date.")
+                                return;
+                            }
+                            try {
+                                shape.geqeData.minDt = $scope.minDt.toJSON().substring(0, 10);
+                                shape.geqeData.maxDt = $scope.maxDt.toJSON().substring(0, 10);
+                            }
+                            catch(err){
+                                console.log(err);
+                            }
                             shape.geqeData.name = $scope.name;
                             $scope.closeThisDialog(null);
                         };
