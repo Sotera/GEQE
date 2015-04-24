@@ -31,7 +31,7 @@ angular.module('NodeWebBase')
 
         $rootScope.$on('deleteShape', function (event, shape) {
             shape.setMap(null);
-            var index = $scope.shapes.indexOf(5);
+            var index = $scope.shapes.indexOf(shape);
             if (index > -1) {
                 $scope.shapes.splice(index, 1);
             }
