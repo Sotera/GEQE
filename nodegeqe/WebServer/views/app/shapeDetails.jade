@@ -18,7 +18,10 @@
                  input#maxDtTextBox.input-xlarge(type='text', ng-model='maxDt')
 
 div.modal-footer
-    button.btn.btn-primary(ng-click="save()")
-        | Save
+    button.btn(ng-click="delete()")
+        | Delete
     button.btn(ng-click="cancel()")
         | Cancel
+    button.btn.btn-primary(ng-click="save()")
+        | Save
+

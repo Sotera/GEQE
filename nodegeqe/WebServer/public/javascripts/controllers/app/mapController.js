@@ -29,6 +29,14 @@ angular.module('NodeWebBase')
             $scope.clearAll();
         });
 
+        $rootScope.$on('deleteShape', function (event, shape) {
+            shape.setMap(null);
+            var index = $scope.shapes.indexOf(5);
+            if (index > -1) {
+                $scope.shapes.splice(index, 1);
+            }
+        });
+
         $rootScope.$on('renderKmlFile', function(event, file){
             $scope.renderKmlFile(file);
         });
@@ -247,7 +255,6 @@ angular.module('NodeWebBase')
         $scope.clearCurrentShapes = function(){
             angular.forEach($scope.shapes,function(shape,idx){
                 shape.setMap(null);
-                $scope.shapes[idx] = null;
             });
 
             $scope.shapes = [];
@@ -295,6 +302,11 @@ angular.module('NodeWebBase')
                             shape.geqeData.minDt = $scope.minDt;
                             shape.geqeData.maxDt = $scope.maxDt;
                             shape.geqeData.name = $scope.name;
+                            $scope.closeThisDialog(null);
+                        };
+
+                        $scope.delete = function(){
+                            $rootScope.$emit("deleteShape", shape);
                             $scope.closeThisDialog(null);
                         };
                     }]
