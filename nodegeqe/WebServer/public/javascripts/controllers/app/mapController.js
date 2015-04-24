@@ -298,6 +298,9 @@ angular.module('NodeWebBase')
                         }
                         catch(err){
                             console.log(err);
+                            $rootScope.showErrorMessage("Site Date", "Invalid date format in site data. Creating new dates.");
+                            $scope.minDt = new Date();
+                            $scope.maxDt = new Date();
                         }
                         $scope.name = shape.geqeData.name;
                         $scope.cancel = function(){
@@ -306,7 +309,7 @@ angular.module('NodeWebBase')
 
                         $scope.save = function(){
                             if($scope.minDt > $scope.maxDt){
-                                $rootScope.showErrorMessage("Date range", "Minimum date cannot be after maximum date.")
+                                $rootScope.showErrorMessage("Date range", "Minimum date cannot be after maximum date.");
                                 return;
                             }
                             try {
@@ -315,6 +318,8 @@ angular.module('NodeWebBase')
                             }
                             catch(err){
                                 console.log(err);
+                                $rootScope.showErrorMessage("Invalid date", "Please enter a valid date.");
+                                return;
                             }
                             shape.geqeData.name = $scope.name;
                             $scope.closeThisDialog(null);
