@@ -190,8 +190,13 @@ angular.module('NodeWebBase')
                 success: function (response) {
                     var latLngs = [];
                     var latLngList = [];
-                    var sites = JSON.parse(response.fileData);
-
+                    try {
+                        var sites = JSON.parse(response.fileData);
+                    }
+                    catch(err){
+                        $rootScope.showErrorMessage("JSON Parsing", err);
+                        return;
+                    }
                     angular.forEach(sites.sites, function(site,idx){
                         latLngs[idx] = [];
                         for(var i = 0; i<site.lats.length; i++)

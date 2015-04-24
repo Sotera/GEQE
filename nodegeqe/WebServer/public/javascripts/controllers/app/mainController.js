@@ -27,6 +27,18 @@ angular.module('NodeWebBase')
             $rootScope.servicePort;
         };
 
+        $rootScope.showErrorMessage = function(source, reason){
+            ngDialog.openConfirm({
+                template: '/views/app/genericError',
+                controller: ['$scope', function ($scope) {
+                    $scope.errorMessage = source + ":" + reason;
+                    $scope.close = function () {
+                        $scope.closeThisDialog(null);
+                    }
+                }]
+            });
+        };
+
         $rootScope.showError = function(jqxhr, testStatus, reason){
             ngDialog.openConfirm({
                 template: '/views/app/genericError',
