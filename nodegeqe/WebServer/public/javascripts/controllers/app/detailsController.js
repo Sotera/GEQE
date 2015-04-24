@@ -6,7 +6,7 @@ angular.module('NodeWebBase')
         $scope.displayIndex = 0;
         $scope.displayCaptionHtml = "None";
         $scope.termArray = [];
-        $scope.defaultItem = {  "img":"http://localhost:3000/images/blank.png",
+        $scope.defaultItem = {  "img":"/images/blank.png",
                                 "usr":"None Selected",
                                 "cap":"",
                                 "sco":"",
@@ -106,7 +106,7 @@ angular.module('NodeWebBase')
 
         $scope.getUser = function(){
             $.ajax({
-                url:  $rootScope.baseUrl + "app/twitter/user",
+                url:  "app/twitter/user",
                 data : {
                     "screen_name":"twitterapi"
                 },

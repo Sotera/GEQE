@@ -10,7 +10,7 @@ angular.module('NodeWebBase')
                 return;
 
             $.ajax({
-                url:  $rootScope.baseUrl + "app/controlBox/popScoreList",
+                url: "app/controlBox/popScoreList",
                 data : {
                     filePath: $rootScope.savePath
                 },
@@ -29,7 +29,7 @@ angular.module('NodeWebBase')
             if(!$rootScope.isAppConfigured())
                 return;
             $.ajax({
-                url: $rootScope.baseUrl + "app/controlBox/popScoreList",
+                url: "app/controlBox/popScoreList",
                 data : {
                     filePath: $rootScope.savePath,
                     subDir:$scope.fileSubDir
@@ -54,7 +54,7 @@ angular.module('NodeWebBase')
             var fBin = $("#sBinSize").val();
             var bCUU = $("#uniqueUser").is(":checked");
             $.ajax({
-                url: $rootScope.baseUrl + "app/controlBox/getScores",
+                url: "app/controlBox/getScores",
                 data: {
                     filePath: $rootScope.savePath,
                     fileAppOut: sName,

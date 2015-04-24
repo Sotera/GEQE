@@ -2,7 +2,6 @@ angular.module('NodeWebBase')
     .constant('userUrl', 'app/users')
     .controller('mainController', function ($scope, $rootScope, $http, $cookies, ngDialog) {
         $scope.scopeName = "mainController";
-        $rootScope.baseUrl = "http://localhost:3000/";
 
         //THESE ARE IN SETTINGS NOW..Please set them in the settings dialog
         //$rootScope.savePath = "/home/jlueders/src/geqe/exSrc/";
@@ -62,7 +61,7 @@ angular.module('NodeWebBase')
         };
 
         ///INIT
-        var url = $rootScope.baseUrl + "app/users/" + $cookies.userId ;
+        var url = "app/users/" + $cookies.userId ;
 
         $http.get(url,{
             params: {

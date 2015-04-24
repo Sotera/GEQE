@@ -188,7 +188,7 @@ angular.module('NodeWebBase')
 
         $scope.drawPolygonFile = function(fileName){
             $.ajax({
-                url: $rootScope.baseUrl + "app/controlBox/getFileContents",
+                url: "app/controlBox/getFileContents",
                 data : {
                     filePath: $rootScope.savePath,
                     fileName: fileName,

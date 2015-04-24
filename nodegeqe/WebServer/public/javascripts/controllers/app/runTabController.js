@@ -14,7 +14,7 @@ angular.module('NodeWebBase')
             if(!$rootScope.isAppConfigured())
                 return;
             $.ajax({
-                url: $rootScope.baseUrl + "app/controlBox/popScoreList",
+                url: "app/controlBox/popScoreList",
                 data : {
                     filePath: $rootScope.savePath,
                     subDir:$scope.fileSubDir
@@ -33,7 +33,7 @@ angular.module('NodeWebBase')
             if(!$rootScope.isAppConfigured())
                 return;
             $.ajax({
-                url:  $rootScope.baseUrl + "app/controlBox/getDataSets",
+                url: "app/controlBox/getDataSets",
                 dataType: "json",
                 success: function (response) {
                     $scope.$apply(function(){
@@ -54,7 +54,7 @@ angular.module('NodeWebBase')
                         return;
                     var pName = $("#pFileName").val();
                     $.ajax({
-                        url:  $rootScope.baseUrl + "app/controlBox/writePoly",
+                        url: "app/controlBox/writePoly",
                         data: {
                             filePath: $rootScope.savePath,
                             filePolygon: pName,
@@ -88,7 +88,7 @@ angular.module('NodeWebBase')
             var nFeat = $("#nFeat").val();
             var sSWords = $("#cStopW").val();
             $.ajax({
-                url:  $rootScope.baseUrl + "app/controlBox/applyScores",
+                url: "app/controlBox/applyScores",
                 data: {
                     filePath: $rootScope.savePath,
                     filePolygon: pName,

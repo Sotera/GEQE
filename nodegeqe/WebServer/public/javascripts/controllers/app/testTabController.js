@@ -11,7 +11,7 @@ angular.module('NodeWebBase')
             var tName = $("#tFileName").val();
             var dSet = $("#dataSetSelect").val();
             $.ajax({
-                url: $rootScope.baseUrl + "app/controlBox/launchTest",
+                url: "app/controlBox/launchTest",
                 data: {
                     filePath: pPath,
                     filePolygon: pName,
@@ -29,7 +29,7 @@ angular.module('NodeWebBase')
         $scope.gatherTest = function() {
             var tName = $("#tFileName").val();
             $.ajax({
-                url: $rootScope.baseUrl + "app/controlBox/getTest",
+                url: "app/controlBox/getTest",
                 data: {
                     filePath: $rootScope.savePath,
                     fileTestOut: tName

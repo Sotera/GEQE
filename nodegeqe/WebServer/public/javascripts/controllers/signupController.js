@@ -1,5 +1,5 @@
 angular.module('NodeWebBase', ['ngRoute'])
-		.constant('signupUrl', 'http://localhost:3000/login/signup')
+		.constant('signupUrl', '/login/signup')
 		.config(function($locationProvider){
 			//$locationProvider.html5Mode(true);
 		})
