@@ -47,7 +47,7 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
                 };
 
                 $scope.requestSettings = function(){
-                    var url = $rootScope.baseUrl + userUrl + "/" + $cookies.userId ;
+                    var url = userUrl + "/" + $cookies.userId ;
 
                     $http.get(url,{
                         params: {
