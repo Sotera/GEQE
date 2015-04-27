@@ -269,18 +269,62 @@ angular.module('NodeWebBase')
             $scope.markers = [];
         };
 
-        $scope.putScoreMarker = function(location, caption, item) {
+        $scope.rgbToHex =function(r, g, b) {
+            var rgb = r | (g << 8) | (b << 16);
+            return '#' + rgb.toString(16);
+        };
+
+        $scope.interpolateComponent = function(c1,c2,percent){
+            var componentDiff = Math.abs(c1 - c2);
+            var delta = componentDiff * percent;
+
+            if(c1 < c2)
+                return c1 + delta;
+            return c1 - delta;
+        };
+
+        $scope.interpolateColor = function(min,max,val)
+        {
+            if(val < min)
+                return $scope.rgbToHex(0,0,0);
+            if(val > max)
+                return $scope.rgbToHex(255,255,255);
+            var percent = Math.abs(val - min) / Math.abs(max - min);
+            var minColorRGB = [50,50,255];
+            var maxColorRGB = [255,50,50];
+
+            return $scope.rgbToHex($scope.interpolateComponent(minColorRGB[0],maxColorRGB[0],percent),
+                $scope.interpolateComponent(minColorRGB[1],maxColorRGB[1],percent),
+                $scope.interpolateComponent(minColorRGB[2],maxColorRGB[2],percent)
+            )
+        };
+
+        $scope.getIcon = function (color) {
+            return {
+                path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z M -2,-30 a 2,2 0 1,1 4,0 2,2 0 1,1 -4,0',
+                fillColor: color,
+                fillOpacity: 1,
+                strokeColor: '#000',
+                strokeWeight: 2,
+                scale: 1
+            };
+        };
+
+        $scope.putScoreMarker = function(location, caption, item, numMarkers, markerIndex) {
+
             var marker = new google.maps.Marker({
                 position: location,
-                title:caption
+                map: $scope.map,
+                icon: $scope.getIcon($scope.interpolateColor(0,numMarkers,markerIndex)),
+                title:caption,
+                markerIndex:markerIndex
             });
-            marker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
-            marker.setMap($scope.map);
+
             $scope.markers.push(marker);
             google.maps.event.addListener(marker, 'click', function() {
-                marker.setIcon('http://maps.google.com/mapfiles/ms/icons/green-dot.png');
+                marker.setIcon($scope.getIcon("#00FF00"));
                 if($scope.selectedMarker){
-                    $scope.selectedMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+                    $scope.selectedMarker.setIcon($scope.getIcon($scope.interpolateColor(0,numMarkers,$scope.selectedMarker.markerIndex)));
                 }
                 $scope.selectedMarker = marker;
                 $rootScope.$emit("loadItemData",item);
@@ -337,6 +381,7 @@ angular.module('NodeWebBase')
 
         $rootScope.$on('putScoreMarkers', function (event, data, binSize) {
             var locations = [];
+
             angular.forEach(data, function(item){
                 var capPScor = item['index'].toString();
                 var strLat = item['lat'];
@@ -354,7 +399,7 @@ angular.module('NodeWebBase')
 
                 var markerLocation = new google.maps.LatLng(shiftLat, shiftLon);
                 locations.push(markerLocation);
-                $scope.putScoreMarker(markerLocation, capPScor, item);
+                $scope.putScoreMarker(markerLocation, capPScor, item, data.length,item['index']);
 
             });
 

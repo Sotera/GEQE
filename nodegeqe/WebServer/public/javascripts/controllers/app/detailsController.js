@@ -1,5 +1,5 @@
 angular.module('NodeWebBase')
-    .controller('detailsController', ['$scope','$rootScope','ngDialog', function ($scope, $rootScope, ngDialog) {
+    .controller('detailsController', ['$scope','$rootScope','$window','ngDialog', function ($scope, $rootScope,$window, ngDialog) {
         $scope.scopeName = 'detailsController';
         $scope.data = {"nTotal":0};
         $scope.currentItemIndex = null;
@@ -12,6 +12,7 @@ angular.module('NodeWebBase')
                                 "sco":"",
                                 "nTotal":0,
                                 "date":""};
+        $scope.socialMediaUrl = $scope.defaultItem.img;
         $scope.currentItem = $scope.defaultItem;
 
         $rootScope.$on('loadItemData', function (event, data) {
@@ -23,6 +24,8 @@ angular.module('NodeWebBase')
                 $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
                 $("#caption").html($scope.displayCaptionHtml);
             });
+
+            $scope.getAccount();
         });
 
         $rootScope.$on("setTermDictionary", function(event,data){
@@ -48,6 +51,32 @@ angular.module('NodeWebBase')
             $scope.termArray = [];
             $scope.currentItem = $scope.defaultItem;
             $("#caption").html("None");
+        };
+
+        $scope.findSocialMediaLink = function(username, callback){
+            $.ajax({
+                url:  "app/socialMediaQuery/" + username,
+                dataType: "json",
+                success: function (response) {
+                    callback(response, win);
+                },
+                error: callback
+            });
+        };
+
+        $scope.loadSocialPage = function(url){
+            $scope.$apply(function () {
+                if(url.responseText === ""){
+                    $scope.socialMediaUrl = $scope.currentItem.img;
+                    return;
+                }
+
+                $scope.socialMediaUrl = url.responseText;
+            });
+        };
+
+        $scope.getAccount = function(){
+            $scope.findSocialMediaLink($scope.currentItem.usr, $scope.loadSocialPage);
         };
 
         $scope.showImage = function(url){
@@ -88,6 +117,7 @@ angular.module('NodeWebBase')
             $scope.currentItem = $scope.data.posts[$scope.currentItemIndex];
             $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
             $("#caption").html($scope.displayCaptionHtml);
+            $scope.getAccount();
         };
 
         $scope.previous = function(){
@@ -102,6 +132,7 @@ angular.module('NodeWebBase')
             $scope.currentItem = $scope.data.posts[$scope.currentItemIndex];
             $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
             $("#caption").html($scope.displayCaptionHtml);
+            $scope.getAccount();
         };
 
         $scope.getUser = function(){
