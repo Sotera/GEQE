@@ -390,7 +390,15 @@ angular.module('NodeWebBase')
             var locations = [];
 
             angular.forEach(data, function(item){
-                var capPScor = item['index'].toString();
+                var capPScor = 'Rank: ' + item['index'].toString() +
+                               '  |  Unique Users: ' + item['nUnique'] +
+                               '  |  Total: ' + item['nTotal'] + '\n' +
+                               '--------------------------------------------------------------' + '\n';
+                angular.forEach(item['posts'], function(post,idx){
+                    capPScor+= post['cap'] + '\n' +
+                    '-------------------------------------' + '\n';
+                });
+
                 var strLat = item['lat'];
                 var strLon = item['lon'];
 
