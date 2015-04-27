@@ -9,12 +9,6 @@ DEFAULT_BUCKET = 'geqebin'
 
 
 
-
-def generate_job_name():
-    """ generate a job id based on the current time """
-    return 'job_'+str(datetime.datetime.now()).replace(' ','_')
-
-
 def saveBytesToS3(bucket,key,bytes):
     s3 = boto3.resource('s3')
     bucket = s3.Bucket(bucket)
@@ -29,7 +23,7 @@ def getBytesFromS3(bucket,key):
 
 
 
-def submitJob(jobConf,polyFilePath,bucket=DEFAULT_BUCKET):
+def submitJob(jobname,jobConf,polyFilePath,bucket=DEFAULT_BUCKET):
     """
     Save job details to s3 and submit jobname to the message queue
     :param jobConf:
@@ -37,16 +31,44 @@ def submitJob(jobConf,polyFilePath,bucket=DEFAULT_BUCKET):
     :param bucket:
     :return:
     """
-    jobname = generate_job_name()
 
     saveBytesToS3(bucket,jobname+'/job.conf',json.dumps(jobConf))
     with open(polyFilePath,'r') as handle:
         bytes = handle.read()
         saveBytesToS3(bucket,jobname+'/poly.txt',bytes)
 
-    saveBytesToS3(bucket,jobname+'/STATUS_PENDING',"")
+    saveBytesToS3(bucket,jobname+'/STATUS_WAITING',"")
 
-    return jobname
+
+
+
+def getStatus(jobname,bucket=DEFAULT_BUCKET):
+    s3 = boto3.resource('s3')
+    bucket = s3.Bucket(bucket)
+    keys =  [x.key.replace(jobname+'/','') for x in bucket.objects.filter(Prefix=jobname)]
+    keys = filter(lambda x: 'STATUS_' == x[:7],keys)
+    if len(keys) != 1:
+        return "UNKNOWN STATUS"
+    else:
+        return keys[0]
+
+
+
+def getAllJobStatus(bucket=DEFAULT_BUCKET):
+    s3 = boto3.resource('s3')
+    bucket = s3.Bucket(bucket)
+    keys =  [x.key for x in bucket.objects.all()]
+    keys = filter(lambda x: x[:3] == 'job' and 'STATUS_' in x,keys)
+    statusDict = {}
+    for key in keys:
+        (job,status) = key.split('/')
+        status = status.replace('STATUS_','')
+        if job in statusDict:
+            statusDict[job] = 'UNKNOWN STATUS'
+        else:
+            statusDict[job] = status
+    return statusDict
+
 
 
 
