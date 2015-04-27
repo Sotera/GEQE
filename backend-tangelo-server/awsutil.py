@@ -24,49 +24,27 @@ def getBytesFromS3(bucket,key):
 
 
 
-def saveResultsConf(jobname,scoreFilePath,dictFilePath,bucket=DEFAULT_BUCKET):
+
+def submitJob(jobConf,polyFilePath,bucket=DEFAULT_BUCKET):
     """
-    Create and save a configuration file so we know where in the local file system to store
-    results when the job is finished
+    Save job details to s3 and submit jobname to the message queue
+    :param jobConf:
+    :param polyFilePath:
+    :param bucket:
+    :return:
     """
-
-    conf = {}
-    conf['scoreFile'] = scoreFilePath
-    conf['dictFile'] = dictFilePath
-    conf = json.dumps(conf)
-    saveBytesToS3(bucket,jobname+'/results.conf',conf)
-
-
-def readResultsConf(jobname,bucket=DEFAULT_BUCKET):
-    """
-    Read in the results conf so we know where to store results
-    """
-
-    bytes = getBytesFromS3(bucket,jobname+'/results.conf')
-    return json.loads(bytes)
-
-
-def createJob(runConf,polyFilePath,scoreFilePath,dictFilePath,bucket=DEFAULT_BUCKET):
     jobname = generate_job_name()
-    saveBytesToS3(bucket,jobname+'/run.conf',json.dumps(runConf))
-    saveResultsConf(jobname,scoreFilePath,dictFilePath,bucket)
 
+    saveBytesToS3(bucket,jobname+'/job.conf',json.dumps(jobConf))
     with open(polyFilePath,'r') as handle:
         bytes = handle.read()
         saveBytesToS3(bucket,jobname+'/poly.txt',bytes)
+
     saveBytesToS3(bucket,jobname+'/STATUS_PENDING',"")
+
     return jobname
 
 
-def readJob(jobname,bucket=DEFAULT_BUCKET):
-
-    if not os.path.isdir(jobname): os.mkdir(jobname)
-
-    # save the polygon file
-    bytes = getBytesFromS3(bucket,jobname+'/poly.txt')
-    with open(jobname+'/poly.txt','w') as handle:
-        handle.write(bytes)
-        handle.close()
 
 
 
