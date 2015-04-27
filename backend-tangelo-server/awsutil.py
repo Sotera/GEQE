@@ -2,8 +2,12 @@ import boto3
 import os
 import datetime
 import json
+import sys
 
 DEFAULT_BUCKET = 'geqebin'
+
+
+
 
 
 def generate_job_name():
@@ -48,3 +52,27 @@ def submitJob(jobConf,polyFilePath,bucket=DEFAULT_BUCKET):
 
 
 
+def saveJobResults(jobname,bucket=DEFAULT_BUCKET):
+
+    try:
+        getBytesFromS3(bucket,jobname+'/STATUS_SUCCESS')
+        jobconf = json.loads( getBytesFromS3(bucket,jobname+'/job.conf') )
+
+        with open(jobconf['score_save_path'],'w') as handle:
+            handle.write(getBytesFromS3(bucket,jobname+'/score'))
+
+        with open(jobconf['dict_save_path'],'w') as handle:
+            handle.write(getBytesFromS3(bucket,jobname+'/dict'))
+        return True
+    except:
+        # the job did not complete or had errors
+        return False
+
+
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print 'requires job name to save results'
+        sys.exit(1)
+    else:
+        saveJobResults(sys.argv[1])
