@@ -1,5 +1,5 @@
 angular.module('NodeWebBase')
-    .controller('tabsController', function ($scope) {
+    .controller('tabsController', function ($scope, $rootScope) {
         $scope.tabs = [{
             title: 'Results',
             url: 'one.tpl.html'
@@ -21,5 +21,21 @@ angular.module('NodeWebBase')
             return tabUrl == $scope.currentTab;
         };
 
+        $scope.clearMarkers = function(){
+            $rootScope.$emit("clearCurrentMarkers");
+        };
+
+        $scope.clearShapes = function(){
+            $rootScope.$emit("clearCurrentShapes");
+        };
+
+        $scope.clearResults = function(){
+            $rootScope.$emit("clearResults");
+        };
+
+        $scope.clearAll = function(){
+            $rootScope.$emit("clearAll");
+            $scope.clearResults();
+        };
 
     });

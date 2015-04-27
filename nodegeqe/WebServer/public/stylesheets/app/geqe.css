@@ -100,7 +100,8 @@ div[class^="col-"]{
 }
 
 .tabs {
-    margin: 4px;
+    margin-left: 4px;
+    margin-right: 4px;
     width:100%;
 }
 .tab-links{
@@ -131,12 +132,13 @@ div[class^="col-"]{
     margin: auto;
 }
 .tab-links li {
-    margin:0px 5px;
+    margin-right: 4px;
     float:left;
     list-style:none;
 }
 .tab-links a {
-    padding:4px;
+    padding-left:4px;
+    padding-right:4px;
     display:inline-block;
     background:#7FB5DA;
     font-size:16px;
@@ -153,7 +155,6 @@ li.active a, li.active a:hover {
     color:#4c4c4c;
 }
 .tab-content {
-    padding:8px;
     border-radius:3px;
 }
 .tab.active {

@@ -39,7 +39,7 @@ angular.module('NodeWebBase')
                     $("#inMean").val(response.m);
                     $("#inVar").val(response.v);
                     lRes = response.lPas;
-                    lNZ = response.lNZ
+                    lNZ = response.lNZ;
                     var strRet = '';
                     for( i=1; i<=lRes.length; i++)
                     {

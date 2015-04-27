@@ -99,23 +99,6 @@ angular.module('NodeWebBase')
             });
         };
 
-        $scope.clearMarkers = function(){
-            $rootScope.$emit("clearCurrentMarkers");
-        };
-
-        $scope.clearShapes = function(){
-            $rootScope.$emit("clearCurrentShapes");
-        };
-
-        $scope.clearResults = function(){
-            $rootScope.$emit("clearResults");
-        };
-
-        $scope.clearAll = function(){
-            $rootScope.$emit("clearAll");
-            $scope.clearResults();
-        };
-
         $scope.drawPolygonFile = function(){
             $rootScope.$emit("drawPolygonFile",$("#polygonSelect").val())
         };

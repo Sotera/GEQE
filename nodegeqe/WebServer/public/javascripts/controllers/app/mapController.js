@@ -269,9 +269,16 @@ angular.module('NodeWebBase')
             $scope.markers = [];
         };
 
-        $scope.rgbToHex =function(r, g, b) {
-            var rgb = r | (g << 8) | (b << 16);
-            return '#' + rgb.toString(16);
+        $scope.rgbToHex =function(r,g,b){
+            return "#" + $scope.toHex(r) + $scope.toHex(g) + $scope.toHex(b)
+        };
+
+        $scope.toHex =function(n) {
+            n = parseInt(n,10);
+            if (isNaN(n)) return "00";
+            n = Math.max(0,Math.min(n,255));
+            return "0123456789ABCDEF".charAt((n-n%16)/16)
+                + "0123456789ABCDEF".charAt(n%16);
         };
 
         $scope.interpolateComponent = function(c1,c2,percent){
@@ -279,8 +286,8 @@ angular.module('NodeWebBase')
             var delta = componentDiff * percent;
 
             if(c1 < c2)
-                return c1 + delta;
-            return c1 - delta;
+                return c2 - delta;
+            return c2 + delta;
         };
 
         $scope.interpolateColor = function(min,max,val)
@@ -290,8 +297,8 @@ angular.module('NodeWebBase')
             if(val > max)
                 return $scope.rgbToHex(255,255,255);
             var percent = Math.abs(val - min) / Math.abs(max - min);
-            var minColorRGB = [50,50,255];
-            var maxColorRGB = [255,50,50];
+            var minColorRGB = [220,210,210];
+            var maxColorRGB = [255,98,0];
 
             return $scope.rgbToHex($scope.interpolateComponent(minColorRGB[0],maxColorRGB[0],percent),
                 $scope.interpolateComponent(minColorRGB[1],maxColorRGB[1],percent),
