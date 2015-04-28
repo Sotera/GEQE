@@ -6,9 +6,6 @@ angular.module('NodeWebBase')
         }, {
             title: 'Run',
             url: 'two.tpl.html'
-        }, {
-            title: 'Test',
-            url: 'three.tpl.html'
         }];
 
         $scope.currentTab = 'one.tpl.html';
