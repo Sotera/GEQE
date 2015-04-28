@@ -1,3 +1,9 @@
 div.container-fluid(ng-controller='mainController')
-    div.row(ng-include="'views/app/body'" mirror-Height )
-    div.row(ng-include="'views/app/footer'")
+    div.row
+        div.col-lg-2(mirror-Height)
+            div(ng-include="'views/app/controlBox'")
+        div.col-lg-7
+            div(ng-include="'views/app/map'")
+        div.col-lg-3(ng-style="style")
+            div(ng-include="'views/app/details'")
+            div(ng-include="'views/app/resultsBox'")

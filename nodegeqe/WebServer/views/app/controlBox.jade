@@ -1,124 +1,117 @@
 div.tabs(id="tabs" ng-controller="tabsController")
    div.container-fluid
       div.row
-         div.col-lg-6
+         div.col-lg-12
             ul.nav.nav-tabs
                li(ng-repeat="tab in tabs" ng-class="{active:isActiveTab(tab.url)}" ng-click="onClickTab(tab)")
                   a {{tab.title}}
-         div.col-lg-6
-            span Clear:
-               button.btn.btn-default.btn-xs(ng-click="clearResults()") Results
-               button.btn.btn-default.btn-xs(ng-click="clearShapes()") Shapes
-               button.btn.btn-default.btn-xs(ng-click="clearMarkers()") Markers
-               button.btn.btn-default.btn-xs(ng-click="clearAll()") All
+
       div.row
-         div( id="mainView")
-            div(id="controlBox" class="tab-content" ng-include="currentTab")
+         div( id="mainView" )
+            div(id="controlBox" class="tab-content" percent-Height percent='90'  ng-style="style" ng-include="currentTab")
 
 script(type="text/ng-template" id="one.tpl.html")
    div.tab( id="viewOne" ng-controller="resultsTabController")
-      div.container-fluid
-         div.row
-            div.col-lg-6
-               span.inputItem Polygon Files:
-               select.input-xs(name="polygonSelect" id="polygonSelect")
-                  option( ng-repeat="item in polygonFiles" value="{{item}}") {{item}}
-               button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='populatePolygonSelect()' title="Refresh file list.")
-               button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="drawPolygonFile()" title="Draw polygons to the map.")
+      form
+         div.form-group-sm
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-th-list(ng-click='clearResults()' title="Clear Results")
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-unchecked(ng-click='clearShapes()' title="Clear Shapes")
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-map-marker(ng-click='clearMarkers()' title="Clear Markers")
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-asterisk(ng-click='clearAll()' title="Clear All")
+         div.form-group-sm
+            label(for="polygonSelect") Polygon Files:
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='populatePolygonSelect()' title="Refresh file list.")
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="drawPolygonFile()" title="Draw polygons to the map.")
+            select.form-control(name="polygonSelect" id="polygonSelect")
+               option( ng-repeat="item in polygonFiles" value="{{item}}") {{item}}
+         div.form-group-sm
+            label(for="scoreSelect") Score Files:
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="popScore()" title="Refresh file list.")
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="gatherScores()" title="Load scores.")
+            select.form-control( name="scoreSelect" id="scoreSelect")
+               option( ng-repeat="item in scoreFiles" value="{{item}}") {{item}}
+         div.form-group-sm
+            label(for="sMaxEntries")  Max Points:
+            input.form-control(type="number" id="sMaxEntries" value="-1")
+         div.form-group-sm
+            label(for="sBinSize") Bin Size:
+            input.form-control(type="number" id="sBinSize" value=".005")
+         div.form-group-sm
+            label(for='aggScores') Bin by Lat-Lon:
+            input.form-control-sm(type="checkbox" checked=true id="aggScores" name="aggScores")
+         div.form-group-sm
+            label(for='aggTime') Bin as time series:
+            input.form-control-sm( type="checkbox" id="aggTime" name="aggTime")
+         div.form-group-sm
+            label(for='uniqueUser') Count only unique users:
+            input.form-control-sm(type="checkbox" id="uniqueUser")
 
-         div.row
-            div.col-lg-6
-               span.inputItem Score Files:
-               select.input-xs( name="scoreSelect" id="scoreSelect")
-                  option( ng-repeat="item in scoreFiles" value="{{item}}") {{item}}
-               button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="popScore()" title="Refresh file list.")
-               button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="gatherScores()" title="Load scores.")
-
-         div.row
-            div.col-lg-2
-               span.inputItem  Max Points:
-               input( id="sMaxEntries" value="-1" style="width:40px")
-            div.col-lg-4
-               label(for="sBinSize")
-                  span.inputItem Bin Size:
-                  input(type="text" id="sBinSize" value=".005" style="width:40px")
-         div.row
-            div.col-lg-2
-               input(type="checkbox" checked=true id="aggScores" name="aggScores")
-               label(for='aggScores')
-                  span.inputItem  Bin by Lat-Lon
-            div.col-lg-2
-               label(for='aggTime')
-                  input( type="checkbox" id="aggTime" name="aggTime")
-                  span.inputItem  Bin as time series
-
-         div.row
-            div.col-lg-4
-               label(for='uniqueUser')
-                  input(type="checkbox" id="uniqueUser")
-                  span.inputItem  Count only unique users
 script( type="text/ng-template" id="two.tpl.html")
    div.tab( id="viewTwo" ng-controller="runTabController")
-      div.container-fluid
-         div.row
-            div.col-lg-4
-               span.inputItem Data Set:
-               select(id="dataSetSelect" onchange="newCenter()")
-                  option( ng-repeat="item in dataSets" value="{{item}}") {{item}}
-            div.col-lg-4
-               a(href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;") View Progress
-         div.row
-            div.col-lg-6
-               div.input-group
-                  span.inputItem Polygon File:
+      div.form
+         div.form-group-sm
+            label(for='dataSetSelect') Data Set:
+            select.form-control(id="dataSetSelect" onchange="newCenter()")
+               option( ng-repeat="item in dataSets" value="{{item}}") {{item}}
+         div.form-group-sm
+            div.input-group
+               label(for='pFileName') Polygon File:
+               button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="populatePolygonSelect()" title="Refresh file list.")
+               button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-floppy-disk(ng-click="saveList()" title= "Save Polygon File")
+               div(style="display:inline-table")
                   div.input-group-btn
-                     button.btn.btn-xs.btn-default.dropdown-toggle(type="button" data-toggle="dropdown" aria-expanded="false")
+                     button.btn.btn-sm.btn-default(type="button" id="pFileDropButton" data-toggle="dropdown" aria-expanded="false")
                         span.caret
                      ul.scrollable-menu.dropdown-menu(role="menu")
                         li(ng-repeat="item in polygonFiles" ng-click="polyFileSelected(item)" value="{{item}}") {{item}}
-                  input.input-xs(type="text" ng-model="polyFile" id="pFileName" value="polyFile.json")
-                  button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="populatePolygonSelect()" title="Refresh file list.")
-                  button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-floppy-disk(ng-click="saveList()" title= "Save Polygon File")
-         div.row
-            div.col-lg-2
-               button.btn.btn-default.btn-xs(ng-click="applyScores()") Apply Scores
-            div.col-lg-3
-               input(id="sFileName" value="scores.csv")
-            div.col-lg-3
-               div(id="rankReturnInput") Return top:
-                  input(id="sTopN" value="300" style="width:50px")
-               div( id="percentReturnInput" class="invis") Return Percent:
-                  input( id="sTopPercent" value="0.0001" style="width:50px")
-         div.row
-            div.col-lg-4
-               label(for='bAdvanced')
-                  input( type="checkbox" id="bAdvanced" ng-click="toggleAdv()")
-                  | Show Advanced Options
-         div.row(id="hr1" class="invis")
-            div.col-lg-4
-               label(for='bPercent')
-                  input(type="checkbox" id="bPercent" ng-click="modReturn()")
-                  | Limit Return by Percent
-         div.row( id="hr4" class="invis")
-            div.col-lg-4
-               label(for='useML')
-                  input(type="checkbox" checked=true id="useML")
-                  | Use M.L. Scoring
-            div.col-lg-4 Feature Vector Max Length
-            div.col-lg-4
-               input( type="text" id="nFeat" value="300")
-         div.row( id="hr5" class="invis")
-            div.col-lg-4
-               label(for='useBayes')
-                  input( type="checkbox" id="useBayes")
-                  | Sort by Bayes (when ML)
-         div.row( id="hr3" class="invis")
-            div.col-lg-4
-               label(for='timeSeries')
-                  input( type="checkbox" id="timeSeries")
-                  | Time Series polygon
+                  input.form-control(type="text" ng-model="polyFile" id="pFileName" value="polyFile.json")
+         div.form-group-sm
+            label(for='sFileName') Score File:
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="applyScores()" title='Apply Scores')
+            input.form-control(id="sFileName" value="scores.csv")
 
-         div.row( id="hr2" class="invis")
-            div.col-lg-4 Custom Stop Words
-            div.col-lg-4
-               input( type="text" id="cStopW")
+         div.form-group-sm
+            div(id="rankReturnInput")
+               label(for='sTopN') Return top:
+               input.form-control(id="sTopN" value="300")
+         div.form-group-sm
+            div( id="percentReturnInput" class="invis")
+               label(for='sTopPercent') Return Percent:
+               input.form-control(id="sTopPercent" value="0.0001")
+         div.form-group-sm
+            label(for='bAdvanced') Show Advanced Options:
+            input.form-control-sm( type="checkbox" id="bAdvanced" ng-click="toggleAdv()")
+
+
+      //div( id="hr4" class="invis")
+         div.form-group-sm
+            label(for="nFeat") Feature Vector Max Length
+            input.form-control( type="text" id="nFeat" value="300")
+      div( id="hr1" class="invis")
+         div.form-group-sm
+            label(for="cStopW") Custom Stop Words
+            input.form-control( type="text" id="cStopW")
+
+      div(id="hr2" class="invis")
+         div.form-group-sm
+            label(for='bPercent') Limit Return by Percent
+               input.form-control-sm(type="checkbox" id="bPercent" ng-click="modReturn()")
+      div( id="hr3" class="invis")
+         div.form-group-sm
+            label(for='timeSeries') Time Series polygon
+            input.form-control-sm( type="checkbox" id="timeSeries")
+
+      div( id="hr4" class="invis")
+         div.form-group-sm
+            label(for='useML') Use M.L. Scoring
+               input.form-control-sm(type="checkbox" checked=true id="useML")
+
+      div( id="hr5" class="invis")
+         div.form-group-sm
+            label(for='useBayes') Sort by Bayes (when ML)
+            input.form-control-sm( type="checkbox" id="useBayes")
+
+
+
+
+
