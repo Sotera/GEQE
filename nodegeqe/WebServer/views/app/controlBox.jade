@@ -2,7 +2,7 @@ div.tabs(id="tabs" ng-controller="tabsController")
    div.container-fluid
       div.row
          div.col-lg-6
-            ul.tab-links
+            ul.nav.nav-tabs
                li(ng-repeat="tab in tabs" ng-class="{active:isActiveTab(tab.url)}" ng-click="onClickTab(tab)")
                   a {{tab.title}}
          div.col-lg-6

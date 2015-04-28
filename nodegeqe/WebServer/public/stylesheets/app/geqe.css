@@ -2,6 +2,10 @@ html{
     height:100%;
 }
 
+body{
+    background: #e8e8e8
+}
+
 .error{
     overflow:auto;
     padding: 10px;
@@ -25,6 +29,7 @@ html{
 }
 
 #details{
+    background-color: white;
     border: 1px solid lightblue;
     padding: 10px;
     overflow: auto;
@@ -80,8 +85,11 @@ div[class^="col-"]{
     padding: 10px;
     font-family: Roboto, Arial;
     font-size: 13px;
-    border-top: 1px solid lightblue;
+    background-color: white;
+    height: 228px;
+    overflow: auto;
 }
+
 #resultsBox {
     height: 228px;
     overflow:auto;
@@ -89,7 +97,7 @@ div[class^="col-"]{
     margin: 34px 0 0 0;
     font-family: Roboto, Arial;
     font-size: 13px;
-    border-top: 1px solid lightblue;
+    background-color: white;
 }
 #resultsText {
     position: relative;
@@ -131,35 +139,26 @@ div[class^="col-"]{
     text-align: center;
     margin: auto;
 }
-.tab-links li {
-    margin-right: 4px;
-    float:left;
-    list-style:none;
-}
-.tab-links a {
-    padding-left:4px;
-    padding-right:4px;
-    display:inline-block;
-    background:#7FB5DA;
-    font-size:16px;
-    font-weight:600;
-    color:#4c4c4c;
-    transition:all linear 0.15s;
-}
-.tab-links a:hover {
-    background:#a7cce5;
-    text-decoration:none;
-}
-li.active a, li.active a:hover {
-    background:#fff;
-    color:#4c4c4c;
-}
 .tab-content {
     border-radius:3px;
-}
-.tab.active {
-    display:block;
 }
 .invis {
     display:none;
 }
+
+.nav-tabs > li > a {
+    padding: 0px 4px;
+    background: #DADADA;
+    border-radius: 0;
+}
+
+/*---------------------------------
+------------debug css--------------
+-----------------------------------
+div[class^="col-"]{
+    border: 1px dotted green;
+}
+
+.row{
+    border: 1px dotted red;
+}*/
