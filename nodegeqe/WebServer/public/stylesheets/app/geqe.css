@@ -20,7 +20,6 @@ body{
 #map-canvas {
     width: 100%;
     height:100%;
-    border: 1px solid lightblue;
 }
 #boldLogo {
     position:absolute;
@@ -29,9 +28,8 @@ body{
 }
 
 #details{
-    background-color: white;
-    border: 1px solid lightblue;
-    padding: 10px;
+    background-color: #f4f4f4;
+    padding: 0px 10px;
     overflow: auto;
 }
 
@@ -64,7 +62,7 @@ body{
     margin:4px;
 }
 div[class^="col-"]{
-    padding:4px;
+    padding:0px;
 }
 
 .footer {
@@ -82,19 +80,17 @@ div[class^="col-"]{
 
 
 #controlBox {
-    padding: 10px;
     font-family: Roboto, Arial;
     font-size: 13px;
     background-color: white;
-    height: 228px;
+    height: 256px;
     overflow: auto;
 }
 
 #resultsBox {
-    height: 228px;
+    height: 256px;
     overflow:auto;
-    padding: 10px;
-    margin: 34px 0 0 0;
+    margin: 26px 0 0 0;
     font-family: Roboto, Arial;
     font-size: 13px;
     background-color: white;
