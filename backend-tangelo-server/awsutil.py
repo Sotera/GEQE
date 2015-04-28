@@ -3,16 +3,66 @@ import os
 import datetime
 import json
 import sys
+from threading import Thread
+from threading import Condition
+import tangelo
 
-DEFAULT_BUCKET = 'geqebin'
 
+CONSUMER_THREAD = None
+lock = Condition()
+
+
+class JobResultsReader(Thread):
+    """
+    Read and save results from the completed job queue
+    """
+
+    def __init__(self,bucket):
+        super(JobResultsReader,self).__init__()
+        self.bucket = bucket
+        self.incoming_url =  getBytesFromS3(bucket,'COMPLETED_QUEUE')
+
+    def run(self):
+        sqs = boto3.resource('sqs')
+        queue = sqs.Queue(self.incoming_url)
+        tangelo.log("JobResultsReader Thread: running.")
+        while True:
+            tangelo.log("JobResultsReader Thread: waiting for completed job message.")
+            while True:
+                messages = queue.receive_messages(WaitTimeSeconds=10,MaxNumberOfMessages=1)
+                if messages is not None and len(messages) > 0: break
+            message = messages[0]
+            content = json.loads(message.body)
+            tangelo.log("JobResultsReader Thread: got message: "+str(content))
+            self.delete_message(queue,message)
+            if content['success']: saveJobResults(content['jobname'],self.bucket)
+
+
+
+    def delete_message(self,queue,message):
+        entries = [{'Id':message.message_id,'ReceiptHandle':message.receipt_handle}]
+        response = queue.delete_messages(Entries=entries)
+        return 'Successful' in response and len(response['Successful']) > 0
+
+
+
+def start_consumer_thread(bucket):
+    global CONSUMER_THREAD
+    lock.acquire()
+    try:
+        if CONSUMER_THREAD is None or not CONSUMER_THREAD.isAlive():
+            CONSUMER_THREAD = JobResultsReader(bucket)
+            CONSUMER_THREAD.setDaemon(True)
+            CONSUMER_THREAD.start()
+    finally:
+        lock.release()
 
 
 
 def saveBytesToS3(bucket,key,bytes):
     s3 = boto3.resource('s3')
-    bucket = s3.Bucket(bucket)
-    bucket.put_object(Key=key,Body=bytes)
+    s3bucket = s3.Bucket(bucket)
+    s3bucket.put_object(Key=key,Body=bytes)
 
 
 def getBytesFromS3(bucket,key):
@@ -22,8 +72,7 @@ def getBytesFromS3(bucket,key):
 
 
 
-
-def submitJob(jobname,jobConf,polyFilePath,bucket=DEFAULT_BUCKET):
+def submitJob(jobname,jobConf,polyFilePath,bucket):
     """
     Save job details to s3 and submit jobname to the message queue
     :param jobConf:
@@ -32,20 +81,26 @@ def submitJob(jobname,jobConf,polyFilePath,bucket=DEFAULT_BUCKET):
     :return:
     """
 
+
+    JOB_QUEUE_URL = getBytesFromS3(bucket,'WAITING_QUEUE')
+
     saveBytesToS3(bucket,jobname+'/job.conf',json.dumps(jobConf))
+
     with open(polyFilePath,'r') as handle:
         bytes = handle.read()
         saveBytesToS3(bucket,jobname+'/poly.txt',bytes)
 
     saveBytesToS3(bucket,jobname+'/STATUS_WAITING',"")
+    send_to_queue(JOB_QUEUE_URL,jobname)
+    start_consumer_thread(bucket)
 
 
 
 
-def getStatus(jobname,bucket=DEFAULT_BUCKET):
+def getStatus(jobname,bucket):
     s3 = boto3.resource('s3')
-    bucket = s3.Bucket(bucket)
-    keys =  [x.key.replace(jobname+'/','') for x in bucket.objects.filter(Prefix=jobname)]
+    s3bucket = s3.Bucket(bucket)
+    keys =  [x.key.replace(jobname+'/','') for x in s3bucket.objects.filter(Prefix=jobname)]
     keys = filter(lambda x: 'STATUS_' == x[:7],keys)
     if len(keys) != 1:
         return "UNKNOWN STATUS"
@@ -54,10 +109,10 @@ def getStatus(jobname,bucket=DEFAULT_BUCKET):
 
 
 
-def getAllJobStatus(bucket=DEFAULT_BUCKET):
+def getAllJobStatus(bucket):
     s3 = boto3.resource('s3')
-    bucket = s3.Bucket(bucket)
-    keys =  [x.key for x in bucket.objects.all()]
+    s3bucket = s3.Bucket(bucket)
+    keys =  [x.key for x in s3bucket.objects.all()]
     keys = filter(lambda x: x[:3] == 'job' and 'STATUS_' in x,keys)
     statusDict = {}
     for key in keys:
@@ -74,7 +129,7 @@ def getAllJobStatus(bucket=DEFAULT_BUCKET):
 
 
 
-def saveJobResults(jobname,bucket=DEFAULT_BUCKET):
+def saveJobResults(jobname,bucket):
 
     try:
         getBytesFromS3(bucket,jobname+'/STATUS_SUCCESS')
@@ -92,9 +147,18 @@ def saveJobResults(jobname,bucket=DEFAULT_BUCKET):
 
 
 
+def send_to_queue(url,jobname):
+    sqs = boto3.resource('sqs')
+    queue = sqs.Queue(url)
+    message = json.dumps({'jobname':jobname})
+    response = queue.send_message(MessageBody=message)
+    return response
+
+
+
 if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        print 'requires job name to save results'
+    if len(sys.argv) != 3:
+        print 'usuage python ',sys.argv[0], ' bucket jobname'
         sys.exit(1)
     else:
-        saveJobResults(sys.argv[1])
+        saveJobResults(sys.argv[2],sys.argv[1])

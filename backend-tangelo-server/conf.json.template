@@ -12,5 +12,6 @@
     },
 
     "deploy-mode" : "local"
+    "s3-bucket" : ""  USE ONLY FOR deploy-mode "aws-emr" otherwise delete from conf
 
 }

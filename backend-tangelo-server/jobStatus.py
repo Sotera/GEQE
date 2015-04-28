@@ -16,11 +16,12 @@ def get(jobname=''):
             return json.dumps(commandlineLauncher.JOB_STATUS)
 
     elif 'aws-emr' == confObj['deploy-mode']:
+        bucket = confObj['s3-bucket']
         import awsutil
         if jobname != '':
-            return awsutil.getStatus(jobname)
+            return awsutil.getStatus(jobname,bucket)
         else:
-            return awsutil.getAllJobStatus()
+            return awsutil.getAllJobStatus(bucket)
 
     else:
         return "?"
