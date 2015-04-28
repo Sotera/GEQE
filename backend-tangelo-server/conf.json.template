@@ -9,6 +9,9 @@
 
     "datasets": {
         "Example 1 " : { "path": "", "type": 2},
-    }
+    },
+
+    "deploy-mode" : "local"
+    "s3-bucket" : ""  USE ONLY FOR deploy-mode "aws-emr" otherwise delete from conf
 
 }
