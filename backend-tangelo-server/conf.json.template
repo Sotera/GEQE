@@ -1,10 +1,15 @@
 {
     "spark": {
-        "SPARK_SUBMIT_PATH" : "",
-        "SPARK_MASTER" : "local",
-        "EXECUTOR_MEMORY": "4g",
-        "DRIVER_MEMORY": "2g",
-        "TOTAL_EXECUTOR_CORES": "4"
+        "SPARK_SUBMIT_PATH" : "/home/hadoop/spark/bin/",
+        "SPARK_OPTIONS" : [
+            "--master" , "yarn-client",
+            "--py-files" , "lib/shapeReader.py,lib/pointClass.py,lib/fspLib.py",
+            "--executor-memory" , "16g",
+            "--driver-memory" ,  "8g",
+            "--num-executors", "2",
+            "--executor-cores", "8"
+        ],
+        "SPARK_MASTER" : "yarn-client"
     },
 
     "datasets": {
