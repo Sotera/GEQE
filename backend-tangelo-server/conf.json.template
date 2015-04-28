@@ -9,7 +9,6 @@
             "--num-executors", "2",
             "--executor-cores", "8"
         ],
-        "SPARK_MASTER" : "yarn-client"
     },
 
     "datasets": {
