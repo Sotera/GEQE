@@ -10,18 +10,7 @@ angular.module('NodeWebBase')
             $scope.polyFile = item;
         };
 
-        $scope.jobs = [{"jobname":"job1", "status":"SUCCESS"},
-            {"jobname":"job2", "status":"SUCCESS"},
-            {"jobname":"job3", "status":"SUCCESS"},
-            {"jobname":"job4", "status":"SUCCESS"},
-            {"jobname":"job5", "status":"SUCCESS"},
-            {"jobname":"job6", "status":"SUCCESS"},
-            {"jobname":"job7", "status":"SUCCESS"},
-            {"jobname":"job8", "status":"SUCCESS"},
-            {"jobname":"job9", "status":"SUCCESS"},
-            {"jobname":"job10", "status":"SUCCESS"},
-            {"jobname":"job11", "status":"SUCCESS"},
-            {"jobname":"job12", "status":"RUNNING"}];
+        $scope.jobs = [];
 
         $scope.populatePolygonSelect = function() {
             if(!$rootScope.isAppConfigured())
