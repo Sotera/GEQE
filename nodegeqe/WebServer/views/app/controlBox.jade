@@ -83,34 +83,43 @@ script( type="text/ng-template" id="two.tpl.html")
             input.form-control-sm( type="checkbox" id="bAdvanced" ng-click="toggleAdv()")
 
 
-      //div( id="hr4" class="invis")
-         div.form-group-sm
-            label(for="nFeat") Feature Vector Max Length
-            input.form-control( type="text" id="nFeat" value="300")
-      div( id="hr1" class="invis")
-         div.form-group-sm
-            label(for="cStopW") Custom Stop Words
-            input.form-control( type="text" id="cStopW")
+         //div( id="hr4" class="invis")
+            div.form-group-sm
+               label(for="nFeat") Feature Vector Max Length
+               input.form-control( type="text" id="nFeat" value="300")
+         div( id="hr1" class="invis")
+            div.form-group-sm
+               label(for="cStopW") Custom Stop Words
+               input.form-control( type="text" id="cStopW")
 
-      div(id="hr2" class="invis")
-         div.form-group-sm
-            label(for='bPercent') Limit Return by Percent
-               input.form-control-sm(type="checkbox" id="bPercent" ng-click="modReturn()")
-      div( id="hr3" class="invis")
-         div.form-group-sm
-            label(for='timeSeries') Time Series polygon
-            input.form-control-sm( type="checkbox" id="timeSeries")
+         div(id="hr2" class="invis")
+            div.form-group-sm
+               label(for='bPercent') Limit Return by Percent
+                  input.form-control-sm(type="checkbox" id="bPercent" ng-click="modReturn()")
+         div( id="hr3" class="invis")
+            div.form-group-sm
+               label(for='timeSeries') Time Series polygon
+               input.form-control-sm( type="checkbox" id="timeSeries")
 
-      div( id="hr4" class="invis")
-         div.form-group-sm
-            label(for='useML') Use M.L. Scoring
-               input.form-control-sm(type="checkbox" checked=true id="useML")
+         div( id="hr4" class="invis")
+            div.form-group-sm
+               label(for='useML') Use M.L. Scoring
+                  input.form-control-sm(type="checkbox" checked=true id="useML")
 
-      div( id="hr5" class="invis")
-         div.form-group-sm
-            label(for='useBayes') Sort by Bayes (when ML)
-            input.form-control-sm( type="checkbox" id="useBayes")
-
+         div( id="hr5" class="invis")
+            div.form-group-sm
+               label(for='useBayes') Sort by Bayes (when ML)
+               input.form-control-sm( type="checkbox" id="useBayes")
+      div
+         table.table.table-striped
+            tr
+               th Job Name
+               th Job Status
+                  button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="getJobStatus()" title="Refresh Job Status.")
+            tbody(ng:repeat="job in jobs")
+               tr
+                  td {{job.jobname}}
+                  td {{job.status}}
 
 
 
