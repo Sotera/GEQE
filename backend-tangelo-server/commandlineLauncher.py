@@ -87,7 +87,18 @@ def getStatus(jobname):
             status = JOB_STATUS[jobname]
             if status == 'SUCCESS' or status == 'ERROR':
                 del JOB_STATUS[jobname]
-            return status
-        else: return "JOB NOT FOUND"
+            return [{'jobname':jobname, 'status': status}]
+        else: return [{'jobname': jobname, 'status': "JOB NOT FOUND"}]
+    finally:
+        condition.release()
+
+
+def getAllJobStatus():
+    condition.acquire()
+    try:
+        jobList = []
+        for jobname,status in JOB_STATUS.iteritems():
+            jobList.append({'jobname':jobname, 'status':status})
+        return jobList
     finally:
         condition.release()

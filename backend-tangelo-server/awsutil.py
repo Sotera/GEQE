@@ -102,10 +102,12 @@ def getStatus(jobname,bucket):
     s3bucket = s3.Bucket(bucket)
     keys =  [x.key.replace(jobname+'/','') for x in s3bucket.objects.filter(Prefix=jobname)]
     keys = filter(lambda x: 'STATUS_' == x[:7],keys)
+    statusDict = {'jobname':jobname}
     if len(keys) != 1:
-        return "UNKNOWN STATUS"
+        statusDict['status'] = 'UNKNOWN'
     else:
-        return keys[0]
+        statusDict['status'] = keys[0].replace('STATUS_','')
+    return [statusDict]
 
 
 
@@ -114,15 +116,12 @@ def getAllJobStatus(bucket):
     s3bucket = s3.Bucket(bucket)
     keys =  [x.key for x in s3bucket.objects.all()]
     keys = filter(lambda x: x[:3] == 'job' and 'STATUS_' in x,keys)
-    statusDict = {}
+    statusList = []
     for key in keys:
         (job,status) = key.split('/')
         status = status.replace('STATUS_','')
-        if job in statusDict:
-            statusDict[job] = 'UNKNOWN STATUS'
-        else:
-            statusDict[job] = status
-    return statusDict
+        statusList.append({'jobname':job,'status':status})
+    return statusList
 
 
 

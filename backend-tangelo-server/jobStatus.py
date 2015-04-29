@@ -13,7 +13,7 @@ def get(jobname=''):
         if '' != jobname:
             return commandlineLauncher.getStatus(jobname)
         else:
-            return json.dumps(commandlineLauncher.JOB_STATUS)
+            return json.dumps(commandlineLauncher.getAllJobStatus())
 
     elif 'aws-emr' == confObj['deploy-mode']:
         bucket = confObj['s3-bucket']
