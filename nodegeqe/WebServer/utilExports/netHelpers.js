@@ -16,7 +16,7 @@ exports.performAjaxRequest = function (hostname, port, path, method, data, succe
 				'Content-Length': dataString.length
 			};
 		}
-	} 
+	}
 
 	var options = {
 		hostname: hostname,
