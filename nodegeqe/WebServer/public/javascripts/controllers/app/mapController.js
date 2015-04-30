@@ -10,15 +10,15 @@ angular.module('NodeWebBase')
 
         $scope.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
         $scope.shapes = [];
-        $scope.markers = [];
+        $scope.markers = {};
 
         $rootScope.$on('drawPolygonFile', function (event, data) {
             $scope.clearCurrentShapes();
             $scope.drawPolygonFile(data);
         });
 
-        $rootScope.$on('clearCurrentMarkers', function () {
-            $scope.clearCurrentMarkers();
+        $rootScope.$on('clearMarkers', function (event,types) {
+            $scope.clearMarkers(types);
         });
 
         $rootScope.$on('clearCurrentShapes', function () {
@@ -248,7 +248,7 @@ angular.module('NodeWebBase')
         };
 
         $scope.clearAll = function(){
-            $scope.clearCurrentMarkers();
+            $scope.clearMarkers(['training','score']);
             $scope.clearCurrentShapes();
         };
 
@@ -260,13 +260,17 @@ angular.module('NodeWebBase')
             $scope.shapes = [];
         };
 
-        $scope.clearCurrentMarkers = function(){
-            angular.forEach($scope.markers,function(marker,idx){
-                marker.setMap(null);
-                $scope.markers[idx] = null;
+        $scope.clearMarkers = function(types){
+            angular.forEach(types,function(type){
+                var markers = $scope.markers[type];
+                angular.forEach(markers,function(marker){
+                    marker.setMap(null);
+                });
             });
 
-            $scope.markers = [];
+            angular.forEach(types,function(type){
+                $scope.markers[type] = [];
+            });
         };
 
         $scope.rgbToHex =function(r,g,b){
@@ -318,6 +322,8 @@ angular.module('NodeWebBase')
         };
 
         $scope.putTrainingMarker = function(location,caption,item){
+            if(!$scope.markers['training'])
+                $scope.markers['training'] = [];
             var marker = new google.maps.Marker({
                 position: location,
                 map: $scope.map,
@@ -325,7 +331,7 @@ angular.module('NodeWebBase')
                 title:caption
             });
 
-            $scope.markers.push(marker);
+            $scope.markers['training'].push(marker);
             google.maps.event.addListener(marker, 'click', function() {
                 marker.setIcon($scope.getIcon("#00FF00"));
                 if($scope.selectedMarker){
@@ -338,6 +344,8 @@ angular.module('NodeWebBase')
 
         $scope.putScoreMarker = function(location, caption, item, numMarkers, markerIndex) {
 
+            if(!$scope.markers['score'])
+                $scope.markers['score'] = [];
             var marker = new google.maps.Marker({
                 position: location,
                 map: $scope.map,
@@ -346,7 +354,7 @@ angular.module('NodeWebBase')
                 markerIndex:markerIndex
             });
 
-            $scope.markers.push(marker);
+            $scope.markers['score'].push(marker);
             google.maps.event.addListener(marker, 'click', function() {
                 marker.setIcon($scope.getIcon("#00FF00"));
                 if($scope.selectedMarker){

@@ -32,10 +32,10 @@ script(type="text/ng-template" id="one.tpl.html")
                option( ng-repeat="item in scoreFiles" value="{{item}}") {{item}}
          div.form-group-sm
             label(for="sMaxEntries")  Max Points:
-            input.form-control(type="number" id="sMaxEntries" value="-1")
+            input.form-control(type="number" id="sMaxEntries" value="-1" novalidate)
          div.form-group-sm
             label(for="sBinSize") Bin Size:
-            input.form-control(type="number" id="sBinSize" value=".005")
+            input.form-control(type="number" id="sBinSize" value=".005" novalidate)
          div.form-group-sm
             label(for='aggScores') Bin by Lat-Lon:
             input.form-control-sm(type="checkbox" checked=true id="aggScores" name="aggScores")

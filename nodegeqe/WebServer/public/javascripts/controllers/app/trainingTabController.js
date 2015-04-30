@@ -33,7 +33,7 @@ angular.module('NodeWebBase')
                 },
                 dataType: "json",
                 success: function (response) {
-                    $rootScope.$emit("clearCurrentMarkers");
+                    $rootScope.$emit("clearMarkers",['training']);
                     $rootScope.$emit("drawMapMarkers",response.sco,null, "training");
                 },
                 error: $rootScope.showError

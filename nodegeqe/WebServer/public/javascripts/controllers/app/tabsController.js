@@ -22,7 +22,7 @@ angular.module('NodeWebBase')
         };
 
         $scope.clearMarkers = function(){
-            $rootScope.$emit("clearCurrentMarkers");
+            $rootScope.$emit("clearMarkers",['training','score']);
         };
 
         $scope.clearShapes = function(){
