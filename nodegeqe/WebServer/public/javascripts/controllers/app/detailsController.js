@@ -76,7 +76,15 @@ angular.module('NodeWebBase')
         };
 
         $scope.getAccount = function(){
-            $scope.findSocialMediaLink($scope.currentItem.usr, $scope.loadSocialPage);
+            //$scope.findSocialMediaLink($scope.currentItem.usr, $scope.loadSocialPage);
+            $scope.$apply(function () {
+                if($scope.currentItem.img != null){
+                    $scope.socialMediaUrl = "https://instagram.com/" + $scope.currentItem.usr;
+                    return;
+                }
+
+                $scope.socialMediaUrl = "https://twitter.com/" + $scope.currentItem.usr;
+            });
         };
 
         $scope.showImage = function(url){

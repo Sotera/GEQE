@@ -113,9 +113,10 @@ script( type="text/ng-template" id="two.tpl.html")
       div
          table.table.table-striped
             tr
-               th Job Name
-               th Job Status
+               th
                   button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="getJobStatus()" title="Refresh Job Status.")
+                  | Job Name
+               th Job Status
             tbody(ng:repeat="job in jobs")
                tr
                   td {{job.jobname}}
