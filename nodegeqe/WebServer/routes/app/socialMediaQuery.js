@@ -26,6 +26,28 @@ var checkTwitter = function(req,res,username){
 
 };
 
+var checkTwitter2 = function(req,res,username){
+    var Twitter = require("twitter");
+
+    var client = new Twitter({
+        consumer_key: 'hl0yqdyod64vsZ6nGolhR4IW2',
+        consumer_secret: 'Ii1DIbQWE75M2pF7Ch4oIpDS63MXzT0kgKtqOGbzVIK0LbLKUz',
+        access_token_key: '3179892536-EAj5iPHmfFiaQhNxarMz82wn8z8q5hrUddGFrYl',
+        access_token_secret: 'KOWtnyb5FH4ApjbySOwR8uY2QLeSUEwDuv3kBJgxLdZr6'
+    });
+
+    var params = {screen_name: username};
+    client.get('users/show', params, function(error, tweets, response){
+        if (!error) {
+            console.log(tweets);
+        }else{
+            console.log(error);
+        }
+        res.status(200).send("");
+    });
+};
+
+
 router.get('/:vp', function (req, res) {
     var partialName = req.params.vp;
     var socialRequest = require("request");
@@ -41,7 +63,7 @@ router.get('/:vp', function (req, res) {
 
         if(response.statusCode == 404)
         {
-            checkTwitter(req,res,partialName);
+            checkTwitter2(req,res,partialName);
             return;
         }
 

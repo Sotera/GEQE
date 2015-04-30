@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var netHelpers = require('../../utilExports/netHelpers');
+var netHelpers = require('netHelpers');
 
 router.get('/:vp', function (req, res) {
     netHelpers.performAjaxRequest('localhost', 5500, '/api/users' + req.url, 'GET', null,function (resultObject) {
