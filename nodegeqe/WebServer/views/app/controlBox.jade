@@ -122,6 +122,15 @@ script( type="text/ng-template" id="two.tpl.html")
                   td {{job.jobname}}
                   td {{job.status}}
 
+script(type="text/ng-template" id="three.tpl.html")
+   div.tab( id="viewOne" ng-controller="trainingTabController")
+      form
+         div.form-group-sm
+            label(for="trainingSelect") Polygon Files:
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='populateTrainingSelect()' title="Refresh file list.")
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="drawTrainingData()" title="Draw training data to the map.")
+            select.form-control(name="trainingSelect" id="trainingSelect")
+               option( ng-repeat="item in trainingFiles" value="{{item}}") {{item}}
 
 
 

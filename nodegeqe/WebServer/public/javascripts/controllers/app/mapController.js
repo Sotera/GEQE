@@ -317,6 +317,25 @@ angular.module('NodeWebBase')
             };
         };
 
+        $scope.putTrainingMarker = function(location,caption,item){
+            var marker = new google.maps.Marker({
+                position: location,
+                map: $scope.map,
+                icon: $scope.getIcon("#3C85E6"),
+                title:caption
+            });
+
+            $scope.markers.push(marker);
+            google.maps.event.addListener(marker, 'click', function() {
+                marker.setIcon($scope.getIcon("#00FF00"));
+                if($scope.selectedMarker){
+                    $scope.selectedMarker.setIcon($scope.getIcon("#3C85E6"));
+                }
+                $scope.selectedMarker = marker;
+                $rootScope.$emit("loadItemData",item);
+            });
+        };
+
         $scope.putScoreMarker = function(location, caption, item, numMarkers, markerIndex) {
 
             var marker = new google.maps.Marker({
@@ -386,7 +405,36 @@ angular.module('NodeWebBase')
 
         };
 
-        $rootScope.$on('putScoreMarkers', function (event, data, binSize) {
+        $rootScope.$on('drawMapMarkers', function (event, data, binSize, markerType) {
+            switch (markerType) {
+                case "score":
+                    $scope.drawScopeMarkers(data, binSize);
+                    break;
+                case "training":
+                    $scope.drawTrainingMarkers(data);
+                    break;
+            }
+        });
+
+        $scope.drawTrainingMarkers = function(data){
+            var locations = [];
+
+            angular.forEach(data, function(item){
+                var capPScor = item['cap'];
+
+                var lat = parseFloat(item['lat']);
+                var lon = parseFloat(item['lon']);
+
+                var markerLocation = new google.maps.LatLng(lat, lon);
+                locations.push(markerLocation);
+                $scope.putTrainingMarker(markerLocation, capPScor, item);
+
+            });
+
+            $scope.calculateBounds(locations);
+        };
+
+        $scope.drawScopeMarkers = function(data, binSize){
             var locations = [];
 
             angular.forEach(data, function(item){
@@ -419,7 +467,7 @@ angular.module('NodeWebBase')
             });
 
             $scope.calculateBounds(locations);
-        });
+        };
 
         $scope.renderKmlFile = function(file) {
             var reader = new FileReader();
