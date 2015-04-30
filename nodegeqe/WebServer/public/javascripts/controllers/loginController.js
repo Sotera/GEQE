@@ -2,8 +2,8 @@ angular.module('NodeWebBase', ['ngCookies', 'ngDialog'])
 		.config(function ($locationProvider) {
 			//$locationProvider.html5Mode(true);
 		})
-    .constant('authUrl', 'http://geqe.local/login')
-		.controller('loginController', function ($scope, $http, $window, $cookies, authUrl, ngDialog) {
+		.constant('authUrl', '/login')
+		.controller('loginController', function ($scope, $http, $window, $cookies, $rootScope, authUrl, ngDialog) {
 			// Do the whole check cookies for last username, etc.
 			$scope.data = {
 				rememberMe: $cookies.rememberMe === 'true',
@@ -17,6 +17,8 @@ angular.module('NodeWebBase', ['ngCookies', 'ngDialog'])
 					withCredentials: true
 				})
 						.success(function (res) {
+							$cookies.userId = res.userId;
+							$cookies.access_token = res.id;
 							$cookies.lastUsername = $scope.data.username;
 							$cookies.rememberMe = $scope.data.rememberMe;
 							$window.location.href = '/';

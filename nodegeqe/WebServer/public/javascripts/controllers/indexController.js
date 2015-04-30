@@ -1,10 +1,8 @@
-angular.module('NodeWebBase', ['ngRoute', 'logout'])
-    .constant('dataUrl', 'http://geqe.local/products')
-    .constant('orderUrl', 'http://geqe.local/orders')
+angular.module('NodeWebBase', ['ngRoute', 'logout','nbSettings'])
 		.config(function ($routeProvider) {
 			$routeProvider
 			.otherwise({templateUrl: '/views/app/main'})
 		})
-		.controller('indexController', function ($scope, $http, $location, dataUrl, orderUrl) {
+		.controller('indexController', function ($scope, $http, $location) {
 
 		});

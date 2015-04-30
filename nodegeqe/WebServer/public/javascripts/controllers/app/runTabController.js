@@ -3,16 +3,76 @@
  */
 angular.module('NodeWebBase')
     .controller('runTabController', function ($scope, $rootScope) {
+        $scope.dataSets= ["--select--"];
+        $scope.polygonFiles = ["--select--"];
+        $scope.polyFile = "polyfile.json";
+        $scope.polyFileSelected = function(item){
+            $scope.polyFile = item;
+        };
 
+        $scope.jobs = [];
+
+        $scope.populatePolygonSelect = function() {
+            if(!$rootScope.isAppConfigured())
+                return;
+            $.ajax({
+                url: "app/controlBox/popScoreList",
+                data : {
+                    filePath: $rootScope.savePath,
+                    subDir:$scope.fileSubDir
+                },
+                dataType: "json",
+                success: function (response) {
+                    $scope.$apply(function() {
+                        $scope.polygonFiles = response.lFiles;
+                    });
+                },
+                error: $rootScope.showError
+            });
+        };
+
+        $scope.getJobStatus = function(){
+            if(!$rootScope.isAppConfigured())
+                return;
+            $.ajax({
+                url: "app/controlBox/jobStatus",
+                dataType: "json",
+                success: function (response) {
+                    $scope.$apply(function(){
+                        $scope.jobs= response;
+                    });
+
+                },
+                error: $rootScope.showError
+            });
+        };
+
+        $scope.getDataSets = function(){
+            if(!$rootScope.isAppConfigured())
+                return;
+            $.ajax({
+                url: "app/controlBox/getDataSets",
+                dataType: "json",
+                success: function (response) {
+                    $scope.$apply(function(){
+                        $scope.dataSets= response;
+                    });
+
+                },
+                error: $rootScope.showError
+            });
+        };
         $scope.saveList = function(){
 
             $rootScope.$emit("getShapesText",
             {
                 "scope":this,
                 "callback":function(resultsText){
+                    if(!$rootScope.isAppConfigured())
+                        return;
                     var pName = $("#pFileName").val();
                     $.ajax({
-                        url:  $rootScope.baseUrl + "app/controlBox/writePoly",
+                        url: "app/controlBox/writePoly",
                         data: {
                             filePath: $rootScope.savePath,
                             filePolygon: pName,
@@ -22,15 +82,16 @@ angular.module('NodeWebBase')
                         success: function (response) {
                             $("#resultsText").text(pName + " written");
                         },
-                        error: function (jqxhr, testStatus, reason) {
-                            $("#resultsText").text(reason);
-                        }
+                        error: $rootScope.showError
                     });
                 }
             });
         };
 
         $scope.applyScores = function() {
+            if(!$rootScope.isAppConfigured())
+                return;
+
             var pName = $("#pFileName").val();
             var sName = $("#sFileName").val();
             var dSet = $("#dataSetSelect").val();
@@ -45,7 +106,7 @@ angular.module('NodeWebBase')
             var nFeat = $("#nFeat").val();
             var sSWords = $("#cStopW").val();
             $.ajax({
-                url:  $rootScope.baseUrl + "app/controlBox/applyScores",
+                url: "app/controlBox/applyScores",
                 data: {
                     filePath: $rootScope.savePath,
                     filePolygon: pName,
@@ -61,9 +122,7 @@ angular.module('NodeWebBase')
                 success: function (response) {
                     $("#resultsText").text("Job Launched");
                 },
-                error: function (jqxhr, testStatus, reason) {
-                    $("#resultsText").text(reason);
-                }
+                error: $rootScope.showError
             });
         };
         $scope.modReturn = function() {
@@ -99,5 +158,9 @@ angular.module('NodeWebBase')
                 r4.addClass("invis");
                 r5.addClass("invis");
             }
-        }
+        };
+
+        //go ahead and get the data sets from the server
+        $scope.getDataSets();
+        $scope.populatePolygonSelect();
     });

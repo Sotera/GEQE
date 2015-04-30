@@ -1,138 +1,126 @@
 div.tabs(id="tabs" ng-controller="tabsController")
-   ul.tab-links
-      li(ng-repeat="tab in tabs" ng-class="{active:isActiveTab(tab.url)}" ng-click="onClickTab(tab)")
-         a {{tab.title}}
-   div( id="mainView")
-      div(id="controlBox" class="tab-content" ng-include="currentTab")
+   div.container-fluid
+      div.row
+         div.col-lg-12
+            ul.nav.nav-tabs
+               li(ng-repeat="tab in tabs" ng-class="{active:isActiveTab(tab.url)}" ng-click="onClickTab(tab)")
+                  a {{tab.title}}
+
+      div.row
+         div( id="mainView" )
+            div(id="controlBox" class="tab-content" percent-Height percent='90'  ng-style="style" ng-include="currentTab")
 
 script(type="text/ng-template" id="one.tpl.html")
    div.tab( id="viewOne" ng-controller="resultsTabController")
-      table(style="width:100%")
-         tr
-            td
-               button(type="button" class="btn btn-default" ng-click='populatePolygonSelect()') Get Polygon Files
-            td
-               select(name="polygonSelect" id="polygonSelect")
-                  option(value="0") -Select-
-               button(type="button" class="btn btn-default btn-xs" ng-click="drawPolygonFile()") Load File
-            td
-               |Clear:
-               button(type="button" class="btn btn-default btn-xs" ng-click="clearResults()") Results
-               button(type="button" class="btn btn-default btn-xs" ng-click="clearShapes()") Shapes
-               button(type="button" class="btn btn-default btn-xs" ng-click="clearMarkers()") Markers
-               button(type="button" class="btn btn-default btn-xs" ng-click="clearAll()") All
+      form
+         div.form-group-sm
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-th-list(ng-click='clearResults()' title="Clear Results")
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-unchecked(ng-click='clearShapes()' title="Clear Shapes")
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-map-marker(ng-click='clearMarkers()' title="Clear Markers")
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-asterisk(ng-click='clearAll()' title="Clear All")
+         div.form-group-sm
+            label(for="polygonSelect") Polygon Files:
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='populatePolygonSelect()' title="Refresh file list.")
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="drawPolygonFile()" title="Draw polygons to the map.")
+            select.form-control(name="polygonSelect" id="polygonSelect")
+               option( ng-repeat="item in polygonFiles" value="{{item}}") {{item}}
+         div.form-group-sm
+            label(for="scoreSelect") Score Files:
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="popScore()" title="Refresh file list.")
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="gatherScores()" title="Load scores.")
+            select.form-control( name="scoreSelect" id="scoreSelect")
+               option( ng-repeat="item in scoreFiles" value="{{item}}") {{item}}
+         div.form-group-sm
+            label(for="sMaxEntries")  Max Points:
+            input.form-control(type="number" id="sMaxEntries" value="-1")
+         div.form-group-sm
+            label(for="sBinSize") Bin Size:
+            input.form-control(type="number" id="sBinSize" value=".005")
+         div.form-group-sm
+            label(for='aggScores') Bin by Lat-Lon:
+            input.form-control-sm(type="checkbox" checked=true id="aggScores" name="aggScores")
+         div.form-group-sm
+            label(for='aggTime') Bin as time series:
+            input.form-control-sm( type="checkbox" id="aggTime" name="aggTime")
+         div.form-group-sm
+            label(for='uniqueUser') Count only unique users:
+            input.form-control-sm(type="checkbox" id="uniqueUser")
 
-         tr
-            td
-               button( type="button" class="btn btn-default" ng-click="popScore()") Get Score Files
-            td
-               select( name="scoreSelect" id="scoreSelect")
-                  option( value="0") -Select-
-         tr
-            td
-               button(type="button" class="btn btn-default" ng-click="gatherScores()") Get Scores
-            td
-               | Max Points:
-               input( id="sMaxEntries" value="-1" style="width:40px")
-         tr
-            td
-               label(for='aggScores')
-                  input(type="checkbox" id="aggScores" name="aggScores")
-                  | Bin by Lat-Lon
-            td
-               label(for="sBinSize")
-                  input(type="text" id="sBinSize" value=".005")
-                  | Bin Size
-         tr
-            td
-               label(for='aggTime')
-                  input( type="checkbox" id="aggTime" name="aggTime")
-                  | Bin as time series
-            td
-               label(for='uniqueUser')
-                  input(type="checkbox" id="uniqueUser")
-                  | Count only unique users
-         tr
-            td(colspan="3")
-               div(id="drop_zone" drop-target ng-click="onDropZoneClicked()") Drop kml file here or click to browse.
-                  output( id="file_list")
 script( type="text/ng-template" id="two.tpl.html")
    div.tab( id="viewTwo" ng-controller="runTabController")
-      table( style="width:100%")
-         tr
-            td
-               b Data Set
-            td
-               select( id="dataSetSelect" onchange="newCenter()")
-                  option( value="Cleveland") Cleveland
-                  option( value="Texas") Texas
-                  option(value="dcArea") Washington D.C.
-            td
-               a(href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;") View Progress
-         tr
-            td
-               button(type="button" class="btn btn-default" ng-click="saveList()") Save Polygon File
-            td
-               input(type="text" id="pSavePath" readonly="True" disabled)
-            td
-               input( type="text" id="pFileName" value="polyFile.txt")
-         tr
-            td
-               button( type="button" class="btn btn-default" ng-click="applyScores()") Apply Scores
-            td
-               input(id="sFileName" value="scores.csv")
-            td
-               div(id="rankReturnInput") Return top:
-                  input(id="sTopN" value="300" style="width:50px")
-               div( id="percentReturnInput" class="invis") Return Percent:
-                  input( id="sTopPercent" value="0.0001" style="width:50px")
-         tr
-            td
-               label(for='bAdvanced')
-                  input( type="checkbox" id="bAdvanced" ng-click="toggleAdv()")
-                  | Show Advanced Options
-         tr(id="hr1" class="invis")
-            td
-               label(for='bPercent')
-                  input(type="checkbox" id="bPercent" ng-click="modReturn()")
-                  | Limit Return by Percent
-         tr( id="hr4" class="invis")
-            td
-               label(for='useML')
-                  input(type="checkbox" id="useML")
-                  | see M.L. Scoring
-            td Feature Vector Max Length
-            td
-               input( type="text" id="nFeat" value="300")
-         tr( id="hr5" class="invis")
-            td
-               label(for='useBayes')
-                  input( type="checkbox" id="useBayes")
-                  | Sort by Bayes (when ML)
-         tr( id="hr3" class="invis")
-            td
-               label(for='timeSeries')
-                  input( type="checkbox" id="timeSeries")
-                  | Time Series polygon
+      div.form
+         div.form-group-sm
+            label(for='dataSetSelect') Data Set:
+            select.form-control(id="dataSetSelect" onchange="newCenter()")
+               option( ng-repeat="item in dataSets" value="{{item}}") {{item}}
+         div.form-group-sm
+            div.input-group
+               label(for='pFileName') Polygon File:
+               button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="populatePolygonSelect()" title="Refresh file list.")
+               button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-floppy-disk(ng-click="saveList()" title= "Save Polygon File")
+               div(style="display:inline-table")
+                  div.input-group-btn
+                     button.btn.btn-sm.btn-default(type="button" id="pFileDropButton" data-toggle="dropdown" aria-expanded="false")
+                        span.caret
+                     ul.scrollable-menu.dropdown-menu(role="menu")
+                        li(ng-repeat="item in polygonFiles" ng-click="polyFileSelected(item)" value="{{item}}") {{item}}
+                  input.form-control(type="text" ng-model="polyFile" id="pFileName" value="polyFile.json")
+         div.form-group-sm
+            label(for='sFileName') Score File:
+            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="applyScores()" title='Apply Scores')
+            input.form-control(id="sFileName" value="scores.csv")
 
-         tr( id="hr2" class="invis")
-            td Custom Stop Words
-            td
-               input( type="text" id="cStopW")
-script( type="text/ng-template" id="three.tpl.html")
-   div.tab( id="viewThree" ng-controller="testTabController")
-      table( style="width:100%")
-         tr
-            td
-               button( type="button" class="btn btn-default" ng-click="launchTest()") Cross Validate
-            td
-               input( type="text" id="tFileName" value="testSummary.csv")
-            td
-               a(href="http://scc.silverdale.dev:7180/cmf/home" target="_blank" style="target-new: tab;") View Progress
-         tr
-            td
-               button(type="button" class="btn btn-default" ng-click="gatherTest()") Get Results
-            td Mean:
-               input( id="inMean" type="text" readonly="True" value="Test Mean" style="width:65px")
-            td Variance:
-               input( id="inVar" type="text" readonly="True" value="Test Var" style="width:60px")
+         div.form-group-sm
+            div(id="rankReturnInput")
+               label(for='sTopN') Return top:
+               input.form-control(id="sTopN" value="300")
+         div.form-group-sm
+            div( id="percentReturnInput" class="invis")
+               label(for='sTopPercent') Return Percent:
+               input.form-control(id="sTopPercent" value="0.0001")
+         div.form-group-sm
+            label(for='bAdvanced') Show Advanced Options:
+            input.form-control-sm( type="checkbox" id="bAdvanced" ng-click="toggleAdv()")
+
+
+         //div( id="hr4" class="invis")
+            div.form-group-sm
+               label(for="nFeat") Feature Vector Max Length
+               input.form-control( type="text" id="nFeat" value="300")
+         div( id="hr1" class="invis")
+            div.form-group-sm
+               label(for="cStopW") Custom Stop Words
+               input.form-control( type="text" id="cStopW")
+
+         div(id="hr2" class="invis")
+            div.form-group-sm
+               label(for='bPercent') Limit Return by Percent
+                  input.form-control-sm(type="checkbox" id="bPercent" ng-click="modReturn()")
+         div( id="hr3" class="invis")
+            div.form-group-sm
+               label(for='timeSeries') Time Series polygon
+               input.form-control-sm( type="checkbox" id="timeSeries")
+
+         div( id="hr4" class="invis")
+            div.form-group-sm
+               label(for='useML') Use M.L. Scoring
+                  input.form-control-sm(type="checkbox" checked=true id="useML")
+
+         div( id="hr5" class="invis")
+            div.form-group-sm
+               label(for='useBayes') Sort by Bayes (when ML)
+               input.form-control-sm( type="checkbox" id="useBayes")
+      div
+         table.table.table-striped
+            tr
+               th Job Name
+               th Job Status
+                  button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="getJobStatus()" title="Refresh Job Status.")
+            tbody(ng:repeat="job in jobs")
+               tr
+                  td {{job.jobname}}
+                  td {{job.status}}
+
+
+
+

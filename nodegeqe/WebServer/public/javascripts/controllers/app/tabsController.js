@@ -6,15 +6,7 @@ angular.module('NodeWebBase')
         }, {
             title: 'Run',
             url: 'two.tpl.html'
-        }, {
-            title: 'Test',
-            url: 'three.tpl.html'
         }];
-
-        $rootScope.baseUrl = "http://geqe.local/";
-        $rootScope.savePath = "exSrc/";
-        //$scope.savePath = "/home/jgartner/findSP/";
-        $rootScope.fileSubDir = "inputFiles/";
 
         $scope.currentTab = 'one.tpl.html';
 
@@ -26,5 +18,21 @@ angular.module('NodeWebBase')
             return tabUrl == $scope.currentTab;
         };
 
+        $scope.clearMarkers = function(){
+            $rootScope.$emit("clearCurrentMarkers");
+        };
+
+        $scope.clearShapes = function(){
+            $rootScope.$emit("clearCurrentShapes");
+        };
+
+        $scope.clearResults = function(){
+            $rootScope.$emit("clearResults");
+        };
+
+        $scope.clearAll = function(){
+            $rootScope.$emit("clearAll");
+            $scope.clearResults();
+        };
 
     });

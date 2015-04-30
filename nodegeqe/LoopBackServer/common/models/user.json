@@ -6,7 +6,20 @@
   "properties": {
     "rememberMe": {
       "type": "boolean"
+    },
+    "savePath": {
+      "type": "string"
+    },
+    "inputSubDir": {
+      "type": "string"
+    },
+    "serviceHostName": {
+      "type": "string"
+    },
+    "servicePort": {
+      "type": "string"
     }
+
   },
   "validations": [],
   "relations": {},

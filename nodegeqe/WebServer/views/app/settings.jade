@@ -1,0 +1,38 @@
+.modal-header
+   h3 Settings
+.modal-body
+   form(novalidate)#signup-form.well.span4
+      p.subheading User Settings
+      fieldset
+         .control-group
+            label.control-label(for='nameTextBox') Name
+            .controls
+               input#nameTextBox.input-xlarge(type='text', ng-model='data.fullname')
+         .control-group
+            label.control-label(for='emailTextBox') Email
+            .controls
+               input#emailTextBox.input-xlarge(type='text', ng-model='data.email')
+      p.subheading System Configuration
+      fieldset
+         .control-group
+            label.control-label(for='savePathTextBox') Save Path
+            .controls
+               input#savePathTextBox.input-xlarge(type='text', ng-model='data.savePath')
+         .control-group
+            label.control-label(for='inputSubDirTextBox') Input Sub Dir
+            .controls
+               input#inputSubDirTextBox.input-xlarge(type='text', ng-model='data.inputSubDir')
+         .control-group
+            label.control-label(for='serviceHostNameTextBox') Service Host Name
+            .controls
+               input#serviceHostNameTextBox.input-xlarge(type='text', ng-model='data.serviceHostName')
+         .control-group
+            label.control-label(for='servicePortTextBox') Service Port
+            .controls
+               input#servicePortTextBox.input-xlarge(type='text', ng-model='data.servicePort')
+
+div.modal-footer
+   button.btn.btn-primary(ng-click="save()")
+      | Save
+   button.btn(ng-click="cancel()")
+      | Cancel

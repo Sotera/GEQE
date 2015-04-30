@@ -1,0 +1,151 @@
+angular.module('NodeWebBase')
+    .controller('detailsController', ['$scope','$rootScope','$window','ngDialog', function ($scope, $rootScope,$window, ngDialog) {
+        $scope.scopeName = 'detailsController';
+        $scope.data = {"nTotal":0};
+        $scope.currentItemIndex = null;
+        $scope.displayIndex = 0;
+        $scope.displayCaptionHtml = "None";
+        $scope.termArray = [];
+        $scope.defaultItem = {  "img":"/images/blank.png",
+                                "usr":"None Selected",
+                                "cap":"",
+                                "sco":"",
+                                "nTotal":0,
+                                "date":""};
+        $scope.socialMediaUrl = $scope.defaultItem.img;
+        $scope.currentItem = $scope.defaultItem;
+
+        $rootScope.$on('loadItemData', function (event, data) {
+            $scope.$apply(function () {
+                $scope.data = data;
+                $scope.currentItemIndex = 0;
+                $scope.displayIndex = 1;
+                $scope.currentItem = $scope.data.posts[0];
+                $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
+                $("#caption").html($scope.displayCaptionHtml);
+            });
+
+            $scope.getAccount();
+        });
+
+        $rootScope.$on("setTermDictionary", function(event,data){
+            $scope.$apply(function () {
+                    angular.forEach(data,function(entry,idx){
+                        $scope.termArray.push(entry[0]);
+                    })
+                });
+        });
+
+        $rootScope.$on('clearResults', function (event) {
+            $scope.clearAll();
+        });
+        $rootScope.$on('clearAll', function () {
+            $scope.clearAll();
+        });
+
+        $scope.clearAll = function(){
+            $scope.data = {"nTotal":0};
+            $scope.currentItemIndex = null;
+            $scope.displayIndex = 0;
+            $scope.displayCaptionHtml = "None";
+            $scope.termArray = [];
+            $scope.currentItem = $scope.defaultItem;
+            $("#caption").html("None");
+        };
+
+        $scope.findSocialMediaLink = function(username, callback){
+            $.ajax({
+                url:  "app/socialMediaQuery/" + username,
+                dataType: "json",
+                success: function (response) {
+                    callback(response, win);
+                },
+                error: callback
+            });
+        };
+
+        $scope.loadSocialPage = function(url){
+            $scope.$apply(function () {
+                if(url.responseText === ""){
+                    $scope.socialMediaUrl = $scope.currentItem.img;
+                    return;
+                }
+
+                $scope.socialMediaUrl = url.responseText;
+            });
+        };
+
+        $scope.getAccount = function(){
+            $scope.findSocialMediaLink($scope.currentItem.usr, $scope.loadSocialPage);
+        };
+
+        $scope.showImage = function(url){
+            ngDialog.openConfirm({
+                template: '/views/app/imageView',
+                controller: ['$scope', function ($scope) {
+                    $scope.url = url;
+                    $scope.close = function () {
+                        $scope.closeThisDialog(null);
+                    }
+                }]
+            });
+        };
+
+        $scope.highlightText = function(text){
+            var words = text.split(' ');
+            angular.forEach($scope.termArray,function(term,idx){
+                angular.forEach(words,function(word,idx){
+                    if(word.toLowerCase() == term.toLowerCase()){
+                        words[idx] = '<span class="highlight">' + word + "</span>";
+                    }
+                    else{
+                    }
+                });
+            });
+            return words.join(' ');
+        };
+
+        $scope.next = function(){
+            if(!$scope.data || !$scope.data.posts)
+                return;
+            $scope.currentItemIndex++;
+
+            if($scope.currentItemIndex >= $scope.data.posts.length)
+                $scope.currentItemIndex = 0;
+
+            $scope.displayIndex = $scope.currentItemIndex+1;
+            $scope.currentItem = $scope.data.posts[$scope.currentItemIndex];
+            $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
+            $("#caption").html($scope.displayCaptionHtml);
+            $scope.getAccount();
+        };
+
+        $scope.previous = function(){
+            if(!$scope.data || !$scope.data.posts)
+                return;
+            $scope.currentItemIndex--;
+
+            if($scope.currentItemIndex < 0)
+                $scope.currentItemIndex = $scope.data.posts.length-1;
+
+            $scope.displayIndex = $scope.currentItemIndex+1;
+            $scope.currentItem = $scope.data.posts[$scope.currentItemIndex];
+            $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
+            $("#caption").html($scope.displayCaptionHtml);
+            $scope.getAccount();
+        };
+
+        $scope.getUser = function(){
+            $.ajax({
+                url:  "app/twitter/user",
+                data : {
+                    "screen_name":"twitterapi"
+                },
+                dataType: "json",
+                success: function (response) {
+                    $scope.user = response;
+                },
+                error: $rootScope.showError
+            });
+        };
+    }]);

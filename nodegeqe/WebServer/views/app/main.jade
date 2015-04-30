@@ -1,2 +1,9 @@
-ng-include.fill(src="'views/app/map.jade'")
-ng-include.fill(src="'views/app/footer.jade'")
+div.container-fluid(ng-controller='mainController')
+    div.row
+        div.col-lg-2
+            div(ng-include="'views/app/controlBox'")
+        div.col-lg-7
+            div(ng-include="'views/app/map'")
+        div.col-lg-3
+            div(ng-include="'views/app/details'")
+            div(ng-include="'views/app/resultsBox'")

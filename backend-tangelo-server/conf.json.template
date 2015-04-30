@@ -1,0 +1,21 @@
+{
+    "spark": {
+        "SPARK_SUBMIT_PATH" : "/home/hadoop/spark/bin/",
+        "SPARK_OPTIONS" : [
+            "--master" , "yarn-client",
+            "--py-files" , "lib/shapeReader.py,lib/pointClass.py,lib/fspLib.py",
+            "--executor-memory" , "16g",
+            "--driver-memory" ,  "8g",
+            "--num-executors", "2",
+            "--executor-cores", "8"
+        ],
+    },
+
+    "datasets": {
+        "Example 1 " : { "path": "", "type": 2},
+    },
+
+    "deploy-mode" : "local"
+    "s3-bucket" : ""  USE ONLY FOR deploy-mode "aws-emr" otherwise delete from conf
+
+}

@@ -1,109 +1,70 @@
 var express = require('express');
-var config = require('config');
-var netHelpers = require('netHelpers');
-var util = require('util');
-
 var router = express.Router();
 
+var netHelpers = require('../../utilExports/netHelpers');
 
-router.get('/popScoreList', function (req, res) {
+var makeServiceCall = function(req,res,routeName, serviceHostName, servicePort){
 
-    netHelpers.performAjaxRequest(config.remote.host, config.remote.port, '/popScoreList', 'GET', req.query, function (resultObject) {
+    netHelpers.performAjaxRequest(serviceHostName, servicePort, '/' + routeName, 'GET', req.query, function (resultObject) {
         if (resultObject.error) {
-            res.status(resultObject.error.status).send(resultObject.error.message);
+            if(!resultObject.error.message){
+                console.log(resultObject.traceback);
+                res.status(500).send(":" + resultObject.error);
+                return;
+            }
+            res.status(500).send(resultObject.error.message);
+            console.log(resultObject.traceback);
             return;
         }
 
         res.status(200).send(resultObject);
-    })
-});
 
-router.get('/getFileContents', function (req, res) {
-    netHelpers.performAjaxRequest(config.remote.host, config.remote.port, '/getFileContents', 'GET', req.query, function (resultObject) {
+    },function (error) {
+        if(!error.message) {
+            console.log(error);
+            res.status(500).send(error);
+            return;
+        }
+        console.log(error.message);
+        res.status(500).send(error.message);
+    })
+};
+
+router.get('/:vp', function (req, res) {
+    var routeName = req.params.vp;
+    var settingsUrl = "/api/users/" + req.session.userId ;
+    var settingsData =  {
+                                access_token: req.session.loopbackId
+                        };
+
+    netHelpers.performAjaxRequest("localhost", 5500, settingsUrl, 'GET', settingsData, function (resultObject) {
         if (resultObject.error) {
-            res.status(resultObject.error.status).send(resultObject.error.message);
+            if(!resultObject.error.message){
+                console.log(resultObject.traceback);
+                res.status(500).send(":" + resultObject.error);
+                return;
+            }
+            res.status(500).send(resultObject.error.message);
+            console.log(resultObject.traceback);
             return;
         }
 
-        res.status(200).send(resultObject);
-    })
-});
+        makeServiceCall(req,res,routeName,resultObject.serviceHostName,resultObject.servicePort);
 
-router.get('/getScores', function (req, res) {
-    netHelpers.performAjaxRequest(config.remote.host, config.remote.port, '/getScores', 'GET', req.query, function (resultObject) {
-        if (resultObject.error) {
-            res.status(resultObject.error.status).send(resultObject.error.message);
+    },function (error) {
+        if(!error.message) {
+            console.log(error);
+            res.status(500).send(error);
             return;
         }
-
-        res.status(200).send(resultObject);
+        console.log(error.message);
+        res.status(500).send(error.message);
     })
+
+
 });
 
 
-// TODO: Make more readable, maybe we can replace
-//["/popScoreList",
-//    "/getFileContents",
-//    "/getScores"].forEach(function (name) {
-//
-//        router.get(name, function (req, res) {
-//
-//            netHelpers.performAjaxRequest(config.remote.host, config.remote.port, name, 'GET', req.query, function (resultObject) {
-//                if (resultObject.error) {
-//                    res.status(resultObject.error.status).send(resultObject.error.message);
-//                    return;
-//                }
-//
-//                res.status(200).send(resultObject);
-//            })
-//        });
-//
-//    });
-
-
-router.get('/writePoly', function (req, res) {
-    netHelpers.performAjaxRequest('localhost', 8080, '/writePoly', 'GET', req.query, function (resultObject) {
-        if (resultObject.error) {
-            res.status(resultObject.error.status).send(resultObject.error.message);
-            return;
-        }
-
-        res.status(200).send(resultObject);
-    })
-});
-
-router.get('/applyScores', function (req, res) {
-    netHelpers.performAjaxRequest('localhost', 8080, '/applyScores', 'GET', req.query, function (resultObject) {
-        if (resultObject.error) {
-            res.status(resultObject.error.status).send(resultObject.error.message);
-            return;
-        }
-
-        res.status(200).send(resultObject);
-    })
-});
-
-router.get('/launchTest', function (req, res) {
-    netHelpers.performAjaxRequest('localhost', 8080, '/launchTest', 'GET', req.query, function (resultObject) {
-        if (resultObject.error) {
-            res.status(resultObject.error.status).send(resultObject.error.message);
-            return;
-        }
-
-        res.status(200).send(resultObject);
-    })
-});
-
-router.get('/getTest', function (req, res) {
-    netHelpers.performAjaxRequest('localhost', 8080, '/getTest', 'GET', req.query, function (resultObject) {
-        if (resultObject.error) {
-            res.status(500).send(resultObject.error);
-            return;
-        }
-
-        res.status(200).send(resultObject);
-    })
-});
 
 
 module.exports = router;

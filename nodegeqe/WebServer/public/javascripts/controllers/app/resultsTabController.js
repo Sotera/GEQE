@@ -3,57 +3,50 @@
  */
 angular.module('NodeWebBase')
     .controller('resultsTabController', function ($scope, $rootScope) {
-
+        $scope.scoreFiles = ["--select--"];
+        $scope.polygonFiles = ["--select--"];
         $scope.popScore = function() {
+            if(!$rootScope.isAppConfigured())
+                return;
+
             $.ajax({
-                url:  $rootScope.baseUrl + "app/controlBox/popScoreList",
+                url: "app/controlBox/popScoreList",
                 data : {
                     filePath: $rootScope.savePath
                 },
                 dataType: "json",
                 success: function (response) {
-                    var lFiles = response.lFiles;
-                    var nFiles = response.nFiles;
-                    var elmSel = document.getElementById("scoreSelect");
-                    elmSel.options.length=1;
+                    $scope.$apply(function(){
+                        $scope.scoreFiles = response.lFiles;
+                    });
 
-                    for(i=0; i<nFiles; i++)
-                    {
-                        elmSel.options[i+1] = new Option(lFiles[i], lFiles[i], false, false);
-                    }
                 },
-                error: function(jqxhr, testStatus, reason) {
-                    $("#resultsText").text(reason);
-                }
+                error: $rootScope.showError
             });
         };
 
         $scope.populatePolygonSelect = function() {
+            if(!$rootScope.isAppConfigured())
+                return;
             $.ajax({
-                url: $rootScope.baseUrl + "app/controlBox/popScoreList",
+                url: "app/controlBox/popScoreList",
                 data : {
                     filePath: $rootScope.savePath,
                     subDir:$scope.fileSubDir
                 },
                 dataType: "json",
                 success: function (response) {
-                    var lFiles = response.lFiles;
-                    var nFiles = response.nFiles;
-                    var elmSel = $("#polygonSelect").get(0);
-                    elmSel.options.length=1;
-
-                    for(i=0; i<nFiles; i++)
-                    {
-                        elmSel.options[i+1] = new Option(lFiles[i], lFiles[i], false, false);
-                    }
+                    $scope.$apply(function() {
+                        $scope.polygonFiles = response.lFiles;
+                    });
                 },
-                error: function(jqxhr, testStatus, reason) {
-                    $("#resultsText").text(reason);
-                }
+                error: $rootScope.showError
             });
         };
 
         $scope.gatherScores = function() {
+            if(!$rootScope.isAppConfigured())
+                return;
             var sName = $("#scoreSelect").val();
             var sMaxP = $("#sMaxEntries").val();
             var bAgg = $("#aggScores").is(":checked");
@@ -61,7 +54,7 @@ angular.module('NodeWebBase')
             var fBin = $("#sBinSize").val();
             var bCUU = $("#uniqueUser").is(":checked");
             $.ajax({
-                url: $rootScope.baseUrl + "app/controlBox/getScores",
+                url: "app/controlBox/getScores",
                 data: {
                     filePath: $rootScope.savePath,
                     fileAppOut: sName,
@@ -75,32 +68,8 @@ angular.module('NodeWebBase')
                 success: function (response) {
                     //clean old point array, needed to removed points from map if you decrease number of entries
                     $rootScope.$emit("clearCurrentMarkers");
-
-                    //create new points
-                    var nTot = response.total;
-                    var markerData = [];
-                    for( i=0; i<nTot; i++)
-                    {
-                        var capPScor = response.cap[i] + " (" + response.lUser[i] + ") (" + response.sco[i] + ")";
-                        var shiftLat = parseFloat(response.lat[i])+fBin/2;
-                        if(parseFloat(response.lat[i]) < 0.0)
-                        {
-                            shiftLat = parseFloat(response.lat[i])-fBin/2;
-                        }
-                        var shiftLon = parseFloat(response.lon[i])+fBin/2;
-                        if(parseFloat(response.lon[i]) < 0.0)
-                        {
-                            shiftLon = parseFloat(response.lon[i])-fBin/2;
-                        }
-                        markerData.push({"lat":parseFloat(shiftLat),
-                            "lon":parseFloat(shiftLon),
-                            "caption": capPScor});
-                    }
-
-                    if(markerData.length > 0){
-                        $rootScope.$emit("putScoreMarkers",markerData);
-                    }
-
+                    $rootScope.$emit("setTermDictionary", response.dic);
+                    $rootScope.$emit("putScoreMarkers",response.sco, fBin);
 
                     //write dictionary to results box
                     var strRet = '';
@@ -126,27 +95,8 @@ angular.module('NodeWebBase')
                     }
                     $rootScope.$emit("displayResults",strRet)
                 },
-                error: function (jqxhr, testStatus, reason) {
-                    $rootScope.$emit("displayResults",reason)
-                }
+                error: $rootScope.showError
             });
-        };
-
-        $scope.clearMarkers = function(){
-            $rootScope.$emit("clearCurrentMarkers");
-        };
-
-        $scope.clearShapes = function(){
-            $rootScope.$emit("clearCurrentShapes");
-        };
-
-        $scope.clearResults = function(){
-            $rootScope.$emit("displayResults","")
-        };
-
-        $scope.clearAll = function(){
-            $rootScope.$emit("clearAll");
-            $scope.clearResults();
         };
 
         $scope.drawPolygonFile = function(){
@@ -161,26 +111,9 @@ angular.module('NodeWebBase')
             });
             fileSelector.click();
         };
-    })
-    .directive('dropTarget', function($rootScope){
-        return{
-            link:function(scope, element, attrs){
 
-                element.bind('dragover', function(evt){
-                    evt.stopPropagation();
-                    evt.preventDefault();
-                    evt.dropEffect = 'copy'; // Explicitly show this is a copy.
-                });
-
-                element.bind('drop', function(evt){
-                    evt.stopPropagation();
-                    evt.preventDefault();
-
-                    var files = evt.dataTransfer.files;
-
-                    $rootScope.$emit("renderKmlFile",files[0])
-                });
-            }
-        }
-
+        ///INIT
+        $scope.popScore();
+        $scope.populatePolygonSelect();
     });
+

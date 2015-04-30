@@ -1,0 +1,15 @@
+div( ng-controller='detailsController')
+    div( id='details' percent-Height percent='73' ng-style="style")
+        div
+            nav.navbar.navbar-default.navbar-inverse
+                h4.navbar-brand.my-navbar-brand {{displayIndex}} of {{data.nTotal}} Items
+                span(ng-click='previous()' title='Previous').noselect.navbar-button.btn-lg.glyphicon.glyphicon-backward.navbar-left.navbar-text
+                span(ng-click='next()' title='Next').noselect.navbar-button.btn-lg.glyphicon.glyphicon-forward.navbar-right.navbar-text
+            img.img-thumbnail.detailsImg(ng-click="showImage(currentItem.img)" ng-src="{{currentItem.img}}")
+            h3.text-center
+                a(href='{{socialMediaUrl}}' target="_blank") {{currentItem.usr}}
+        div
+            p score: {{currentItem.sco}}
+            p date: {{currentItem.date}}
+            div.caption
+            p(id="caption")
