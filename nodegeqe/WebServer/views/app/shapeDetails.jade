@@ -8,13 +8,14 @@
                 .controls
                     input#nameTextBox.input-sm(type='text', ng-model='name')
             .control-group
-                label.control-label(for='minDtTextBox') Minimum Date Time
+                label.control-label(for='minDtTextBox') Date Range
                 .controls
                     input#minDtTextBox.input-sm(type='date', ng-model='minDt')
-            .control-group
-                label.control-label(for='maxDtTextBox') Maximum Date Time
-                .controls
                     input#maxDtTextBox.input-sm(type='date', ng-model='maxDt')
+                    button.inputItem.btn.btn-default.btn-sm.glyphicon.glyphicon-plus(ng-click="addDateRange()" title="Refresh file list.")
+                label.control-label(for='dateList') Dates
+                    ul#dateList
+                        li(ng-repeat="range in dateRanges" ) "{{range.min}} - {{range.max}}"
 
 div.modal-footer
     button.btn(ng-click="delete()")

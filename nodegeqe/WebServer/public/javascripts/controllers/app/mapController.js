@@ -132,7 +132,8 @@ angular.module('NodeWebBase')
             angular.forEach($scope.shapes, function(shape, index){
                 sites.sites.push($scope.getSiteFromShape(index,shape));
             });
-            return JSON.stringify(sites);
+            var retval = angular.toJson(sites);
+            return retval;
         };
 
         $scope.getSiteFromShape = function(index, shape){
@@ -147,8 +148,7 @@ angular.module('NodeWebBase')
                 "name":shape.geqeData.name,
                 "lats":[],
                 "lons":[],
-                "minDt":shape.geqeData.minDt,
-                "maxDt":shape.geqeData.maxDt
+                "dates":shape.geqeData.dates
             };
 
             angular.forEach(vertices,function(vert){
@@ -174,8 +174,7 @@ angular.module('NodeWebBase')
                 "name":shape.geqeData.name,
                 "lats":[],
                 "lons":[],
-                "minDt":shape.geqeData.minDt,
-                "maxDt":shape.geqeData.maxDt
+                "dates":shape.geqeData.dates
             };
 
             angular.forEach(vertices,function(vert){
@@ -231,8 +230,7 @@ angular.module('NodeWebBase')
                         $scope.shapes.push(polygon);
                         polygon.geqeData = {
                             "name":sites.sites[idx].name,
-                            "minDt":sites.sites[idx].minDt,
-                            "maxDt":sites.sites[idx].maxDt
+                            "dates":sites.sites[idx].dates
                         };
                         $scope.addShapeClickListener(polygon);
                         polygon.setMap($scope.map);
@@ -370,35 +368,33 @@ angular.module('NodeWebBase')
                 ngDialog.openConfirm({
                     template: '/views/app/shapeDetails',
                     controller: ['$scope', function ($scope) {
-                        try{
-                            $scope.minDt = new Date(shape.geqeData.minDt);
-                            $scope.maxDt = new Date(shape.geqeData.maxDt);
-                        }
-                        catch(err){
-                            console.log(err);
-                            $rootScope.showErrorMessage("Site Date", "Invalid date format in site data. Creating new dates.");
-                            $scope.minDt = new Date();
-                            $scope.maxDt = new Date();
-                        }
+                        $scope.dateRanges= !shape.geqeData.dates?[]:shape.geqeData.dates;
+                        $scope.minDt = new Date();
+                        $scope.maxDt = new Date();
                         $scope.name = shape.geqeData.name;
+
                         $scope.cancel = function(){
                             $scope.closeThisDialog(null);
                         };
 
-                        $scope.save = function(){
+                        $scope.addDateRange = function(){
+
                             if($scope.minDt > $scope.maxDt){
                                 $rootScope.showErrorMessage("Date range", "Minimum date cannot be after maximum date.");
                                 return;
                             }
-                            try {
-                                shape.geqeData.minDt = $scope.minDt.toJSON().substring(0, 10);
-                                shape.geqeData.maxDt = $scope.maxDt.toJSON().substring(0, 10);
-                            }
-                            catch(err){
-                                console.log(err);
-                                $rootScope.showErrorMessage("Invalid date", "Please enter a valid date.");
-                                return;
-                            }
+
+                            var range = {
+                                'min':$scope.minDt.toJSON().substring(0, 10),
+                                'max':$scope.maxDt.toJSON().substring(0, 10)
+                            };
+
+                            $scope.dateRanges.push(range);
+                        };
+
+                        $scope.save = function(){
+
+                            shape.geqeData.dates = $scope.dateRanges;
                             shape.geqeData.name = $scope.name;
                             $scope.closeThisDialog(null);
                         };
