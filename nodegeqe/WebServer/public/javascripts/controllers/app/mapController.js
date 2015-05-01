@@ -64,8 +64,7 @@ angular.module('NodeWebBase')
             $scope.shapes.push(shape);
             shape.geqeData = {
                 "name":"site",
-                "minDt":"1994-01-01",
-                "maxDt":"3000-01-01"
+                "dates":[]
             };
 
             $scope.addShapeClickListener(shape);
@@ -148,7 +147,7 @@ angular.module('NodeWebBase')
                 "name":shape.geqeData.name,
                 "lats":[],
                 "lons":[],
-                "dates":shape.geqeData.dates
+                "dates":!shape.geqeData.dates?[]:shape.geqeData.dates
             };
 
             angular.forEach(vertices,function(vert){
@@ -174,7 +173,7 @@ angular.module('NodeWebBase')
                 "name":shape.geqeData.name,
                 "lats":[],
                 "lons":[],
-                "dates":shape.geqeData.dates
+                "dates":!shape.geqeData.dates?[]:shape.geqeData.dates
             };
 
             angular.forEach(vertices,function(vert){
