@@ -78,7 +78,7 @@ angular.module('NodeWebBase')
         };
 
         $scope.getAccount = function(){
-            if($scope.currentItem.img != null){
+            if($scope.currentItem.img != null && $scope.currentItem.img != '\n'){
                 $scope.$apply(function () {
                     $scope.socialMediaUrl = "https://instagram.com/" + $scope.currentItem.usr;
                 });
