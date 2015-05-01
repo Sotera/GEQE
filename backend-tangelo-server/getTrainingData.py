@@ -8,8 +8,8 @@ from sets import Set
 
 
 @tangelo.restful
-def get(filePath='./', fileAppOut='', maxOut = "-1"):
-
+def get(filePath='./', fileAppOut='', maxOut = "500"):
+    maxOut = int(maxOut)
     ssName  = filePath + "previewTrainingFiles/" + fileAppOut
 
     retList = []
