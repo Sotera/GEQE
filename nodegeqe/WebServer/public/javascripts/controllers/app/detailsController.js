@@ -92,7 +92,7 @@ angular.module('NodeWebBase')
             $scope.findSocialMediaLink($scope.currentItem.usr,"twitter", function(data){
                 if(data) {
                     $scope.$apply(function () {
-                        $scope.currentItem.img = data.profile_image_url;
+                        $scope.currentItem.img = data.profile_image_url.replace('_normal','');
                     });
                 }
             });
