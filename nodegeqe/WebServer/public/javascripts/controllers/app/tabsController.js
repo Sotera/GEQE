@@ -1,15 +1,34 @@
 angular.module('NodeWebBase')
     .controller('tabsController', function ($scope, $rootScope) {
         $scope.tabs = [{
-            title: 'Results',
+            title: 'Run',
             url: 'one.tpl.html'
         }, {
-            title: 'Run',
+            title: 'Results',
             url: 'two.tpl.html'
-        }, {
-            title: 'Training',
-            url: 'three.tpl.html'
         }];
+
+
+
+        $scope.getJobStatus = function(){
+            if(!$rootScope.isAppConfigured())
+                return;
+            $.ajax({
+                url: "app/controlBox/jobStatus",
+                dataType: "json",
+                success: function (response) {
+                    $scope.$apply(function(){
+                        $scope.jobs= response;
+                    });
+
+                },
+                error: $rootScope.showError
+            });
+        };
+
+        $rootScope.$on('refreshJobsList', function(){
+            $scope.getJobStatus();
+        });
 
         $scope.currentTab = 'one.tpl.html';
 
@@ -37,5 +56,6 @@ angular.module('NodeWebBase')
             $rootScope.$emit("clearAll");
             $scope.clearResults();
         };
+
 
     });

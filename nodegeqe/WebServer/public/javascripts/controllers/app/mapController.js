@@ -179,8 +179,8 @@ angular.module('NodeWebBase')
             };
 
             angular.forEach(vertices,function(vert){
-                site.lats.push(vert["k"]);
-                site.lons.push(vert["D"]);
+                site.lats.push(vert.lat());
+                site.lons.push(vert.lng());
             });
 
             return site;
