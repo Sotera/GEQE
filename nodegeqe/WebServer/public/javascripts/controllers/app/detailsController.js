@@ -121,6 +121,11 @@ angular.module('NodeWebBase')
             });
         };
 
+        $scope.replaceURLWithHTMLLinks = function(text) {
+            var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+            return text.replace(exp,"<a href='$1' target='_blank'>$1</a>");
+        };
+
         $scope.highlightText = function(text){
             var words = text.split(' ');
             angular.forEach($scope.termArray,function(term,idx){
@@ -132,7 +137,9 @@ angular.module('NodeWebBase')
                     }
                 });
             });
-            return words.join(' ');
+            var highlights = words.join(' ');
+            return $scope.replaceURLWithHTMLLinks(highlights);
+
         };
 
         $scope.next = function(){
