@@ -53,14 +53,16 @@ angular.module('NodeWebBase')
             $("#caption").html("None");
         };
 
-        $scope.findSocialMediaLink = function(username, callback){
+        $scope.findSocialMediaLink = function(username, socialMediaType, callback){
             $.ajax({
                 url:  "app/socialMediaQuery/" + username,
+                data : {
+                    socialMediaType: socialMediaType
+                },
                 dataType: "json",
                 success: function (response) {
-                    callback(response, win);
-                },
-                error: callback
+                    callback(response);
+                }
             });
         };
 
@@ -76,14 +78,23 @@ angular.module('NodeWebBase')
         };
 
         $scope.getAccount = function(){
-            //$scope.findSocialMediaLink($scope.currentItem.usr, $scope.loadSocialPage);
-            $scope.$apply(function () {
-                if($scope.currentItem.img != null){
+            if($scope.currentItem.img != null){
+                $scope.$apply(function () {
                     $scope.socialMediaUrl = "https://instagram.com/" + $scope.currentItem.usr;
-                    return;
-                }
+                });
+                return;
+            }
 
+            $scope.$apply(function () {
                 $scope.socialMediaUrl = "https://twitter.com/" + $scope.currentItem.usr;
+            });
+
+            $scope.findSocialMediaLink($scope.currentItem.usr,"twitter", function(data){
+                if(data) {
+                    $scope.$apply(function () {
+                        $scope.currentItem.img = data.profile_image_url;
+                    });
+                }
             });
         };
 
