@@ -78,7 +78,18 @@ angular.module('NodeWebBase')
         };
 
         $scope.getAccount = function(){
-            if($scope.currentItem.img != null && $scope.currentItem.img != '\n'){
+            if(!$scope.currentItem['socialMediaType'])
+            {
+                if($scope.currentItem.img != null && $scope.currentItem.img != '\n'){
+                    $scope.currentItem['socialMediaType'] = 'instagram';
+                }
+                else{
+                    $scope.currentItem['socialMediaType'] = 'twitter';
+                }
+
+            }
+
+            if($scope.currentItem['socialMediaType'] === 'instagram'){
                 $scope.$apply(function () {
                     $scope.socialMediaUrl = "https://instagram.com/" + $scope.currentItem.usr;
                 });
