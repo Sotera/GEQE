@@ -89,11 +89,11 @@ script( type="text/ng-template" id="one.tpl.html")
                   input.form-control-sm( type="checkbox" id="useBayes")
             button.form-control.btn.btn-default(ng-click="applyScores()" title='Start Query Job') Start Job
          fieldset.scheduler-border
-            legend.scheduler-border Run Training Job
+            legend.scheduler-border Get Training Data
             div.form-group-sm
                label(for='tFileName') Training Output File:
                input.form-control(id="tFileName" value="training.csv")
-            button.form-control.btn.btn-default(ng-click="applyTraining()" title='Start Training Job') Start Job
+            button.form-control.btn.btn-default(ng-click="applyTraining()" title='Get Training Data') Get Data
 
 script(type="text/ng-template" id="two.tpl.html")
    div.tab( id="viewOne" ng-controller="resultsTabController")
