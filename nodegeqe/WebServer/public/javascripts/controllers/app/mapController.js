@@ -369,8 +369,8 @@ angular.module('NodeWebBase')
                     template: '/views/app/shapeDetails',
                     controller: ['$scope', function ($scope) {
                         $scope.dateRanges= !shape.geqeData.dates?[]:shape.geqeData.dates;
-                        $scope.minDt = new Date();
-                        $scope.maxDt = new Date();
+                        $scope.minDt = new Date(1996, 1, 1);
+                        $scope.maxDt = new Date(2999,12,31);
                         $scope.name = shape.geqeData.name;
 
                         $scope.cancel = function(){
