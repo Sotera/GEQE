@@ -30,7 +30,7 @@ $> tangelo
 $> cd nodegeqe/LoopBackServer  
 $> sudo npm install -g loopback  
 $> npm install  
-$> node .  
+$> slc start
 ```  
 
 ##Webserver
