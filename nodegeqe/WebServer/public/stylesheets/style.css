@@ -58,9 +58,6 @@ body {
 
 .modal-form-errors li {
     color: #808080;
-    text-shadow: -1px 1px 0 #fff;
-    -moz-text-shadow: -1px 1px 0 #fff;
-    -webkit-text-shadow: -1px 1px 0 #fff;
     color: #d8000c;
 }
 
@@ -71,9 +68,6 @@ body {
 
 .modal-single-input form {
     color: #808080;
-    text-shadow: -1px 1px 0 #fff;
-    -moz-text-shadow: -1px 1px 0 #fff;
-    -webkit-text-shadow: -1px 1px 0 #fff;
     margin-bottom: 0;
 }
 
@@ -142,20 +136,7 @@ body {
     padding: 17px 0 0 270px;
 }
 
-label {
-    color: #808080;
-    text-shadow: -1px 1px 0 #fff;
-    -moz-text-shadow: -1px 1px 0 #fff;
-    -webkit-text-shadow: -1px 1px 0 #fff;
-}
 
-.subheading {
-    color: #808080;
-    text-shadow: -1px 1px 0 #fff;
-    -moz-text-shadow: -1px 1px 0 #fff;
-    -webkit-text-shadow: -1px 1px 0 #fff;
-    margin-top: 3px;
-}
 
 .fill{
     width:100%;

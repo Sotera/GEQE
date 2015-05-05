@@ -13,16 +13,27 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
                 $scope.openSettings = function(res){
                     ngDialog.openConfirm({
                         template: '/views/app/settings',
-                        controller: ['$scope', function ($scope) {
+                        controller: ['$scope','$rootScope', function ($scope,$rootScope) {
                             $scope.url = userUrl + "/" + $cookies.userId ;
                             $scope.data = res;
+                            $scope.themes = $rootScope.themes;
+                            $scope.currentTheme = !$scope.data.themeName?$scope.themes[0].name:$scope.data.themeName;
+
                             $scope.cancel = function(){
                                 $scope.closeThisDialog(null);
+                                if($scope.data.themeName != $scope.currentTheme )
+                                    $rootScope.$emit("changeTheme", $scope.currentTheme );
                             };
+
+                            $scope.changeTheme = function(){
+                                $rootScope.$emit("changeTheme", $scope.data.themeName);
+                            };
+
                             $scope.save = function(){
                                 $http.post($scope.url,{
                                     "fullname": $scope.data.fullname,
                                     "email": $scope.data.email,
+                                    "themeName": $scope.data.themeName,
                                     "inputSubDir": $scope.data.inputSubDir,
                                     "savePath":$scope.data.savePath,
                                     "serviceHostName":$scope.data.serviceHostName,

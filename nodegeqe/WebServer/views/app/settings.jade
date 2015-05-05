@@ -1,38 +1,59 @@
 .modal-header
-   h3 Settings
+    h3 Settings
 .modal-body
-   form(novalidate)#signup-form.well.span4
-      p.subheading User Settings
-      fieldset
-         .control-group
-            label.control-label(for='nameTextBox') Name
-            .controls
-               input#nameTextBox.input-xlarge(type='text', ng-model='data.fullname')
-         .control-group
-            label.control-label(for='emailTextBox') Email
-            .controls
-               input#emailTextBox.input-xlarge(type='text', ng-model='data.email')
-      p.subheading System Configuration
-      fieldset
-         .control-group
-            label.control-label(for='savePathTextBox') Save Path
-            .controls
-               input#savePathTextBox.input-xlarge(type='text', ng-model='data.savePath')
-         .control-group
-            label.control-label(for='inputSubDirTextBox') Input Sub Dir
-            .controls
-               input#inputSubDirTextBox.input-xlarge(type='text', ng-model='data.inputSubDir')
-         .control-group
-            label.control-label(for='serviceHostNameTextBox') Service Host Name
-            .controls
-               input#serviceHostNameTextBox.input-xlarge(type='text', ng-model='data.serviceHostName')
-         .control-group
-            label.control-label(for='servicePortTextBox') Service Port
-            .controls
-               input#servicePortTextBox.input-xlarge(type='text', ng-model='data.servicePort')
+    div.container-fluid
+        form(novalidate)#signup-form.well.span4
+            div.row
+                p.subheading User Settings
+                fieldset
+                    div.col-sm-6
 
+                        .control-group
+                            label.control-label(for='nameTextBox') Name
+                            .controls
+                                div.form-group.form-group-sm
+                                    input#nameTextBox.form-control(type='text', ng-model='data.fullname')
+                        .control-group
+                            label(for='themeSelect') Themes
+                            .controls
+                                div.form-group.form-group-sm
+                                    select#themeSelect.form-control(ng-model="data.themeName" ng-change='changeTheme()')
+                                        option( ng-repeat="theme in themes"  ) {{theme.name}}
+
+                    div.col-sm-6
+                        .control-group
+                            label.control-label(for='emailTextBox') Email
+                            .controls
+                                div.form-group.form-group-sm
+                                    input#emailTextBox.form-control(type='text', ng-model='data.email')
+
+            div.row
+                p.subheading System Configuration
+                fieldset
+                    div.col-sm-6
+                        .control-group
+                            label.control-label(for='savePathTextBox') Save Path
+                            .controls
+                                div.form-group.form-group-sm
+                                    input#savePathTextBox.form-control(type='text', ng-model='data.savePath')
+                        .control-group
+                            label.control-label(for='inputSubDirTextBox') Input Sub Dir
+                            .controls
+                                div.form-group.form-group-sm
+                                    input#inputSubDirTextBox.form-control(type='text', ng-model='data.inputSubDir')
+                    div.col-sm-6
+                        .control-group
+                            label.control-label(for='serviceHostNameTextBox') Service Host Name
+                            .controls
+                                div.form-group.form-group-sm
+                                    input#serviceHostNameTextBox.form-control(type='text', ng-model='data.serviceHostName')
+                        .control-group
+                            label.control-label(for='servicePortTextBox') Service Port
+                            .controls
+                                div.form-group.form-group-sm
+                                    input#servicePortTextBox.form-control(type='text', ng-model='data.servicePort')
 div.modal-footer
-   button.btn.btn-primary(ng-click="save()")
-      | Save
-   button.btn(ng-click="cancel()")
-      | Cancel
+    button.btn.btn-primary(ng-click="save()")
+        | Save
+    button.btn(ng-click="cancel()")
+        | Cancel

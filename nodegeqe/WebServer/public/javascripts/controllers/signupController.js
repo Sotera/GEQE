@@ -1,13 +1,10 @@
-angular.module('NodeWebBase', ['ngRoute'])
+angular.module('NodeWebBase')
 		.constant('signupUrl', '/login/signup')
-		.config(function($locationProvider){
-			//$locationProvider.html5Mode(true);
-		})
-		.controller('signupController', function ($scope, $http, $window, signupUrl) {
+		.controller('signupController', ['$scope', '$http', '$window', 'signupUrl',
+		function ($scope, $http, $window, signupUrl) {
 			$scope.data = {};
 
 			$scope.cancelSignup=function(){
-				$scope.closeThisDialog(null);
 				window.location.href = '/';
 			};
 
@@ -15,11 +12,11 @@ angular.module('NodeWebBase', ['ngRoute'])
 				$http.post(signupUrl, $scope.data, {
 					withCredentials: true
 				})
-						.success(function (res) {
-							$window.location.href = '/';
-						})
-						.error(function (error) {
-							$scope.authenticationError = error;
-						});
+					.success(function (res) {
+						$window.location.href = '/';
+					})
+					.error(function (error) {
+						$scope.authenticationError = error;
+					});
 			}
-		});
+		}]);
