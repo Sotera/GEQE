@@ -5,6 +5,8 @@ angular.module('NodeWebBase')
     .controller('resultsTabController', function ($scope, $rootScope) {
         $scope.scoreFiles = ["--select--"];
         $scope.polygonFiles = ["--select--"];
+        $scope.trainingFiles = ["--select--"];
+
         $scope.popScore = function() {
             if(!$rootScope.isAppConfigured())
                 return;
@@ -67,9 +69,9 @@ angular.module('NodeWebBase')
                 dataType: "json",
                 success: function (response) {
                     //clean old point array, needed to removed points from map if you decrease number of entries
-                    $rootScope.$emit("clearCurrentMarkers");
+                    $rootScope.$emit("clearMarkers",['score']);
                     $rootScope.$emit("setTermDictionary", response.dic);
-                    $rootScope.$emit("putScoreMarkers",response.sco, fBin);
+                    $rootScope.$emit("drawMapMarkers",response.sco, fBin,"score");
 
                     //write dictionary to results box
                     var strRet = '';
@@ -99,9 +101,6 @@ angular.module('NodeWebBase')
             });
         };
 
-        $scope.drawPolygonFile = function(){
-            $rootScope.$emit("drawPolygonFile",$("#polygonSelect").val())
-        };
 
         $scope.onDropZoneClicked = function(event){
             var fileSelector = $('<input type="file" />');
@@ -112,8 +111,49 @@ angular.module('NodeWebBase')
             fileSelector.click();
         };
 
+        $scope.populateTrainingSelect = function() {
+            if(!$rootScope.isAppConfigured())
+                return;
+
+            $.ajax({
+                url: "app/controlBox/popTrainingDataList",
+                data : {
+                    filePath: $rootScope.savePath
+                },
+                dataType: "json",
+                success: function (response) {
+                    $scope.$apply(function(){
+                        $scope.trainingFiles = response.lFiles;
+                    });
+
+                },
+                error: $rootScope.showError
+            });
+        };
+
+        $scope.drawTrainingData = function() {
+            if(!$rootScope.isAppConfigured())
+                return;
+            var sName = $("#trainingSelect").val();
+            $.ajax({
+                url: "app/controlBox/getTrainingData",
+                data: {
+                    filePath: $rootScope.savePath,
+                    fileAppOut: sName
+                },
+                dataType: "json",
+                success: function (response) {
+                    $rootScope.$emit("clearMarkers",['training']);
+                    $rootScope.$emit("drawMapMarkers",response.sco,null, "training");
+                },
+                error: $rootScope.showError
+            });
+        };
+
+
         ///INIT
         $scope.popScore();
         $scope.populatePolygonSelect();
+        $scope.populateTrainingSelect();
     });
 

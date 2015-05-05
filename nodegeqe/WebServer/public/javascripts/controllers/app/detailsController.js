@@ -53,14 +53,16 @@ angular.module('NodeWebBase')
             $("#caption").html("None");
         };
 
-        $scope.findSocialMediaLink = function(username, callback){
+        $scope.findSocialMediaLink = function(username, socialMediaType, callback){
             $.ajax({
                 url:  "app/socialMediaQuery/" + username,
+                data : {
+                    socialMediaType: socialMediaType
+                },
                 dataType: "json",
                 success: function (response) {
-                    callback(response, win);
-                },
-                error: callback
+                    callback(response);
+                }
             });
         };
 
@@ -76,7 +78,35 @@ angular.module('NodeWebBase')
         };
 
         $scope.getAccount = function(){
-            $scope.findSocialMediaLink($scope.currentItem.usr, $scope.loadSocialPage);
+            if(!$scope.currentItem['socialMediaType'])
+            {
+                if($scope.currentItem.img != null && $scope.currentItem.img != '\n'){
+                    $scope.currentItem['socialMediaType'] = 'instagram';
+                }
+                else{
+                    $scope.currentItem['socialMediaType'] = 'twitter';
+                }
+
+            }
+
+            if($scope.currentItem['socialMediaType'] === 'instagram'){
+                $scope.$apply(function () {
+                    $scope.socialMediaUrl = "https://instagram.com/" + $scope.currentItem.usr;
+                });
+                return;
+            }
+
+            $scope.$apply(function () {
+                $scope.socialMediaUrl = "https://twitter.com/" + $scope.currentItem.usr;
+            });
+
+            $scope.findSocialMediaLink($scope.currentItem.usr,"twitter", function(data){
+                if(data) {
+                    $scope.$apply(function () {
+                        $scope.currentItem.img = data.profile_image_url.replace('_normal','');
+                    });
+                }
+            });
         };
 
         $scope.showImage = function(url){
@@ -91,6 +121,11 @@ angular.module('NodeWebBase')
             });
         };
 
+        $scope.replaceURLWithHTMLLinks = function(text) {
+            var exp = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
+            return text.replace(exp,"<a href='$1' target='_blank'>$1</a>");
+        };
+
         $scope.highlightText = function(text){
             var words = text.split(' ');
             angular.forEach($scope.termArray,function(term,idx){
@@ -102,7 +137,9 @@ angular.module('NodeWebBase')
                     }
                 });
             });
-            return words.join(' ');
+            var highlights = words.join(' ');
+            return $scope.replaceURLWithHTMLLinks(highlights);
+
         };
 
         $scope.next = function(){

@@ -134,11 +134,27 @@ def saveJobResults(jobname,bucket):
         getBytesFromS3(bucket,jobname+'/STATUS_SUCCESS')
         jobconf = json.loads( getBytesFromS3(bucket,jobname+'/job.conf') )
 
-        with open(jobconf['score_save_path'],'w') as handle:
-            handle.write(getBytesFromS3(bucket,jobname+'/score'))
+        try:
+            bytes = getBytesFromS3(bucket,jobname+'/score')
+            with open(jobconf['score_save_path'],'w') as handle:
+                handle.write(bytes)
+        except:
+            tangelo.log('No score file path found from job: '+jobname)
 
-        with open(jobconf['dict_save_path'],'w') as handle:
-            handle.write(getBytesFromS3(bucket,jobname+'/dict'))
+        try:
+            bytes = getBytesFromS3(bucket,jobname+'/dict')
+            with open(jobconf['dict_save_path'],'w') as handle:
+                handle.write(bytes)
+        except:
+            tangelo.log('No dict to save for job: '+jobname)
+
+        try:
+            bytes = getBytesFromS3(bucket,jobname+'/traindata')
+            with open(jobconf['traindata_save_path'],'w') as handle:
+                handle.write(bytes)
+        except:
+            tangelo.log('No train data to save for job: '+jobname)
+
         return True
     except:
         # the job did not complete or had errors

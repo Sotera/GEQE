@@ -10,15 +10,15 @@ angular.module('NodeWebBase')
 
         $scope.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
         $scope.shapes = [];
-        $scope.markers = [];
+        $scope.markers = {};
 
         $rootScope.$on('drawPolygonFile', function (event, data) {
             $scope.clearCurrentShapes();
             $scope.drawPolygonFile(data);
         });
 
-        $rootScope.$on('clearCurrentMarkers', function () {
-            $scope.clearCurrentMarkers();
+        $rootScope.$on('clearMarkers', function (event,types) {
+            $scope.clearMarkers(types);
         });
 
         $rootScope.$on('clearCurrentShapes', function () {
@@ -64,8 +64,7 @@ angular.module('NodeWebBase')
             $scope.shapes.push(shape);
             shape.geqeData = {
                 "name":"site",
-                "minDt":"1994-01-01",
-                "maxDt":"3000-01-01"
+                "dates":[]
             };
 
             $scope.addShapeClickListener(shape);
@@ -132,7 +131,8 @@ angular.module('NodeWebBase')
             angular.forEach($scope.shapes, function(shape, index){
                 sites.sites.push($scope.getSiteFromShape(index,shape));
             });
-            return JSON.stringify(sites);
+            var retval = angular.toJson(sites);
+            return retval;
         };
 
         $scope.getSiteFromShape = function(index, shape){
@@ -142,18 +142,17 @@ angular.module('NodeWebBase')
         };
 
         $scope.getSiteFromPolygon = function(index, shape) {
-            var vertices = shape.getPath().getArray();
+            var vertices = shape.getPath();
             var site = {
                 "name":shape.geqeData.name,
                 "lats":[],
                 "lons":[],
-                "minDt":shape.geqeData.minDt,
-                "maxDt":shape.geqeData.maxDt
+                "dates":!shape.geqeData.dates?[]:shape.geqeData.dates
             };
 
             angular.forEach(vertices,function(vert){
-                site.lats.push(vert["k"]);
-                site.lons.push(vert["D"]);
+                site.lats.push(vert.lat());
+                site.lons.push(vert.lng());
             });
 
             return site;
@@ -174,13 +173,12 @@ angular.module('NodeWebBase')
                 "name":shape.geqeData.name,
                 "lats":[],
                 "lons":[],
-                "minDt":shape.geqeData.minDt,
-                "maxDt":shape.geqeData.maxDt
+                "dates":!shape.geqeData.dates?[]:shape.geqeData.dates
             };
 
             angular.forEach(vertices,function(vert){
-                site.lats.push(vert["k"]);
-                site.lons.push(vert["D"]);
+                site.lats.push(vert.lat());
+                site.lons.push(vert.lng());
             });
 
             return site;
@@ -231,8 +229,7 @@ angular.module('NodeWebBase')
                         $scope.shapes.push(polygon);
                         polygon.geqeData = {
                             "name":sites.sites[idx].name,
-                            "minDt":sites.sites[idx].minDt,
-                            "maxDt":sites.sites[idx].maxDt
+                            "dates":sites.sites[idx].dates
                         };
                         $scope.addShapeClickListener(polygon);
                         polygon.setMap($scope.map);
@@ -248,7 +245,7 @@ angular.module('NodeWebBase')
         };
 
         $scope.clearAll = function(){
-            $scope.clearCurrentMarkers();
+            $scope.clearMarkers(['training','score']);
             $scope.clearCurrentShapes();
         };
 
@@ -260,13 +257,17 @@ angular.module('NodeWebBase')
             $scope.shapes = [];
         };
 
-        $scope.clearCurrentMarkers = function(){
-            angular.forEach($scope.markers,function(marker,idx){
-                marker.setMap(null);
-                $scope.markers[idx] = null;
+        $scope.clearMarkers = function(types){
+            angular.forEach(types,function(type){
+                var markers = $scope.markers[type];
+                angular.forEach(markers,function(marker){
+                    marker.setMap(null);
+                });
             });
 
-            $scope.markers = [];
+            angular.forEach(types,function(type){
+                $scope.markers[type] = [];
+            });
         };
 
         $scope.rgbToHex =function(r,g,b){
@@ -317,8 +318,31 @@ angular.module('NodeWebBase')
             };
         };
 
+        $scope.putTrainingMarker = function(location,caption,item){
+            if(!$scope.markers['training'])
+                $scope.markers['training'] = [];
+            var marker = new google.maps.Marker({
+                position: location,
+                map: $scope.map,
+                icon: $scope.getIcon("#3C85E6"),
+                title:caption
+            });
+
+            $scope.markers['training'].push(marker);
+            google.maps.event.addListener(marker, 'click', function() {
+                marker.setIcon($scope.getIcon("#00FF00"));
+                if($scope.selectedMarker){
+                    $scope.selectedMarker.setIcon($scope.getIcon("#3C85E6"));
+                }
+                $scope.selectedMarker = marker;
+                $rootScope.$emit("loadItemData",item);
+            });
+        };
+
         $scope.putScoreMarker = function(location, caption, item, numMarkers, markerIndex) {
 
+            if(!$scope.markers['score'])
+                $scope.markers['score'] = [];
             var marker = new google.maps.Marker({
                 position: location,
                 map: $scope.map,
@@ -327,7 +351,7 @@ angular.module('NodeWebBase')
                 markerIndex:markerIndex
             });
 
-            $scope.markers.push(marker);
+            $scope.markers['score'].push(marker);
             google.maps.event.addListener(marker, 'click', function() {
                 marker.setIcon($scope.getIcon("#00FF00"));
                 if($scope.selectedMarker){
@@ -343,35 +367,33 @@ angular.module('NodeWebBase')
                 ngDialog.openConfirm({
                     template: '/views/app/shapeDetails',
                     controller: ['$scope', function ($scope) {
-                        try{
-                            $scope.minDt = new Date(shape.geqeData.minDt);
-                            $scope.maxDt = new Date(shape.geqeData.maxDt);
-                        }
-                        catch(err){
-                            console.log(err);
-                            $rootScope.showErrorMessage("Site Date", "Invalid date format in site data. Creating new dates.");
-                            $scope.minDt = new Date();
-                            $scope.maxDt = new Date();
-                        }
+                        $scope.dateRanges= !shape.geqeData.dates?[]:shape.geqeData.dates;
+                        $scope.minDt = new Date(1996, 1, 1);
+                        $scope.maxDt = new Date(2999,12,31);
                         $scope.name = shape.geqeData.name;
+
                         $scope.cancel = function(){
                             $scope.closeThisDialog(null);
                         };
 
-                        $scope.save = function(){
+                        $scope.addDateRange = function(){
+
                             if($scope.minDt > $scope.maxDt){
                                 $rootScope.showErrorMessage("Date range", "Minimum date cannot be after maximum date.");
                                 return;
                             }
-                            try {
-                                shape.geqeData.minDt = $scope.minDt.toJSON().substring(0, 10);
-                                shape.geqeData.maxDt = $scope.maxDt.toJSON().substring(0, 10);
-                            }
-                            catch(err){
-                                console.log(err);
-                                $rootScope.showErrorMessage("Invalid date", "Please enter a valid date.");
-                                return;
-                            }
+
+                            var range = {
+                                'min':$scope.minDt.toJSON().substring(0, 10),
+                                'max':$scope.maxDt.toJSON().substring(0, 10)
+                            };
+
+                            $scope.dateRanges.push(range);
+                        };
+
+                        $scope.save = function(){
+
+                            shape.geqeData.dates = $scope.dateRanges;
                             shape.geqeData.name = $scope.name;
                             $scope.closeThisDialog(null);
                         };
@@ -386,7 +408,36 @@ angular.module('NodeWebBase')
 
         };
 
-        $rootScope.$on('putScoreMarkers', function (event, data, binSize) {
+        $rootScope.$on('drawMapMarkers', function (event, data, binSize, markerType) {
+            switch (markerType) {
+                case "score":
+                    $scope.drawScopeMarkers(data, binSize);
+                    break;
+                case "training":
+                    $scope.drawTrainingMarkers(data);
+                    break;
+            }
+        });
+
+        $scope.drawTrainingMarkers = function(data){
+            var locations = [];
+
+            angular.forEach(data, function(item){
+                var capPScor = item['cap'];
+
+                var lat = parseFloat(item['lat']);
+                var lon = parseFloat(item['lon']);
+
+                var markerLocation = new google.maps.LatLng(lat, lon);
+                locations.push(markerLocation);
+                $scope.putTrainingMarker(markerLocation, capPScor, item);
+
+            });
+
+            $scope.calculateBounds(locations);
+        };
+
+        $scope.drawScopeMarkers = function(data, binSize){
             var locations = [];
 
             angular.forEach(data, function(item){
@@ -419,7 +470,7 @@ angular.module('NodeWebBase')
             });
 
             $scope.calculateBounds(locations);
-        });
+        };
 
         $scope.renderKmlFile = function(file) {
             var reader = new FileReader();
