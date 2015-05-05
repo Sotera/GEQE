@@ -3,6 +3,7 @@ angular.module('NodeWebBase')
         $scope.tabs = [{
             title: 'Run',
             url: 'one.tpl.html'
+
         }, {
             title: 'Results',
             url: 'two.tpl.html'

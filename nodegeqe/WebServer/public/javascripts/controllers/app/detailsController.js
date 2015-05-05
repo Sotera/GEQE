@@ -80,31 +80,29 @@ angular.module('NodeWebBase')
         $scope.getAccount = function(){
             if(!$scope.currentItem['socialMediaType'])
             {
-                if($scope.currentItem.img != null && $scope.currentItem.img != '\n'){
+                if($scope.currentItem.img != null && $scope.currentItem.img != 'None\n' && $scope.currentItem.img != '\n'){
                     $scope.currentItem['socialMediaType'] = 'instagram';
                 }
                 else{
+                    $scope.currentItem.img = "/images/blank.png";
                     $scope.currentItem['socialMediaType'] = 'twitter';
                 }
 
             }
 
             if($scope.currentItem['socialMediaType'] === 'instagram'){
-                $scope.$apply(function () {
-                    $scope.socialMediaUrl = "https://instagram.com/" + $scope.currentItem.usr;
-                });
+                $scope.socialMediaUrl = "https://instagram.com/" + $scope.currentItem.usr;
                 return;
             }
 
-            $scope.$apply(function () {
-                $scope.socialMediaUrl = "https://twitter.com/" + $scope.currentItem.usr;
-            });
+            $scope.socialMediaUrl = "https://twitter.com/" + $scope.currentItem.usr;
 
             $scope.findSocialMediaLink($scope.currentItem.usr,"twitter", function(data){
                 if(data) {
-                    $scope.$apply(function () {
+                    $scope.$apply(function(){
                         $scope.currentItem.img = data.profile_image_url.replace('_normal','');
                     });
+
                 }
             });
         };
