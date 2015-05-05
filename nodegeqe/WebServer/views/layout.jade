@@ -1,25 +1,36 @@
 doctype html
-html(ng-app='NodeWebBase', lang='en')
+html(ng-app="NodeWebBase" ,ng-controller="layoutController", lang='en')
 	head
 		title= title
 		base(href='/')
 		meta(charset='uft-8')
 		meta(name='viewport' content='width=device-width, initial-scale=1')
-		script(src='/javascripts/vendor/angular/angular.min.js')
 		script(src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=drawing")
 		script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js")
 		script(src='/javascripts/vendor/bootstrap/dist/js/bootstrap.min.js')
-		link(rel='stylesheet', href='/javascripts/vendor/bootstrap/dist/css/bootstrap.min.css')
-		link(rel='stylesheet', href='/javascripts/vendor/bootstrap/dist/css/bootstrap-theme.min.css')
-		link(rel='stylesheet', href='/javascripts/vendor/ngDialog/css/ngDialog.min.css')
-		link(rel='stylesheet', href='/javascripts/vendor/ngDialog/css/ngDialog-theme-default.min.css')
-		link(rel='stylesheet', href='/stylesheets/style.css')
-		link(rel='stylesheet', href='/stylesheets/app/geqe.css')
 
+		script(src='/javascripts/vendor/angular/angular.min.js')
 		script(src='/javascripts/vendor/angular-resource/angular-resource.min.js')
 		script(src='/javascripts/vendor/angular-route/angular-route.min.js')
 		script(src='/javascripts/vendor/angular-cookies/angular-cookies.min.js')
 		script(src='/javascripts/vendor/ngDialog/js/ngDialog.min.js')
+		script(src='/javascripts/component/logout/logout.js')
+		script(src='/javascripts/component/app/nbSettings.js')
+		script(src='/javascripts/controllers/layoutController.js')
+
+		link(rel="stylesheet" ng-href="/{{theme.bootstrapCss}}/bootstrap.min.css")
+
+		//link(rel='stylesheet', href='/javascripts/vendor/bootstrap/dist/css/bootstrap.min.css')
+		//link(rel='stylesheet', href='/javascripts/vendor/bootstrap/dist/css/bootstrap-theme.min.css')
+		link(rel='stylesheet', href='/javascripts/vendor/ngDialog/css/ngDialog.min.css')
+		link(rel='stylesheet', href='/javascripts/vendor/ngDialog/css/ngDialog-theme-default.min.css')
+		link(rel='stylesheet', href='/stylesheets/style.css')
+
+		link(rel='stylesheet', ng-href='{{theme.appCss}}')
+
+
+
+
 		block scripts
 	body
 		block content

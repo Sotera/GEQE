@@ -18,6 +18,9 @@
     },
     "servicePort": {
       "type": "string"
+    },
+    "themeName": {
+      "type": "string"
     }
 
   },

@@ -8,6 +8,10 @@ angular.module('NodeWebBase')
             center: myLatlng
         };
 
+        if($rootScope.theme.mapStyles){
+            mapOptions.styles = $rootScope.theme.mapStyles;
+        }
+
         $scope.map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
         $scope.shapes = [];
         $scope.markers = {};
@@ -55,12 +59,17 @@ angular.module('NodeWebBase')
                     google.maps.drawing.OverlayType.POLYGON,
                     google.maps.drawing.OverlayType.RECTANGLE
                 ]
-            }
+            },
+            polygonOptions:$rootScope.theme.shapeStyles,
+            rectangleOptions:$rootScope.theme.shapeStyles
         });
 
         drawingManager.setMap($scope.map);
+
         var handleShape = function(shape) {
             shape.setEditable(true);
+            if($rootScope.theme && $rootScope.theme.shapeStyles)
+                shape.setOptions($rootScope.theme.shapeStyles);
             $scope.shapes.push(shape);
             shape.geqeData = {
                 "name":"site",
@@ -73,6 +82,25 @@ angular.module('NodeWebBase')
 
         google.maps.event.addListener(drawingManager, 'polygoncomplete', handleShape);
         google.maps.event.addListener(drawingManager, 'rectanglecomplete', handleShape);
+
+        $rootScope.$on('themeChanged', function (event) {
+            if($rootScope.theme.mapStyles){
+                $scope.map.setOptions({styles: $rootScope.theme.mapStyles});
+            }
+            else
+                $scope.map.setOptions({styles: null});
+
+            if($rootScope.theme.shapeStyles){
+                drawingManager.setOptions({
+                    polygonOptions:$rootScope.theme.shapeStyles,
+                    rectangleOptions:$rootScope.theme.shapeStyles
+                });
+
+                angular.forEach($scope.shapes,function(shape){
+                    shape.setOptions($rootScope.theme.shapeStyles);
+                });
+            }
+        });
 
         $scope.kmlControl = function() {
             var controlDiv = document.createElement('div');
@@ -218,13 +246,11 @@ angular.module('NodeWebBase')
                             return;
                         var polygon = new google.maps.Polygon({
                             paths: points,
-                            strokeColor: 'black',
-                            strokeOpacity: 0.8,
-                            strokeWeight: 2,
-                            fillColor: 'black',
-                            fillOpacity: 0.35,
                             editable:true
                         });
+
+                        if($rootScope.theme && $rootScope.theme.shapeStyles)
+                            polygon.setOptions($rootScope.theme.shapeStyles);
 
                         $scope.shapes.push(polygon);
                         polygon.geqeData = {

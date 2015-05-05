@@ -16,6 +16,7 @@ angular.module('NodeWebBase')
             $rootScope.servicePort = res.servicePort;
 
             $rootScope.$emit("setfullname");
+            $rootScope.$emit("changeTheme", res.themeName);
         };
 
         $rootScope.isAppConfigured = function(){
@@ -68,8 +69,8 @@ angular.module('NodeWebBase')
                 access_token: $cookies.access_token
             }
         })
-            .success($scope.initWithSettings)
-            .error($rootScope.showError);
+        .success($scope.initWithSettings)
+        .error($rootScope.showError);
         ///END INIT
 
     });

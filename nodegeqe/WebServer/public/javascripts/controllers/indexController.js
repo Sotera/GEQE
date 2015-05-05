@@ -1,8 +1,8 @@
-angular.module('NodeWebBase', ['ngRoute', 'logout','nbSettings'])
+angular.module('NodeWebBase')
 		.config(function ($routeProvider) {
 			$routeProvider
 			.otherwise({templateUrl: '/views/app/main'})
 		})
-		.controller('indexController', function ($scope, $http, $location) {
+		.controller('indexController', function ($scope) {
 
 		});
