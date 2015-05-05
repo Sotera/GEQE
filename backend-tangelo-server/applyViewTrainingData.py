@@ -1,5 +1,6 @@
 import sys
 sys.path.append(".")
+from decorators import allow_all_origins
 import conf
 import json
 import tangelo
@@ -14,6 +15,7 @@ def generate_job_name():
 
 
 @tangelo.restful
+@allow_all_origins
 def get(filePath='./',filePolygon='',fileAppOut='',dataSet=''):
 
     if filePath[-1] != '/': filePath = filePath+"/"
