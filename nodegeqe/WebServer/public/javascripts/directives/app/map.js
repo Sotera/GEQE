@@ -85,7 +85,8 @@ angular.module('NodeWebBase')
                 var myLatlng = new google.maps.LatLng(41.495753190958816,-81.70090198516846);
                 var mapOptions = {
                     zoom: 10,
-                    center: myLatlng
+                    center: myLatlng,
+                    scaleControl: true
                 };
 
                 if($rootScope.theme.mapStyles){

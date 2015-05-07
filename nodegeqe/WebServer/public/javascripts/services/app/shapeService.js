@@ -288,13 +288,15 @@ angular.module('NodeWebBase')
                         return [data[i].lat, data[i].lon]; // map index to point
                     });
                 });
-                // get hulls
+                var locations = [];
                 clusters.forEach(function (pointset) {
                     var pts = hull(pointset, concavity);
 
                     var pointlist = [];
                     angular.forEach(pts, function (pt) {
-                        pointlist.push(new google.maps.LatLng(pt[0], pt[1]))
+                        var location = new google.maps.LatLng(pt[0], pt[1]);
+                        pointlist.push(location);
+                        locations.push(location)
                     });
 
                     var polygon = new google.maps.Polygon({
@@ -307,6 +309,7 @@ angular.module('NodeWebBase')
                     polygon.setMap(me.map);
                     me.scoreShapes.push(polygon);
                 });
+                me.calculateBounds(locations);
             })
             .error(function (error) {
                 me.authenticationError = error;

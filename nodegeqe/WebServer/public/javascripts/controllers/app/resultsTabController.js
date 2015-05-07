@@ -74,12 +74,12 @@ angular.module('NodeWebBase')
                 dataType: "json",
                 success: function (response) {
                     //clean old point array, needed to removed points from map if you decrease number of entries
-                    $rootScope.$emit("clearMarkers",['score']);
                     $rootScope.$emit("setTermDictionary", response.dic);
 
-                    if(drawMarkers)
-                        $rootScope.$emit("drawMapMarkers",response.sco, fBin,"score");
-
+                    if(drawMarkers) {
+                        $rootScope.$emit("clearMarkers",['score']);
+                        $rootScope.$emit("drawMapMarkers", response.sco, fBin, "score");
+                    }
                     if(drawClusters)
                         $rootScope.$emit("drawShapes",response.sco, epsilon, concavity ,"score");
 

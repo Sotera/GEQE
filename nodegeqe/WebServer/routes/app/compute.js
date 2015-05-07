@@ -7,16 +7,14 @@ router.post('/:vp', function (req, res) {
     var dbscan = new clustering.DBSCAN();
     //dataset, epsilon, minPts, distanceFunction
     var clusters = dbscan.run(req.body.data, req.body.epsilon, 3,findDistance);
-    console.log(clusters, dbscan.noise);
-
     res.status(200).send(clusters);
 });
 
-var Rk = 6373; // mean radius of the earth (km) at 39 degrees from the equator
+
 
 // convert degrees to radians
 function deg2rad(deg) {
-    rad = deg * Math.PI/180; // radians = degrees * pi/180
+    var rad = deg * Math.PI/180; // radians = degrees * pi/180
     return rad;
 }
 
@@ -26,9 +24,10 @@ function round(x) {
     return Math.round( x * 1000) / 1000;
 }
 
-/* main function */
+
 function findDistance(pos1,pos2) {
-    var t1, n1, t2, n2, lat1, lon1, lat2, lon2, dlat, dlon, a, c, dm, dk, mi, km;
+    var t1, n1, t2, n2, lat1, lon1, lat2, lon2, dlat, dlon, a, c, dk;
+    var Rk = 6373; // mean radius of the earth (km) at 39 degrees from the equator
 
     // get values for lat1, lon1, lat2, and lon2
     t1 = pos1.lat;
@@ -54,8 +53,5 @@ function findDistance(pos1,pos2) {
     // round the results down to the nearest 1/1000
     return round(dk);
 }
-
-
-
 
 module.exports = router;
