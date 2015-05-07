@@ -73,13 +73,12 @@ class ScoreBin:
 
 @tangelo.restful
 @allow_all_origins
-def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon="false", bBinByDate="false", fBinSize=.005, dateBinSize=1):
+def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon="false", bBinByDate="false", fBinSize=.005):
 
     maxOut = int(maxOut)
     bBinByLatLon = bBinByLatLon == "true" or bBinByLatLon == "True"
     bBinByDate = bBinByDate == "true" or bBinByDate == "True"
     fBinSize = float(fBinSize)
-    dateBinSize = int(dateBinSize)
     ssName  = filePath + "scoreFiles/" + fileAppOut
 
 
