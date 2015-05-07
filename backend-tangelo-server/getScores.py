@@ -180,8 +180,14 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
 
 
     # return the results
-    retDict['sco'] = map(lambda x: x.toDict(),bins)
     retDict['total'] = len(bins)
+    if bBinByDate or bBinByLatLon:
+        bins = sorted(bins,key= lambda x: len(x.records), reverse=True)
+    bins = map(lambda x: x.toDict(),bins)
+    for i in range(len(bins)):
+        bins[i]['index'] = i
+    retDict['sco'] = bins
+
     return json.dumps(retDict)
 
 
