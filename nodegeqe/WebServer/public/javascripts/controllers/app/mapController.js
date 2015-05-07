@@ -1,5 +1,6 @@
+
 angular.module('NodeWebBase')
-   .controller('mapController', ['$scope','$rootScope','ngDialog',function ($scope, $rootScope, ngDialog) {
+   .controller('mapController', ['$scope','$rootScope','$http','ngDialog',function ($scope, $rootScope, $http, ngDialog) {
         $scope.data = {};
         $scope.scopeName = 'mapController';
         var myLatlng = new google.maps.LatLng(41.495753190958816,-81.70090198516846);
@@ -434,10 +435,11 @@ angular.module('NodeWebBase')
 
         };
 
+
         $rootScope.$on('drawMapMarkers', function (event, data, binSize, markerType) {
             switch (markerType) {
                 case "score":
-                    $scope.drawScopeMarkers(data, binSize);
+                    $scope.drawScoreMarkers(data, binSize);
                     break;
                 case "training":
                     $scope.drawTrainingMarkers(data);
@@ -463,9 +465,47 @@ angular.module('NodeWebBase')
             $scope.calculateBounds(locations);
         };
 
-        $scope.drawScopeMarkers = function(data, binSize){
+        $scope.drawScoreMarkers = function(data, binSize){
             var locations = [];
 
+            $http(
+                    {
+                        'Content-Type': 'application/json',
+                        'method': 'POST',
+                        'url': "app/compute/cluster",
+                        'data': data
+                    }
+                )
+                .success(function (res) {
+                    var clusters = res.map(function(cluster) {
+                        return cluster.map(function(i) {
+                            return [data[i].lat,data[i].lon]; // map index to point
+                        });
+                    });
+                    // get hulls
+                        clusters.forEach(function(pointset) {
+                        var pts = hull(pointset,.01);
+
+                        var pointlist = [];
+                        angular.forEach(pts,function(pt,idx){
+                            pointlist.push(new google.maps.LatLng(pt[0],pt[1]))
+                        });
+
+                        var polygon = new google.maps.Polygon({
+                            paths: pointlist,
+                            editable:true
+                        });
+
+                        if($rootScope.theme && $rootScope.theme.shapeStyles)
+                            polygon.setOptions($rootScope.theme.shapeStyles);
+
+                        polygon.setMap($scope.map);
+                    });
+                })
+                .error(function (error) {
+                    $scope.authenticationError = error;
+                });
+return;
             angular.forEach(data, function(item){
                 var capPScor = 'Rank: ' + item['index'].toString() +
                                '  |  Unique Users: ' + item['nUnique'] +

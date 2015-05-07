@@ -55,6 +55,11 @@ angular.module('NodeWebBase')
             var bTim = $("#aggTime").is(":checked");
             var fBin = $("#sBinSize").val();
             var bCUU = $("#uniqueUser").is(":checked");
+            var drawClusters = $("#drawClusters").is(":checked");
+            var drawMarkers = $("#drawMarkers").is(":checked");
+            var epsilon = $("#epsilon").val();
+            var concavity = $("#concavity").val();
+
             $.ajax({
                 url: "app/controlBox/getScores",
                 data: {
@@ -71,7 +76,12 @@ angular.module('NodeWebBase')
                     //clean old point array, needed to removed points from map if you decrease number of entries
                     $rootScope.$emit("clearMarkers",['score']);
                     $rootScope.$emit("setTermDictionary", response.dic);
-                    $rootScope.$emit("drawMapMarkers",response.sco, fBin,"score");
+
+                    if(drawMarkers)
+                        $rootScope.$emit("drawMapMarkers",response.sco, fBin,"score");
+
+                    if(drawClusters)
+                        $rootScope.$emit("drawShapes",response.sco, epsilon, concavity ,"score");
 
                     //write dictionary to results box
                     var strRet = '';
