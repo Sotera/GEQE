@@ -19,7 +19,7 @@ angular.module('NodeWebBase')
             }
         });
 
-        $scope.kmlControl = function() {
+        $scope.buildControl = function(text){
             var controlDiv = document.createElement('div');
             controlDiv.index = 1;
             $scope.map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(controlDiv);
@@ -44,17 +44,32 @@ angular.module('NodeWebBase')
             controlText.style.lineHeight = '38px';
             controlText.style.paddingLeft = '5px';
             controlText.style.paddingRight = '5px';
-            controlText.innerHTML = 'kml';
+            controlText.innerHTML = text;
             controlUI.appendChild(controlText);
 
-            google.maps.event.addDomListener(controlUI, 'click', function() {
+            return controlUI;
+        };
+
+        $scope.kmlControl = function() {
+            var control = $scope.buildControl('kml');
+
+            google.maps.event.addDomListener(control, 'click', function() {
                 var fileSelector = $('<input type="file" />');
 
                 fileSelector.change(function(evt){
                     $scope.renderKmlFile(evt.target.files[0]);
                 });
                 fileSelector.click();
+            });
 
+        };
+
+        $scope.fitControl = function() {
+
+            var control = $scope.buildControl('fit');
+
+            google.maps.event.addDomListener(control, 'click', function() {
+                $rootScope.$emit("fitMapToContents");
             });
 
         };
@@ -73,6 +88,7 @@ angular.module('NodeWebBase')
         $scope.init = function() {
 
             $scope.kmlControl();
+            $scope.fitControl();
 
             shapeService.init($scope.map, $scope.drawingManager);
             markerService.init($scope.map);

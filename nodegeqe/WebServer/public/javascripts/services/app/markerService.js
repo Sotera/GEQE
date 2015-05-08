@@ -17,6 +17,19 @@ angular.module('NodeWebBase')
                 me.clearAll();
             });
 
+            $rootScope.$on('fitMapToContents', function () {
+                var locations = [];
+                angular.forEach(me.markers['training'],function(marker){
+                    locations.push(marker.getPosition());
+                });
+                angular.forEach(me.markers['score'],function(marker){
+                    locations.push(marker.getPosition());
+                });
+
+                me.calculateBounds(locations);
+
+            });
+
             $rootScope.$on('drawMapMarkers', function (event, data, binSize, markerType) {
                 switch (markerType) {
                     case "cluster":
