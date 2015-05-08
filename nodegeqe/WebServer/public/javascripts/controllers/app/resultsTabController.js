@@ -68,8 +68,7 @@ angular.module('NodeWebBase')
                     maxOut: sMaxP,
                     bBinByLatLon: bAgg,
                     bBinByDate: bTim,
-                    fBinSize: fBin,
-                    bCountUniqueUser: bCUU
+                    fBinSize: fBin
                 },
                 dataType: "json",
                 success: function (response) {

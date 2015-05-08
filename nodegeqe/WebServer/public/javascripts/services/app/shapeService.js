@@ -273,34 +273,59 @@ angular.module('NodeWebBase')
 
         };
 
+        me.flattenData = function(data){
+            var flatData = [];
+            angular.forEach(data,function(item){
+                angular.forEach(item.posts,function(post){
+                    flatData.push(post);
+                })
+            });
+
+            return flatData;
+        };
+
         me.drawScoreShapes = function (data, epsilon, concavity) {
+            var flattenedData = me.flattenData(data);
              $http(
                 {
                     'Content-Type': 'application/json',
                     'method': 'POST',
                     'url': "app/compute/cluster",
-                    'data': {'data':data, 'epsilon':epsilon}
+                    'data': {'data':flattenedData, 'epsilon':epsilon}
                 }
             )
             .success(function (res) {
-                var clusters = res.map(function (cluster) {
-                    return cluster.map(function (i) {
-                        return [data[i].lat, data[i].lon]; // map index to point
+                var clusters = [];
+                angular.forEach(res,function(postIndexList){
+                    var cluster = {
+                        'posts' : [],
+                        'pointList':[]
+                    };
+
+                    angular.forEach(postIndexList, function(index){
+                        var post = flattenedData[index];
+                        cluster.posts.push(post);
+                        cluster.pointList.push([post.lat, post.lon]);
                     });
+                    cluster['nTotal'] = cluster.posts.length;
+                    clusters.push(cluster);
+
                 });
+
                 var locations = [];
-                clusters.forEach(function (pointset) {
+                clusters.forEach(function (cluster) {
+                    var pointset = cluster.pointList;
                     var pts = hull(pointset, concavity);
 
-                    var pointlist = [];
+                    var latlonList = [];
                     angular.forEach(pts, function (pt) {
                         var location = new google.maps.LatLng(pt[0], pt[1]);
-                        pointlist.push(location);
+                        latlonList.push(location);
                         locations.push(location)
                     });
 
                     var polygon = new google.maps.Polygon({
-                        paths: pointlist
+                        paths: latlonList
                     });
 
                     if ($rootScope.theme && $rootScope.theme.shapeStyles)
@@ -310,6 +335,7 @@ angular.module('NodeWebBase')
                     me.scoreShapes.push(polygon);
                 });
                 me.calculateBounds(locations);
+                $rootScope.$emit("drawMapMarkers",clusters,0,'cluster');
             })
             .error(function (error) {
                 me.authenticationError = error;
