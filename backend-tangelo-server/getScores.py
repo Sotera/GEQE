@@ -19,7 +19,7 @@ class ScoreRecord:
         self.score = str((int(float(text[3])*10000.)*1.)/10000.)
         self.username = text[4]
         self.date = text[5]
-        self.img = text[6]
+        self.img = text[6] if len(text) > 6 else None
 
     def toDict(self):
         obj = {
@@ -30,7 +30,7 @@ class ScoreRecord:
             'lon':self.lon,
             'lat':self.lat,
         }
-        if self.img and len(self.img) >0:
+        if self.img is not None and len(self.img) >0:
             obj['img'] = self.img
         return obj
 
