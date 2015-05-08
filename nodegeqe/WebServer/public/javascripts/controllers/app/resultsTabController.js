@@ -77,7 +77,7 @@ angular.module('NodeWebBase')
 
                     if(drawMarkers) {
                         $rootScope.$emit("clearMarkers",['score']);
-                        $rootScope.$emit("drawMapMarkers", response.sco, fBin, "score");
+                        $rootScope.$emit("drawMapMarkers", response.sco, fBin, "score", bAgg);
                     }
                     if(drawClusters)
                         $rootScope.$emit("drawShapes",response.sco, epsilon, concavity ,"score");

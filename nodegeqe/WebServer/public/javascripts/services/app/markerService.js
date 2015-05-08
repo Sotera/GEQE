@@ -30,13 +30,13 @@ angular.module('NodeWebBase')
 
             });
 
-            $rootScope.$on('drawMapMarkers', function (event, data, binSize, markerType) {
+            $rootScope.$on('drawMapMarkers', function (event, data, binSize, markerType, isBinned) {
                 switch (markerType) {
                     case "cluster":
                         me.drawClusterMarkers(data);
                         break;
                     case "score":
-                        me.drawScoreMarkers(data, binSize);
+                        me.drawScoreMarkers(data, binSize, isBinned);
                         break;
                     case "training":
                         me.drawTrainingMarkers(data);
@@ -176,7 +176,7 @@ angular.module('NodeWebBase')
             me.markers['score'].push(marker);
 
             google.maps.event.addListener(marker, 'click', function() {
-                me.selectMarker(marker,me.getIcon(me.interpolateColor(0,numMarkers,me.selectedMarker.markerIndex)));
+                me.selectMarker(marker,me.getIcon(me.interpolateColor(0,numMarkers,marker.markerIndex)));
                 $rootScope.$emit("loadItemData",item);
             });
         };
@@ -223,7 +223,7 @@ angular.module('NodeWebBase')
             me.calculateBounds(locations);
         };
 
-        me.drawScoreMarkers = function(data, binSize){
+        me.drawScoreMarkers = function(data, binSize, isBinned){
             var locations = [];
             angular.forEach(data, function(item){
                 var capPScor = 'Rank: ' + item['index'].toString() +
@@ -240,6 +240,11 @@ angular.module('NodeWebBase')
 
                 var shiftLat = parseFloat(strLat);
                 var shiftLon = parseFloat(strLon);
+
+                if(isBinned) {
+                    shiftLat >= 0.0 ? shiftLat = shiftLat + binSize / 2:shiftLat = shiftLat - binSize / 2;
+                    shiftLon >= 0.0 ? shiftLon = shiftLon + binSize / 2:shiftLon = shiftLon - binSize / 2;
+                }
 
                 var markerLocation = new google.maps.LatLng(shiftLat, shiftLon);
                 locations.push(markerLocation);
