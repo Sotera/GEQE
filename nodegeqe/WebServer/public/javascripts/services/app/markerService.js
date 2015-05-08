@@ -238,15 +238,8 @@ angular.module('NodeWebBase')
                 var strLat = item['lat'];
                 var strLon = item['lon'];
 
-                var shiftLat = parseFloat(strLat)+binSize/2;
-                if(parseFloat(strLat) < 0.0){
-                    shiftLat = parseFloat(strLat)-binSize/2;
-                }
-
-                var shiftLon = parseFloat(strLon)+binSize/2;
-                if(parseFloat(strLon) < 0.0){
-                    shiftLon = parseFloat(strLon)-binSize/2;
-                }
+                var shiftLat = parseFloat(strLat);
+                var shiftLon = parseFloat(strLon);
 
                 var markerLocation = new google.maps.LatLng(shiftLat, shiftLon);
                 locations.push(markerLocation);
