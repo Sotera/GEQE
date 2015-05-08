@@ -80,7 +80,7 @@ angular.module('NodeWebBase')
         $scope.getAccount = function(){
             if(!$scope.currentItem['socialMediaType'])
             {
-                if($scope.currentItem.img != null && $scope.currentItem.img != 'None\n' && $scope.currentItem.img != '\n'){
+                if($scope.currentItem.img && $scope.currentItem.img != "None"){
                     $scope.currentItem['socialMediaType'] = 'instagram';
                 }
                 else{
