@@ -73,9 +73,10 @@ class ScoreBin:
 
 @tangelo.restful
 @allow_all_origins
-def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon="false", bBinByDate="false", fBinSize=.005):
+def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon="false", bBinByDate="false", fBinSize=.005, threshhold=None):
 
     maxOut = int(maxOut)
+    if threshhold is not None: threshhold = float(threshhold)
     bBinByLatLon = bBinByLatLon == "true" or bBinByLatLon == "True"
     bBinByDate = bBinByDate == "true" or bBinByDate == "True"
     fBinSize = float(fBinSize)
@@ -88,9 +89,12 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
         i = 0
         for line in fileHandle:
             i = i +1
-            if maxOut > 0 and i > maxOut:
+            if  not bBinByDate and not bBinByLatLon and maxOut > 0 and i > maxOut:
                 break
             recordList.append(ScoreRecord(line))
+
+    if threshhold is not None:
+        recordList = filter(lambda x: float(x.score) >= threshhold,recordList)
 
     bins = []
 
@@ -183,6 +187,8 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
     retDict['total'] = len(bins)
     if bBinByDate or bBinByLatLon:
         bins = sorted(bins,key= lambda x: len(x.records), reverse=True)
+        if maxOut > 0:
+            bins = bins[:maxOut]
     bins = map(lambda x: x.toDict(),bins)
     for i in range(len(bins)):
         bins[i]['index'] = i
