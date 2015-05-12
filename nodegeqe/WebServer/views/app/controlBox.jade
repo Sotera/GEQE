@@ -46,32 +46,24 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                                 div( id="percentReturnInput" class="invis")
                                     label(for='sTopPercent') Return Percent:
                                     input.form-control(id="sTopPercent" value="0.0001")
-                            div.form-group-sm
-                                label(for='bAdvanced') Show Advanced Options:
-                                input.form-control-sm( type="checkbox" id="bAdvanced" ng-click="toggleAdv()")
-                            div( id="hr1" class="invis")
-                                div.form-group-sm
-                                    label(for="cStopW") Custom Stop Words
-                                    input.form-control( type="text" id="cStopW")
 
-                            div(id="hr2" class="invis")
+                            div(id="hr1" )
                                 div.form-group-sm
                                     label(for='bPercent') Limit Return by Percent
-                                        input.form-control-sm(type="checkbox" id="bPercent" ng-click="modReturn()")
-                            div( id="hr3" class="invis")
-                                div.form-group-sm
-                                    label(for='timeSeries') Time Series polygon
-                                    input.form-control-sm( type="checkbox" id="timeSeries")
+                                    input.form-control-sm(type="checkbox" id="bPercent" ng-click="modReturn()")
 
-                            div( id="hr4" class="invis")
-                                div.form-group-sm
-                                    label(for='useML') Use M.L. Scoring
-                                        input.form-control-sm(type="checkbox" checked=true id="useML")
+                            div.form-group-sm
+                                label(for="cStopW") Custom Stop Words
+                                input.form-control( type="text" id="cStopW")
 
-                            div( id="hr5" class="invis")
+                            div( id="hr3" )
                                 div.form-group-sm
-                                    label(for='useBayes') Sort by Bayes (when ML)
-                                    input.form-control-sm( type="checkbox" id="useBayes")
+                                    label Query by Location
+                                    input.form-control-sm( style="margin-left: 5px;" type ="radio", value="0" ng-model="useTimeSeries" ng-value="false")
+                                    br
+                                    label Query by Event
+                                    input.form-control-sm( style="margin-left: 5px;" type ="radio", value="1" ng-model="useTimeSeries" ng-value="true")
+
                             button.form-control.btn.btn-default(ng-click="applyScores()" title='Start Query Job') Start Job
                         fieldset.scheduler-border
                             legend.scheduler-border Get Training Data
