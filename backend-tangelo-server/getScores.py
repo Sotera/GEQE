@@ -72,7 +72,7 @@ def assignToCluster(recordList, epsilon, nMin):
     for obj in recordList:
         lalo.append([obj.lon, obj.lat])
 
-    X = StandardScaler.fit_transform(lalo)
+    X = StandardScaler().fit_transform(lalo)
     db = DBSCAN(eps=epsilon, min_samples=nMin).fit(X)
     for ind in range(len(recordList)):
         recordList[ind].cluster = db.labels_[ind]
