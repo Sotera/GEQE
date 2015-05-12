@@ -22,7 +22,7 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                                 option( ng-repeat="item in dataSets" value="{{item}}") {{item}}
                         div.form-group-sm
                             div.input-group
-                                label(for='pFileName') Polygon File:
+                                label(for='pFileName') Polygon:
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="populatePolygonSelect()" title="Refresh file list.")
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-floppy-disk(ng-click="saveList()" title= "Save Polygon File")
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="drawPolygonFile()" title="Draw polygons to the map.")
@@ -36,8 +36,8 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                         fieldset.scheduler-border
                             legend.scheduler-border Run Query Job
                             div.form-group-sm
-                                label(for='sFileName') Score Output File:
-                                input.form-control(id="sFileName" value="scores.csv")
+                                label(for='sFileName') Job Name:
+                                input.form-control(id="sFileName" value="my-scores")
                             div.form-group-sm
                                 div(id="rankReturnInput")
                                     label(for='sTopN') Return top:
@@ -68,8 +68,8 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                         fieldset.scheduler-border
                             legend.scheduler-border Get Training Data
                             div.form-group-sm
-                                label(for='tFileName') Training Output File:
-                                input.form-control(id="tFileName" value="training.csv")
+                                label(for='tFileName') Job Name:
+                                input.form-control(id="tFileName" value="training")
                             button.form-control.btn.btn-default(ng-click="applyTraining()" title='Get Training Data') Get Data
             div.tab( id="two.tpl.html" ng-class="{hidden:!isActiveTab('two.tpl.html')}")
                 div(ng-controller="resultsTabController")
@@ -77,7 +77,7 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                         fieldset.scheduler-border
                             legend.scheduler-border Query Results
                             div.form-group-sm
-                                label(for="scoreSelect") Score Files:
+                                label(for="scoreSelect") Job Name:
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="popScore()" title="Refresh file list.")
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="gatherScores()" title="Load scores.")
                                 select.form-control( name="scoreSelect" id="scoreSelect")
@@ -112,7 +112,7 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                         fieldset.scheduler-border
                             legend.scheduler-border Training Results
                             div.form-group-sm
-                                label(for="trainingSelect") Training Files:
+                                label(for="trainingSelect") Job Name:
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='populateTrainingSelect()' title="Refresh file list.")
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="drawTrainingData()" title="Draw training data to the map.")
                                 select.form-control(name="trainingSelect" id="trainingSelect")
