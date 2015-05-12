@@ -1,13 +1,15 @@
 import sys
 import json
 import tangelo
+import numpy as np
+from sklearn.cluster import DBSCAN
+from sklearn.preprocessing import StandardScaler
+
 sys.path.append(".")
 from decorators import allow_all_origins
 
-
 def binCoordinate(strCord, fBinSize):
     return str(int(float(strCord)/fBinSize)*fBinSize)
-
 
 class ScoreRecord:
     def __init__(self,text):
@@ -20,6 +22,7 @@ class ScoreRecord:
         self.username = text[4]
         self.date = text[5]
         self.img = text[6] if len(text) > 6 else None
+        self.cluster = -1
 
     def toDict(self):
         obj = {
@@ -33,8 +36,6 @@ class ScoreRecord:
         if self.img is not None and len(self.img) >0:
             obj['img'] = self.img
         return obj
-
-
 
 class ScoreBin:
     def __init__(self,record=None):
@@ -66,22 +67,30 @@ class ScoreBin:
             'posts' : map(lambda x: x.toDict(),self.records)
         }
 
+def assignToCluster(recordList, epsilon, nMin):
+    lalo = []
+    for obj in recordList:
+        lalo.append([obj.lon, obj.lat])
 
-
-
-
+    X = StandardScaler().fit_transform(lalo)
+    db = DBSCAN(eps=epsilon, min_samples=nMin).fit(X)
+    for ind in range(len(recordList)):
+        recordList[ind].cluster = db.labels_[ind]
+    return
 
 @tangelo.restful
 @allow_all_origins
-def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon="false", bBinByDate="false", fBinSize=.005, threshhold=None):
+def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon="false", bBinByDate="false", bCluster="false", fBinSize=.005, threshhold=None):
+    #Add parameter to tune unique user enforcement
+    nMinUniqueUsers = 3
 
     maxOut = int(maxOut)
     if threshhold is not None: threshhold = float(threshhold)
     bBinByLatLon = bBinByLatLon == "true" or bBinByLatLon == "True"
     bBinByDate = bBinByDate == "true" or bBinByDate == "True"
+    bCluster = bCluster == "true" or bCluster == "True"
     fBinSize = float(fBinSize)
     ssName  = filePath + "scoreFiles/" + fileAppOut
-
 
     # read all score records from file
     recordList = []
@@ -99,13 +108,13 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
     bins = []
 
     # no binning - one record per bin
-    if not bBinByDate and not bBinByLatLon:
+    if not bBinByDate and not bBinByLatLon and not bCluster:
         for record in recordList:
             bins.append( ScoreBin(record) )
 
 
     # Bin only by date
-    elif bBinByDate and not bBinByLatLon:
+    elif bBinByDate and not bBinByLatLon and not bCluster:
         dateBinDict = {}
         for record in recordList:
             if record.date not in dateBinDict:
@@ -116,7 +125,7 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
 
 
     # bin only by lat lon
-    elif bBinByLatLon and not bBinByDate:
+    elif bBinByLatLon and not bBinByDate and not bCluster:
         geoBinDict = {}
         for record in recordList:
             binlat = binCoordinate(record.lat,fBinSize=fBinSize)
@@ -133,7 +142,7 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
 
 
     # bin by both date and lat lon
-    elif bBinByDate and bBinByLatLon:
+    elif bBinByDate and bBinByLatLon and not bCluster:
         dateDict = {}
         for record in recordList:
             if record.date not in dateDict:
@@ -156,6 +165,40 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
                     geoBinDict[key].addRecord(record)
             bins.extend(geoBinDict.values())
 
+    # both cluster options make same calls, divide between date bin and not deeper.
+    elif bCluster and bBinByDate:
+        dateDict = {}
+        for record in recordList:
+            if record.date not in dateDict:
+                dateDict[record.date] = [record]
+            else:
+                dateDict[record.date].append(record)
+
+        for date,records in dateDict.iteritems():
+            assignToCluster(records, fBinSize, 3)
+            records = filter(lambda x: x.cluster != -1, records)
+            clustDict = {}
+            for record in records:
+                key = str(record.cluster)
+                if key not in clustDict:
+                    clustDict[key] = ScoreBin(record)
+                else:
+                    clustDict[key].addRecord(record)
+            bins.extend(clustDict)
+
+
+
+    elif bCluster and not bBinByDate:
+        assignToCluster(recordList, fBinSize, 5)
+        recordList = filter(lambda x: x.cluster != -1, recordList)
+        clustDict = {}
+        for record in recordList:
+            key = str(record.cluster)
+            if key not in clustDict:
+                clustDict[key] = ScoreBin(record)
+            else:
+                clustDict[key].addRecord(record)
+        bins.extend(clustDict.values())
 
     else:
         raise ValueError("Invalid arguments.")
@@ -182,6 +225,8 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
     finally:
         f2.close()
 
+    if bBinByLatLon or bCluster:
+        bins = filter(lambda x: len(x.users)>=nMinUniqueUsers,bins)
 
     # return the results
     retDict['total'] = len(bins)
