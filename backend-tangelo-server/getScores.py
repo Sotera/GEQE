@@ -81,6 +81,8 @@ def assignToCluster(recordList, epsilon, nMin):
 @tangelo.restful
 @allow_all_origins
 def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon="false", bBinByDate="false", bCluster="false", fBinSize=.005, threshhold=None):
+    #Add parameter to tune unique user enforcement
+    nMinUniqueUsers = 3
 
     maxOut = int(maxOut)
     if threshhold is not None: threshhold = float(threshhold)
@@ -223,6 +225,8 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
     finally:
         f2.close()
 
+    if bBinByLatLon or bCluster:
+        filter(lambda x: len(x.users)>=nMinUniqueUsers,bins)
 
     # return the results
     retDict['total'] = len(bins)
