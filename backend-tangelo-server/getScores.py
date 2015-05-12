@@ -176,7 +176,7 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
 
         for date,records in dateDict.iteritems():
             assignToCluster(records, fBinSize, 3)
-            filter(lambda x: x.cluster != -1, records)
+            records = filter(lambda x: x.cluster != -1, records)
             clustDict = {}
             for record in records:
                 key = str(record.cluster)
@@ -190,7 +190,7 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
 
     elif bCluster and not bBinByDate:
         assignToCluster(recordList, fBinSize, 5)
-        filter(lambda x: x.cluster != -1, recordList)
+        recordList = filter(lambda x: x.cluster != -1, recordList)
         clustDict = {}
         for record in recordList:
             key = str(record.cluster)
@@ -226,7 +226,7 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
         f2.close()
 
     if bBinByLatLon or bCluster:
-        filter(lambda x: len(x.users)>=nMinUniqueUsers,bins)
+        bins = filter(lambda x: len(x.users)>=nMinUniqueUsers,bins)
 
     # return the results
     retDict['total'] = len(bins)
