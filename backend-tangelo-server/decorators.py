@@ -1,4 +1,5 @@
 import tangelo
+import sys
 sys.path.append(".")
 import conf
 import os
@@ -19,14 +20,16 @@ def validate_user(callback):
     def setup_user(**kwargs):
         confObj = conf.get()
         root = confObj['root_data_path']
-        user = kwargs.get('user','')
-        if user == '': raise ValueError("user is required.")
+        # default user to demo
+        user = kwargs.get('user','demo')
         if '..' in user or '/' in user or '\\' in user:
             raise ValueError("Invalid Username")
         if not os.path.isdir(root+'/'+user):
             os.mkdir(root+'/'+user)
             for dir in ['dictFiles','inputFiles','jobFiles','previewTrainingFiles','scoreFiles']:
                 os.mkdir(root+'/'+user+'/'+dir)
+        return callback(**kwargs)
+    return setup_user
 
 
 
