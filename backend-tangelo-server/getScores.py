@@ -6,10 +6,14 @@ from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
 
 sys.path.append(".")
+import conf
+from decorators import validate_user
 from decorators import allow_all_origins
+
 
 def binCoordinate(strCord, fBinSize):
     return str(int(float(strCord)/fBinSize)*fBinSize)
+
 
 class ScoreRecord:
     def __init__(self,text):
@@ -78,9 +82,15 @@ def assignToCluster(recordList, epsilon, nMin):
         recordList[ind].cluster = db.labels_[ind]
     return
 
+
 @tangelo.restful
 @allow_all_origins
-def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon="false", bBinByDate="false", bCluster="false", fBinSize=.005, threshhold=None):
+@validate_user
+def get(user='demo', fileAppOut='appliedScores', maxOut = -1, bBinByLatLon="false", bBinByDate="false", bCluster="false", fBinSize=.005, threshhold=None):
+
+    confObj = conf.get()
+    filePath = confObj['root_data_path'] +'/' +user
+
     #Add parameter to tune unique user enforcement
     nMinUniqueUsers = 3
 
@@ -90,7 +100,7 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
     bBinByDate = bBinByDate == "true" or bBinByDate == "True"
     bCluster = bCluster == "true" or bCluster == "True"
     fBinSize = float(fBinSize)
-    ssName  = filePath + "scoreFiles/" + fileAppOut
+    ssName  = filePath + "/scoreFiles/" + fileAppOut
 
     # read all score records from file
     recordList = []

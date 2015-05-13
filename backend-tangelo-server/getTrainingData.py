@@ -1,19 +1,22 @@
 import sys
 import json
 import tangelo
-import os
-import time
-from sets import Set
 sys.path.append(".")
+import conf
+from decorators import validate_user
 from decorators import allow_all_origins
 
 
 
 @tangelo.restful
 @allow_all_origins
-def get(filePath='./', fileAppOut='', maxOut = "500"):
+@validate_user
+def get(user='demo', fileAppOut='', maxOut = "500"):
+
+    confObj = conf.get()
+    filePath = confObj['root_data_path'] +'/' +user
     maxOut = int(maxOut)
-    ssName  = filePath + "previewTrainingFiles/" + fileAppOut
+    ssName  = filePath + "/previewTrainingFiles/" + fileAppOut
 
     retList = []
     with open(ssName,'r') as f:
