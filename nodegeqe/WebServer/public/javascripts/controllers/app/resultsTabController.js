@@ -48,7 +48,7 @@ angular.module('NodeWebBase')
         };
 
         $scope.getScoresModel = {
-            filePath: $rootScope.savePath,
+            filePath: "",
             fileAppOut: "",
             maxOut: -1,
             bBinByLatLon: false,
@@ -59,6 +59,7 @@ angular.module('NodeWebBase')
         $scope.getScores = function() {
             if(!$rootScope.isAppConfigured())
                 return;
+            $scope.getScoresModel.filePath = $rootScope.savePath;
             var drawMarkers = $("#drawMarkers").is(":checked");
 
             $.ajax({
@@ -135,12 +136,14 @@ angular.module('NodeWebBase')
         };
 
         $scope.trainingDataModel = {
-            filePath: $rootScope.savePath,
+            filePath: "",
             fileAppOut:""
         };
         $scope.drawTrainingData = function() {
             if(!$rootScope.isAppConfigured())
                 return;
+            $scope.trainingDataModel.filePath = $rootScope.savePath;
+
             $.ajax({
                 url: "app/controlBox/getTrainingData",
                 data: $scope.trainingDataModel,
