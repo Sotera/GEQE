@@ -51,10 +51,9 @@ angular.module('NodeWebBase')
             filePath: "",
             fileAppOut: "",
             maxOut: -1,
-            bBinByLatLon: false,
+            drawMode:"cluster",
             bBinByDate: false,
-            fBinSize:.005,
-            bCluster:true
+            fBinSize:.005
         };
         $scope.getScores = function() {
             if(!$rootScope.isAppConfigured())

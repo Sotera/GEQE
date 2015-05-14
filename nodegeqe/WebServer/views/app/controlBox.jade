@@ -92,14 +92,17 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                                 label(for="sBinSize") Bin Size:
                                 input.form-control(type="number" id="sBinSize" ng-model="getScoresModel.fBinSize" step="any" novalidate)
                             div.form-group-sm
+                                label(for='drawClusters') Draw Clusters:
+                                input.form-control-sm(type="radio" ng-model="getScoresModel.drawMode" value="cluster" id="drawClusters" name="binBy")
+                            div.form-group-sm
                                 label(for='aggScores') Bin by Lat-Lon:
-                                input.form-control-sm(type="checkbox" ng-model = "getScoresModel.bBinByLatLon" id="aggScores" name="aggScores")
+                                input.form-control-sm(type="radio" ng-model="getScoresModel.drawMode" value="latlonbin" id="aggScores" name="binBy")
+                            div.form-group-sm
+                                label(for='indPosts') Individual Posts:
+                                input.form-control-sm(type="radio" ng-model="getScoresModel.drawMode" value="none" id="indPosts" name="binBy")
                             div.form-group-sm
                                 label(for='aggTime') Bin as time series:
-                                input.form-control-sm( type="checkbox" ng-model = "getScoresModel.bBinByDate" id="aggTime" name="aggTime")
-                            div.form-group-sm
-                                label(for='drawClusters') Draw Clusters:
-                                input.form-control-sm(type="checkbox" ng-model = "getScoresModel.bCluster" id="drawClusters" name="drawClusters")
+                                input.form-control-sm( type="checkbox" ng-model="getScoresModel.bBinByDate" id="aggTime" name="aggTime")
                         fieldset.scheduler-border
                             legend.scheduler-border Training Results
                             div.form-group-sm
