@@ -69,11 +69,11 @@ angular.module('NodeWebBase')
                     //clean old point array, needed to removed points from map if you decrease number of entries
                     $rootScope.$emit("setTermDictionary", response.dic);
 
-                    if($scope.getScoresModel.bBinByLatLon) {
+                    if($scope.getScoresModel.drawMode =="none" || $scope.getScoresModel.drawMode =="latlonbin") {
                         $rootScope.$emit("clearMarkers",['score']);
                         $rootScope.$emit("drawMapMarkers", response.sco, $scope.getScoresModel.fBinSize, "score", $scope.getScoresModel.bBinByLatLon);
                     }
-                    if($scope.getScoresModel.bCluster)
+                    if($scope.getScoresModel.drawMode =="cluster")
                         $rootScope.$emit("drawShapes",response.sco ,"score");
 
                     //write dictionary to results box
