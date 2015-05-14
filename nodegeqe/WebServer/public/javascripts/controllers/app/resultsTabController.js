@@ -7,6 +7,7 @@ angular.module('NodeWebBase')
         $scope.polygonFiles = ["--select--"];
         $scope.trainingFiles = ["--select--"];
 
+
         $scope.popScore = function() {
             if(!$rootScope.isAppConfigured())
                 return;
@@ -46,41 +47,35 @@ angular.module('NodeWebBase')
             });
         };
 
-        $scope.gatherScores = function() {
+        $scope.getScoresModel = {
+            filePath: "",
+            fileAppOut: "",
+            maxOut: -1,
+            bBinByLatLon: false,
+            bBinByDate: false,
+            fBinSize:.005,
+            bCluster:true
+        };
+        $scope.getScores = function() {
             if(!$rootScope.isAppConfigured())
                 return;
-            var sName = $("#scoreSelect").val();
-            var sMaxP = $("#sMaxEntries").val();
-            var bAgg = $("#aggScores").is(":checked");
-            var bTim = $("#aggTime").is(":checked");
-            var fBin = $("#sBinSize").val();
-            var bCUU = $("#uniqueUser").is(":checked");
-            var drawClusters = $("#drawClusters").is(":checked");
+            $scope.getScoresModel.filePath = $rootScope.savePath;
             var drawMarkers = $("#drawMarkers").is(":checked");
-            var epsilon = $("#epsilon").val();
-            var concavity = $("#concavity").val();
 
             $.ajax({
                 url: "app/controlBox/getScores",
-                data: {
-                    filePath: $rootScope.savePath,
-                    fileAppOut: sName,
-                    maxOut: sMaxP,
-                    bBinByLatLon: bAgg,
-                    bBinByDate: bTim,
-                    fBinSize: fBin
-                },
+                data: $scope.getScoresModel,
                 dataType: "json",
                 success: function (response) {
                     //clean old point array, needed to removed points from map if you decrease number of entries
                     $rootScope.$emit("setTermDictionary", response.dic);
 
-                    if(drawMarkers) {
+                    if($scope.getScoresModel.bBinByLatLon) {
                         $rootScope.$emit("clearMarkers",['score']);
-                        $rootScope.$emit("drawMapMarkers", response.sco, fBin, "score", bAgg);
+                        $rootScope.$emit("drawMapMarkers", response.sco, $scope.getScoresModel.fBinSize, "score", $scope.getScoresModel.bBinByLatLon);
                     }
-                    if(drawClusters)
-                        $rootScope.$emit("drawShapes",response.sco, epsilon, concavity ,"score");
+                    if($scope.getScoresModel.bCluster)
+                        $rootScope.$emit("drawShapes",response.sco ,"score");
 
                     //write dictionary to results box
                     var strRet = '';
@@ -140,16 +135,18 @@ angular.module('NodeWebBase')
             });
         };
 
+        $scope.trainingDataModel = {
+            filePath: "",
+            fileAppOut:""
+        };
         $scope.drawTrainingData = function() {
             if(!$rootScope.isAppConfigured())
                 return;
-            var sName = $("#trainingSelect").val();
+            $scope.trainingDataModel.filePath = $rootScope.savePath;
+
             $.ajax({
                 url: "app/controlBox/getTrainingData",
-                data: {
-                    filePath: $rootScope.savePath,
-                    fileAppOut: sName
-                },
+                data: $scope.trainingDataModel,
                 dataType: "json",
                 success: function (response) {
                     $rootScope.$emit("clearMarkers",['training']);

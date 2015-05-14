@@ -38,12 +38,12 @@ angular.module('NodeWebBase')
                 me.renderKmlFile(file);
             });
 
-            $rootScope.$on('drawShapes', function (event, data, epsilon,concavity, shapeType) {
+            $rootScope.$on('drawShapes', function (event, data, shapeType) {
                 me.clearCurrentShapes();
 
                 switch (shapeType) {
                     case "score":
-                        me.drawScoreShapes(data, epsilon, concavity);
+                        me.drawScoreShapes(data);
                         break;
                 }
             });
@@ -273,73 +273,32 @@ angular.module('NodeWebBase')
 
         };
 
-        me.flattenData = function(data){
-            var flatData = [];
-            angular.forEach(data,function(item){
-                angular.forEach(item.posts,function(post){
-                    flatData.push(post);
-                })
-            });
+        me.drawScoreShapes = function (data) {
+            var clusters = data;
 
-            return flatData;
-        };
+            var locations = [];
+            clusters.forEach(function (cluster) {
+                var pts = cluster.poly;
 
-        me.drawScoreShapes = function (data, epsilon, concavity) {
-            var flattenedData = me.flattenData(data);
-             $http(
-                {
-                    'Content-Type': 'application/json',
-                    'method': 'POST',
-                    'url': "app/compute/cluster",
-                    'data': {'data':flattenedData, 'epsilon':epsilon}
-                }
-            )
-            .success(function (res) {
-                var clusters = [];
-                angular.forEach(res,function(postIndexList){
-                    var cluster = {
-                        'posts' : [],
-                        'pointList':[]
-                    };
-
-                    angular.forEach(postIndexList, function(index){
-                        var post = flattenedData[index];
-                        cluster.posts.push(post);
-                        cluster.pointList.push([post.lat, post.lon]);
-                    });
-                    cluster['nTotal'] = cluster.posts.length;
-                    clusters.push(cluster);
-
+                var latlonList = [];
+                angular.forEach(pts, function (pt) {
+                    var location = new google.maps.LatLng(pt[0], pt[1]);
+                    latlonList.push(location);
+                    locations.push(location)
                 });
 
-                var locations = [];
-                clusters.forEach(function (cluster) {
-                    var pointset = cluster.pointList;
-                    var pts = hull(pointset, concavity);
-
-                    var latlonList = [];
-                    angular.forEach(pts, function (pt) {
-                        var location = new google.maps.LatLng(pt[0], pt[1]);
-                        latlonList.push(location);
-                        locations.push(location)
-                    });
-
-                    var polygon = new google.maps.Polygon({
-                        paths: latlonList
-                    });
-
-                    if ($rootScope.theme && $rootScope.theme.shapeStyles)
-                        polygon.setOptions($rootScope.theme.shapeStyles);
-
-                    polygon.setMap(me.map);
-                    me.scoreShapes.push(polygon);
+                var polygon = new google.maps.Polygon({
+                    paths: latlonList
                 });
-                me.calculateBounds(locations);
-                $rootScope.$emit("drawMapMarkers",clusters,0,'cluster');
-            })
-            .error(function (error) {
-                me.authenticationError = error;
+
+                if ($rootScope.theme && $rootScope.theme.shapeStyles)
+                    polygon.setOptions($rootScope.theme.shapeStyles);
+
+                polygon.setMap(me.map);
+                me.scoreShapes.push(polygon);
             });
+            me.calculateBounds(locations);
+            $rootScope.$emit("drawMapMarkers",clusters,0,'cluster');
 
         };
     }]);
