@@ -47,7 +47,7 @@ angular.module('NodeWebBase')
         };
 
         $scope.getScoresModel = {
-            user: $rootScope.username,
+            user: "",
             fileAppOut: "",
             maxOut: -1,
             drawMode:"cluster",
@@ -58,7 +58,7 @@ angular.module('NodeWebBase')
             if(!$rootScope.isAppConfigured())
                 return;
             var drawMarkers = $("#drawMarkers").is(":checked");
-
+            $scope.getScoresModel.user = $rootScope.username;
             $.ajax({
                 url: "app/controlBox/getScores",
                 data: $scope.getScoresModel,
@@ -133,13 +133,13 @@ angular.module('NodeWebBase')
         };
 
         $scope.trainingDataModel = {
-            user: $rootScope.username,
+            user: "",
             fileAppOut:""
         };
         $scope.drawTrainingData = function() {
             if(!$rootScope.isAppConfigured())
                 return;
-
+            $scope.trainingDataModel.user = $rootScope.username;
             $.ajax({
                 url: "app/controlBox/getTrainingData",
                 data: $scope.trainingDataModel,
