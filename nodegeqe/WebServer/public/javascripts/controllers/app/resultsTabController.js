@@ -13,9 +13,9 @@ angular.module('NodeWebBase')
                 return;
 
             $.ajax({
-                url: "app/controlBox/popScoreList",
+                url: "app/controlBox/populate/scores",
                 data : {
-                    filePath: $rootScope.savePath
+                    user: $rootScope.username,
                 },
                 dataType: "json",
                 success: function (response) {
@@ -32,10 +32,9 @@ angular.module('NodeWebBase')
             if(!$rootScope.isAppConfigured())
                 return;
             $.ajax({
-                url: "app/controlBox/popScoreList",
+                url: "app/controlBox/populate/polygons",
                 data : {
-                    filePath: $rootScope.savePath,
-                    subDir:$scope.fileSubDir
+                    user: $rootScope.username
                 },
                 dataType: "json",
                 success: function (response) {
@@ -48,7 +47,7 @@ angular.module('NodeWebBase')
         };
 
         $scope.getScoresModel = {
-            filePath: "",
+            user: "",
             fileAppOut: "",
             maxOut: -1,
             drawMode:"cluster",
@@ -58,9 +57,8 @@ angular.module('NodeWebBase')
         $scope.getScores = function() {
             if(!$rootScope.isAppConfigured())
                 return;
-            $scope.getScoresModel.filePath = $rootScope.savePath;
             var drawMarkers = $("#drawMarkers").is(":checked");
-
+            $scope.getScoresModel.user = $rootScope.username;
             $.ajax({
                 url: "app/controlBox/getScores",
                 data: $scope.getScoresModel,
@@ -119,9 +117,9 @@ angular.module('NodeWebBase')
                 return;
 
             $.ajax({
-                url: "app/controlBox/popTrainingDataList",
+                url: "app/controlBox/populate/trainingdata",
                 data : {
-                    filePath: $rootScope.savePath
+                    user: $rootScope.username
                 },
                 dataType: "json",
                 success: function (response) {
@@ -135,14 +133,13 @@ angular.module('NodeWebBase')
         };
 
         $scope.trainingDataModel = {
-            filePath: "",
+            user: "",
             fileAppOut:""
         };
         $scope.drawTrainingData = function() {
             if(!$rootScope.isAppConfigured())
                 return;
-            $scope.trainingDataModel.filePath = $rootScope.savePath;
-
+            $scope.trainingDataModel.user = $rootScope.username;
             $.ajax({
                 url: "app/controlBox/getTrainingData",
                 data: $scope.trainingDataModel,

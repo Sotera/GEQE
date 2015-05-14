@@ -20,10 +20,9 @@ angular.module('NodeWebBase')
             if(!$rootScope.isAppConfigured())
                 return;
             $.ajax({
-                url: "app/controlBox/popScoreList",
+                url: "app/controlBox/populate/polygons",
                 data : {
-                    filePath: $rootScope.savePath,
-                    subDir:$scope.fileSubDir
+                    user: $rootScope.username
                 },
                 dataType: "json",
                 success: function (response) {
@@ -51,7 +50,7 @@ angular.module('NodeWebBase')
                         $.ajax({
                             url: "app/controlBox/writePoly",
                             data: {
-                                filePath: $rootScope.savePath,
+                                user: $rootScope.username,
                                 filePolygon: pName,
                                 fileString: resultsText
                             },
@@ -69,7 +68,7 @@ angular.module('NodeWebBase')
             if(!$rootScope.isAppConfigured())
                 return;
             $.ajax({
-                url: "app/controlBox/getDataSets",
+                url: "app/controlBox/populate/datasets",
                 dataType: "json",
                 success: function (response) {
                     $scope.$apply(function(){
@@ -115,7 +114,7 @@ angular.module('NodeWebBase')
             $.ajax({
                 url: "app/controlBox/applyScores",
                 data: {
-                    filePath: $rootScope.savePath,
+                    user: $rootScope.username,
                     filePolygon: pName,
                     fileAppOut: sName,
                     fScoreThresh: fThresh,
@@ -154,7 +153,7 @@ angular.module('NodeWebBase')
             $.ajax({
                 url: "app/controlBox/applyViewTrainingData",
                 data: {
-                    filePath: $rootScope.savePath,
+                    user: $rootScope.username,
                     filePolygon: pName,
                     fileAppOut: tName,
                     dataSet: dSet

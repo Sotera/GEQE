@@ -5,12 +5,16 @@ import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
 from scipy.spatial import ConvexHull
-
+import traceback
 sys.path.append(".")
+import conf
+from decorators import validate_user
 from decorators import allow_all_origins
+
 
 def binCoordinate(strCord, fBinSize):
     return str(int(float(strCord)/fBinSize)*fBinSize)
+
 
 class ScoreRecord:
     def __init__(self,text):
@@ -81,22 +85,35 @@ def assignToCluster(recordList, epsilon, nMin):
         recordList[ind].cluster = db.labels_[ind]
     return
 
+
 def createHull(cluster):
     loLa = set([])
     for point in cluster.records:
         loLa.add(str(point.lon)+","+str(point.lat))
     loLa = map(lambda x: [x.split(",")[0],x.split(",")[1]],loLa)
     loLa = np.array(loLa)
-    hull = ConvexHull(loLa)
-    polyPoints = []
-    for verts in hull.vertices:
-        polyPoints.append([loLa[verts,1],loLa[verts,0]])
-    cluster.poly = polyPoints
+    try:
+        hull = ConvexHull(loLa)
+        polyPoints = []
+        for verts in hull.vertices:
+            polyPoints.append([loLa[verts,1],loLa[verts,0]])
+        cluster.poly = polyPoints
+    except:
+        tangelo.log(traceback.format_exc())
+        tangelo.log("number of records: "+str(len(cluster.records)))
+        tangelo.log("loLa[0]: "+str(loLa[0]))
+        tangelo.log("records:  \n"+json.dumps(cluster.toDict()))
+
 
 
 @tangelo.restful
 @allow_all_origins
-def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, drawMode="cluster", bBinByDate="false", fBinSize=.05, threshhold=None):
+@validate_user
+def get(user='demo', fileAppOut='appliedScores.csv', maxOut = -1, drawMode="cluster", bBinByDate="false", fBinSize=.05, threshhold=None):
+
+    confObj = conf.get()
+    filePath = confObj['root_data_path'] +'/' +user
+
     #Add parameter to tune unique user enforcement
     nMinUniqueUsers = 3
 
@@ -106,7 +123,7 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, drawMode="cl
     bBinByLatLon = drawMode == "latlonbin"
     bBinByDate = bBinByDate == "true" or bBinByDate == "True"
     fBinSize = float(fBinSize)
-    ssName  = filePath + "scoreFiles/" + fileAppOut
+    ssName  = filePath + "/scoreFiles/" + fileAppOut
 
     # read all score records from file
     recordList = []
@@ -217,7 +234,7 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, drawMode="cl
     # try to read the dictionary file for this score file and return those response as well
     retDict = {}
     try:
-        dictName = filePath + "dictFiles/dict_" + fileAppOut
+        dictName = filePath + "/dictFiles/dict_" + fileAppOut
         lWordScores = []
         f2 = open(dictName,'r')
         for line in f2:
