@@ -7,6 +7,15 @@ angular.module('NodeWebBase')
         $scope.polygonFiles = ["--select--"];
         $scope.trainingFiles = ["--select--"];
 
+        $scope.scoreModel = {
+            filePath: $rootScope.savePath,
+            fileAppOut: "",
+            maxOut: -1,
+            bBinByLatLon: false,
+            bBinByDate: false,
+            fBinSize:.005,
+            bCluster:true
+        };
         $scope.popScore = function() {
             if(!$rootScope.isAppConfigured())
                 return;
@@ -49,27 +58,13 @@ angular.module('NodeWebBase')
         $scope.gatherScores = function() {
             if(!$rootScope.isAppConfigured())
                 return;
-            var sName = $("#scoreSelect").val();
-            var sMaxP = $("#sMaxEntries").val();
-            var bAgg = $("#aggScores").is(":checked");
-            var bTim = $("#aggTime").is(":checked");
-            var fBin = $("#sBinSize").val();
-            var bCUU = $("#uniqueUser").is(":checked");
-            var drawClusters = $("#drawClusters").is(":checked");
             var drawMarkers = $("#drawMarkers").is(":checked");
             var epsilon = $("#epsilon").val();
             var concavity = $("#concavity").val();
 
             $.ajax({
                 url: "app/controlBox/getScores",
-                data: {
-                    filePath: $rootScope.savePath,
-                    fileAppOut: sName,
-                    maxOut: sMaxP,
-                    bBinByLatLon: bAgg,
-                    bBinByDate: bTim,
-                    fBinSize: fBin
-                },
+                data: $scope.scoreModel,
                 dataType: "json",
                 success: function (response) {
                     //clean old point array, needed to removed points from map if you decrease number of entries
@@ -77,10 +72,10 @@ angular.module('NodeWebBase')
 
                     if(drawMarkers) {
                         $rootScope.$emit("clearMarkers",['score']);
-                        $rootScope.$emit("drawMapMarkers", response.sco, fBin, "score", bAgg);
+                        $rootScope.$emit("drawMapMarkers", response.sco, $scope.scoreModel.fBinSize, "score", $scope.scoreModel.bBinByLatLon);
                     }
-                    if(drawClusters)
-                        $rootScope.$emit("drawShapes",response.sco, epsilon, concavity ,"score");
+                    if($scope.scoreModel.bCluster)
+                        $rootScope.$emit("drawShapes",response.sco ,"score");
 
                     //write dictionary to results box
                     var strRet = '';
