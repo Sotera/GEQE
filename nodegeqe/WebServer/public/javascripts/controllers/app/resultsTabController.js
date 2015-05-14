@@ -71,7 +71,7 @@ angular.module('NodeWebBase')
 
                     if($scope.getScoresModel.drawMode =="none" || $scope.getScoresModel.drawMode =="latlonbin") {
                         $rootScope.$emit("clearMarkers",['score']);
-                        $rootScope.$emit("drawMapMarkers", response.sco, $scope.getScoresModel.fBinSize, "score", $scope.getScoresModel.bBinByLatLon);
+                        $rootScope.$emit("drawMapMarkers", response.sco, $scope.getScoresModel.fBinSize, "score", $scope.getScoresModel.drawMode =="latlonbin");
                     }
                     if($scope.getScoresModel.drawMode =="cluster")
                         $rootScope.$emit("drawShapes",response.sco ,"score");
