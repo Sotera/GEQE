@@ -79,34 +79,34 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                             div.form-group-sm
                                 label(for="scoreSelect") Job Name:
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="popScore()" title="Refresh file list.")
-                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="gatherScores()" title="Load scores.")
-                                select.form-control( name="scoreSelect" id="scoreSelect" ng-model="scoreModel.fileAppOut")
+                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="getScores()" title="Load scores.")
+                                select.form-control( name="scoreSelect" id="scoreSelect" ng-model="getScoresModel.fileAppOut")
                                     option( ng-repeat="item in scoreFiles" value="{{item}}") {{item}}
                             div.form-group-sm
                                 label(for="sMaxEntries")  Max Points:
-                                input.form-control(type="number" id="sMaxEntries" ng-model="scoreModel.maxOut" step="any" novalidate)
+                                input.form-control(type="number" id="sMaxEntries" ng-model="getScoresModel.maxOut" step="any" novalidate)
                             div.form-group-sm
                                 label(for="epsilon") Cluster Epsilon(km):
                                 input.form-control(type="number" id="epsilon" value="1" step="any" novalidate)
                             div.form-group-sm
                                 label(for="sBinSize") Bin Size:
-                                input.form-control(type="number" id="sBinSize" ng-model="scoreModel.fBinSize" step="any" novalidate)
+                                input.form-control(type="number" id="sBinSize" ng-model="getScoresModel.fBinSize" step="any" novalidate)
                             div.form-group-sm
                                 label(for='aggScores') Bin by Lat-Lon:
-                                input.form-control-sm(type="checkbox" ng-model = "scoreModel.bBinByLatLon" id="aggScores" name="aggScores")
+                                input.form-control-sm(type="checkbox" ng-model = "getScoresModel.bBinByLatLon" id="aggScores" name="aggScores")
                             div.form-group-sm
                                 label(for='aggTime') Bin as time series:
-                                input.form-control-sm( type="checkbox" ng-model = "scoreModel.bBinByDate" id="aggTime" name="aggTime")
+                                input.form-control-sm( type="checkbox" ng-model = "getScoresModel.bBinByDate" id="aggTime" name="aggTime")
                             div.form-group-sm
                                 label(for='drawClusters') Draw Clusters:
-                                input.form-control-sm(type="checkbox" ng-model = "scoreModel.bCluster" id="drawClusters" name="drawClusters")
+                                input.form-control-sm(type="checkbox" ng-model = "getScoresModel.bCluster" id="drawClusters" name="drawClusters")
                         fieldset.scheduler-border
                             legend.scheduler-border Training Results
                             div.form-group-sm
                                 label(for="trainingSelect") Job Name:
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='populateTrainingSelect()' title="Refresh file list.")
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="drawTrainingData()" title="Draw training data to the map.")
-                                select.form-control(name="trainingSelect" id="trainingSelect")
+                                select.form-control(name="trainingSelect" ng-model="trainingDataModel.fileAppOut" id="trainingSelect")
                                     option( ng-repeat="item in trainingFiles" value="{{item}}") {{item}}
 
     table.table.table-striped

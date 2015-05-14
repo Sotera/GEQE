@@ -7,15 +7,7 @@ angular.module('NodeWebBase')
         $scope.polygonFiles = ["--select--"];
         $scope.trainingFiles = ["--select--"];
 
-        $scope.scoreModel = {
-            filePath: $rootScope.savePath,
-            fileAppOut: "",
-            maxOut: -1,
-            bBinByLatLon: false,
-            bBinByDate: false,
-            fBinSize:.005,
-            bCluster:true
-        };
+
         $scope.popScore = function() {
             if(!$rootScope.isAppConfigured())
                 return;
@@ -55,26 +47,33 @@ angular.module('NodeWebBase')
             });
         };
 
-        $scope.gatherScores = function() {
+        $scope.getScoresModel = {
+            filePath: $rootScope.savePath,
+            fileAppOut: "",
+            maxOut: -1,
+            bBinByLatLon: false,
+            bBinByDate: false,
+            fBinSize:.005,
+            bCluster:true
+        };
+        $scope.getScores = function() {
             if(!$rootScope.isAppConfigured())
                 return;
             var drawMarkers = $("#drawMarkers").is(":checked");
-            var epsilon = $("#epsilon").val();
-            var concavity = $("#concavity").val();
 
             $.ajax({
                 url: "app/controlBox/getScores",
-                data: $scope.scoreModel,
+                data: $scope.getScoresModel,
                 dataType: "json",
                 success: function (response) {
                     //clean old point array, needed to removed points from map if you decrease number of entries
                     $rootScope.$emit("setTermDictionary", response.dic);
 
-                    if(drawMarkers) {
+                    if($scope.getScoresModel.bBinByLatLon) {
                         $rootScope.$emit("clearMarkers",['score']);
-                        $rootScope.$emit("drawMapMarkers", response.sco, $scope.scoreModel.fBinSize, "score", $scope.scoreModel.bBinByLatLon);
+                        $rootScope.$emit("drawMapMarkers", response.sco, $scope.getScoresModel.fBinSize, "score", $scope.getScoresModel.bBinByLatLon);
                     }
-                    if($scope.scoreModel.bCluster)
+                    if($scope.getScoresModel.bCluster)
                         $rootScope.$emit("drawShapes",response.sco ,"score");
 
                     //write dictionary to results box
@@ -135,16 +134,16 @@ angular.module('NodeWebBase')
             });
         };
 
+        $scope.trainingDataModel = {
+            filePath: $rootScope.savePath,
+            fileAppOut:""
+        };
         $scope.drawTrainingData = function() {
             if(!$rootScope.isAppConfigured())
                 return;
-            var sName = $("#trainingSelect").val();
             $.ajax({
                 url: "app/controlBox/getTrainingData",
-                data: {
-                    filePath: $rootScope.savePath,
-                    fileAppOut: sName
-                },
+                data: $scope.trainingDataModel,
                 dataType: "json",
                 success: function (response) {
                     $rootScope.$emit("clearMarkers",['training']);
