@@ -34,8 +34,6 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
                                     "fullname": $scope.data.fullname,
                                     "email": $scope.data.email,
                                     "themeName": $scope.data.themeName,
-                                    "inputSubDir": $scope.data.inputSubDir,
-                                    "savePath":$scope.data.savePath,
                                     "serviceHostName":$scope.data.serviceHostName,
                                     "servicePort":$scope.data.servicePort
                                 },{
@@ -44,8 +42,6 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
                                     }
                                 }).success(function (res) {
                                     //update our root config vars
-                                    $rootScope.savePath = $scope.data.savePath;
-                                    $rootScope.fileSubDir = $scope.data.inputSubDir;
                                     $rootScope.fullname = $scope.data.fullname;
                                     $rootScope.serviceHostName = $scope.data.serviceHostName;
                                     $rootScope.servicePort = $scope.data.servicePort;

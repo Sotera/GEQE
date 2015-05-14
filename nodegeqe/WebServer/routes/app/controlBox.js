@@ -30,12 +30,13 @@ var makeServiceCall = function(req,res,routeName, serviceHostName, servicePort){
     })
 };
 
-router.get('/:vp', function (req, res) {
-    var routeName = req.params.vp;
+
+
+var applyRoute = function(routeName,req,res){
     var settingsUrl = "/api/users/" + req.session.userId ;
     var settingsData =  {
-                                access_token: req.session.loopbackId
-                        };
+        access_token: req.session.loopbackId
+    };
 
     netHelpers.performAjaxRequest("localhost", 5500, settingsUrl, 'GET', settingsData, function (resultObject) {
         if (resultObject.error) {
@@ -60,11 +61,19 @@ router.get('/:vp', function (req, res) {
         console.log(error.message);
         res.status(500).send(error.message);
     })
+}
 
 
+router.get('/populate/:vp', function (req, res) {
+    var routeName = "populate/"+req.params.vp;
+    applyRoute(routeName,req,res);
 });
 
 
+router.get('/:vp', function (req, res) {
+    var routeName = req.params.vp;
+    applyRoute(routeName,req,res)
+});
 
 
 module.exports = router;

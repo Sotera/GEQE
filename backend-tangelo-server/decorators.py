@@ -10,14 +10,14 @@ def allow_all_origins(callback):
     :param callback:
     :return:
     """
-    def set_header(**kwargs):
+    def set_header(*arg,**kwargs):
         tangelo.header('Access-Control-Allow-Origin','*')
-        return callback(**kwargs)
+        return callback(*arg,**kwargs)
     return set_header
 
 
 def validate_user(callback):
-    def setup_user(**kwargs):
+    def setup_user(*arg,**kwargs):
         confObj = conf.get()
         root = confObj['root_data_path']
         # default user to demo
@@ -28,7 +28,7 @@ def validate_user(callback):
             os.mkdir(root+'/'+user)
             for dir in ['dictFiles','inputFiles','jobFiles','previewTrainingFiles','scoreFiles']:
                 os.mkdir(root+'/'+user+'/'+dir)
-        return callback(**kwargs)
+        return callback(*arg,**kwargs)
     return setup_user
 
 

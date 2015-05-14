@@ -215,18 +215,17 @@ angular.module('NodeWebBase')
 
         $scope.drawPolygonFile = function(fileName){
             $.ajax({
-                url: "app/controlBox/getFileContents",
+                url: "app/controlBox/getPolygon",
                 data : {
-                    filePath: $rootScope.savePath,
-                    fileName: fileName,
-                    subDir:$scope.fileSubDir
+                    user: $rootScope.username,
+                    fileName: fileName
                 },
                 dataType: "json",
                 success: function (response) {
                     var latLngs = [];
                     var latLngList = [];
                     try {
-                        var sites = JSON.parse(response.fileData);
+                        var sites = response;
                     }
                     catch(err){
                         $rootScope.showErrorMessage("JSON Parsing", err);

@@ -3,14 +3,10 @@ angular.module('NodeWebBase')
     .controller('mainController', function ($scope, $rootScope, $http, $cookies, ngDialog) {
         $scope.scopeName = "mainController";
 
-        //THESE ARE IN SETTINGS NOW..Please set them in the settings dialog
-        //$rootScope.savePath = "/home/jlueders/src/geqe/exSrc/";
-        //$scope.savePath = "/home/jgartner/findSP/";
-        //$rootScope.fileSubDir = "inputFiles/";
 
         $scope.initWithSettings = function(res){
-            $rootScope.savePath = res.savePath;
-            $rootScope.fileSubDir = res.inputSubDir;
+
+            $rootScope.username = res.username;
             $rootScope.fullname = res.fullname;
             $rootScope.serviceHostName = res.serviceHostName;
             $rootScope.servicePort = res.servicePort;
@@ -20,9 +16,7 @@ angular.module('NodeWebBase')
         };
 
         $rootScope.isAppConfigured = function(){
-          return   $rootScope.savePath &&
-            $rootScope.fileSubDir &&
-            $rootScope.fullname &&
+          return $rootScope.fullname &&
             $rootScope.serviceHostName &&
             $rootScope.servicePort;
         };

@@ -12,9 +12,9 @@ angular.module('NodeWebBase')
                 return;
 
             $.ajax({
-                url: "app/controlBox/popScoreList",
+                url: "app/controlBox/populate/scores",
                 data : {
-                    filePath: $rootScope.savePath
+                    user: $rootScope.username,
                 },
                 dataType: "json",
                 success: function (response) {
@@ -31,10 +31,9 @@ angular.module('NodeWebBase')
             if(!$rootScope.isAppConfigured())
                 return;
             $.ajax({
-                url: "app/controlBox/popScoreList",
+                url: "app/controlBox/populate/polygons",
                 data : {
-                    filePath: $rootScope.savePath,
-                    subDir:$scope.fileSubDir
+                    user: $rootScope.username
                 },
                 dataType: "json",
                 success: function (response) {
@@ -63,7 +62,7 @@ angular.module('NodeWebBase')
             $.ajax({
                 url: "app/controlBox/getScores",
                 data: {
-                    filePath: $rootScope.savePath,
+                    user: $rootScope.username,
                     fileAppOut: sName,
                     maxOut: sMaxP,
                     bBinByLatLon: bAgg,
@@ -125,9 +124,9 @@ angular.module('NodeWebBase')
                 return;
 
             $.ajax({
-                url: "app/controlBox/popTrainingDataList",
+                url: "app/controlBox/populate/trainingdata",
                 data : {
-                    filePath: $rootScope.savePath
+                    user: $rootScope.username
                 },
                 dataType: "json",
                 success: function (response) {
@@ -147,7 +146,7 @@ angular.module('NodeWebBase')
             $.ajax({
                 url: "app/controlBox/getTrainingData",
                 data: {
-                    filePath: $rootScope.savePath,
+                    user: $rootScope.username,
                     fileAppOut: sName
                 },
                 dataType: "json",

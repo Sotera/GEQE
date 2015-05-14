@@ -217,7 +217,7 @@ def get(user='demo', fileAppOut='appliedScores', maxOut = -1, bBinByLatLon="fals
     # try to read the dictionary file for this score file and return those resonse as well
     retDict = {}
     try:
-        dictName = filePath + "dictFiles/dict_" + fileAppOut
+        dictName = filePath + "/dictFiles/dict_" + fileAppOut
         lWordScores = []
         f2 = open(dictName,'r')
         for line in f2:
