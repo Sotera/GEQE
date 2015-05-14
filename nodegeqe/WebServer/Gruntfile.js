@@ -6,7 +6,9 @@ module.exports = function (grunt) {
                 script: 'bin/www',
                 options: {
                     args: ['dev'],
-                    nodeArgs: ['--debug'],
+                    ignore: ["node_modules/**", ".git/", "public/", "Gruntfile.js"],
+                    watchedFolders: ['routes', 'modules'],
+                    //nodeArgs: ['--debug'],
                     callback: function (nodemon) {
                         nodemon.on('log', function (event) {
                             console.log(event.colour);
