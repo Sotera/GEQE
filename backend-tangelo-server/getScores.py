@@ -96,15 +96,15 @@ def createHull(cluster):
 
 @tangelo.restful
 @allow_all_origins
-def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon="false", bBinByDate="false", bCluster="false", fBinSize=.05, threshhold=None):
+def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, drawMode="cluster", bBinByDate="false", fBinSize=.05, threshhold=None):
     #Add parameter to tune unique user enforcement
     nMinUniqueUsers = 3
 
     maxOut = int(maxOut)
     if threshhold is not None: threshhold = float(threshhold)
-    bBinByLatLon = bBinByLatLon == "true" or bBinByLatLon == "True"
+    bCluster = drawMode == "cluster"
+    bBinByLatLon = drawMode == "latlonbin"
     bBinByDate = bBinByDate == "true" or bBinByDate == "True"
-    bCluster = bCluster == "true" or bCluster == "True"
     fBinSize = float(fBinSize)
     ssName  = filePath + "scoreFiles/" + fileAppOut
 
