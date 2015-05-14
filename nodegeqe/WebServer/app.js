@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -28,7 +29,6 @@ app.use('/views/partials', require('./routes/partials'));
 app.use('/views/app', require('./routes/app/app'));
 app.use('/app/controlBox', require('./routes/app/controlBox'));
 app.use('/app/users', require('./routes/app/users'));
-app.use('/app/compute', require('./routes/app/compute'));
 app.use('/app/socialMediaQuery', require('./routes/app/socialMediaQuery'));
 
 // catch 404 and forward to error handler

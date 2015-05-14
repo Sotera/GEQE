@@ -1,10 +1,10 @@
 div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-controller="tabsController")
 
     nav.navbar.navbar-default.navbar-inverse
-        span(ng-click='clearResults()' title='Clear Results').noselect.navbar-button.btn-lg.glyphicon.glyphicon-th-list.navbar-text
-        span(ng-click='clearShapes()' title='Clear Shapes').noselect.navbar-button.btn-lg.glyphicon.glyphicon-unchecked.navbar-text
-        span(ng-click='clearMarkers()' title='Clear Markers').noselect.navbar-button.btn-lg.glyphicon.glyphicon-map-marker.navbar-text
-        span(ng-click='clearAll()' title='Clear All').noselect.navbar-button.btn-lg.glyphicon.glyphicon-asterisk.navbar-text
+        a(ng-click='clearResults()' title='Clear Results' href="#").noselect.navbar-button.btn-lg.glyphicon.glyphicon-th-list.navbar-text
+        a(ng-click='clearShapes()' title='Clear Shapes' href="#").noselect.navbar-button.btn-lg.glyphicon.glyphicon-unchecked.navbar-text
+        a(ng-click='clearMarkers()' title='Clear Markers' href="#").noselect.navbar-button.btn-lg.glyphicon.glyphicon-map-marker.navbar-text
+        a(ng-click='clearAll()' title='Clear All' href="#").noselect.navbar-button.btn-lg.glyphicon.glyphicon-asterisk.navbar-text
 
     ul.nav.nav-tabs
         li(ng-repeat="tab in tabs" ng-class="{active:isActiveTab(tab.url)}" ng-click="onClickTab(tab)")
@@ -79,43 +79,37 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                             div.form-group-sm
                                 label(for="scoreSelect") Job Name:
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="popScore()" title="Refresh file list.")
-                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="gatherScores()" title="Load scores.")
-                                select.form-control( name="scoreSelect" id="scoreSelect")
+                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="getScores()" title="Load scores.")
+                                select.form-control( name="scoreSelect" id="scoreSelect" ng-model="getScoresModel.fileAppOut")
                                     option( ng-repeat="item in scoreFiles" value="{{item}}") {{item}}
                             div.form-group-sm
                                 label(for="sMaxEntries")  Max Points:
-                                input.form-control(type="number" id="sMaxEntries" value="-1" step="any" novalidate)
+                                input.form-control(type="number" id="sMaxEntries" ng-model="getScoresModel.maxOut" step="any" novalidate)
                             div.form-group-sm
                                 label(for="epsilon") Cluster Epsilon(km):
                                 input.form-control(type="number" id="epsilon" value="1" step="any" novalidate)
                             div.form-group-sm
-                                label(for="concavity") Cluster Concavity:
-                                input.form-control(type="number" id="concavity" value=".05" step="any" novalidate)
-                            div.form-group-sm
                                 label(for="sBinSize") Bin Size:
-                                input.form-control(type="number" id="sBinSize" value=".005" step="any" novalidate)
-                            div.form-group-sm
-                                label(for='aggScores') Bin by Lat-Lon:
-                                input.form-control-sm(type="checkbox" id="aggScores" name="aggScores")
-                            div.form-group-sm
-                                label(for='aggTime') Bin as time series:
-                                input.form-control-sm( type="checkbox" id="aggTime" name="aggTime")
+                                input.form-control(type="number" id="sBinSize" ng-model="getScoresModel.fBinSize" step="any" novalidate)
                             div.form-group-sm
                                 label(for='drawClusters') Draw Clusters:
-                                input.form-control-sm(type="checkbox" checked=true id="drawClusters" name="drawClusters")
+                                input.form-control-sm(type="radio" ng-model="getScoresModel.drawMode" value="cluster" id="drawClusters" name="binBy")
                             div.form-group-sm
-                                label(for='drawMarkers') Draw Markers:
-                                input.form-control-sm(type="checkbox" id="drawMarkers" name="drawMarkers")
+                                label(for='aggScores') Bin by Lat-Lon:
+                                input.form-control-sm(type="radio" ng-model="getScoresModel.drawMode" value="latlonbin" id="aggScores" name="binBy")
                             div.form-group-sm
-                                label(for='uniqueUser') Count only unique users:
-                                input.form-control-sm(type="checkbox" id="uniqueUser")
+                                label(for='indPosts') Individual Posts:
+                                input.form-control-sm(type="radio" ng-model="getScoresModel.drawMode" value="none" id="indPosts" name="binBy")
+                            div.form-group-sm
+                                label(for='aggTime') Bin as time series:
+                                input.form-control-sm( type="checkbox" ng-model="getScoresModel.bBinByDate" id="aggTime" name="aggTime")
                         fieldset.scheduler-border
                             legend.scheduler-border Training Results
                             div.form-group-sm
                                 label(for="trainingSelect") Job Name:
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='populateTrainingSelect()' title="Refresh file list.")
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="drawTrainingData()" title="Draw training data to the map.")
-                                select.form-control(name="trainingSelect" id="trainingSelect")
+                                select.form-control(name="trainingSelect" ng-model="trainingDataModel.fileAppOut" id="trainingSelect")
                                     option( ng-repeat="item in trainingFiles" value="{{item}}") {{item}}
 
     table.table.table-striped
