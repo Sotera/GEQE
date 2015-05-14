@@ -1,10 +1,10 @@
 div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-controller="tabsController")
 
     nav.navbar.navbar-default.navbar-inverse
-        span(ng-click='clearResults()' title='Clear Results').noselect.navbar-button.btn-lg.glyphicon.glyphicon-th-list.navbar-text
-        span(ng-click='clearShapes()' title='Clear Shapes').noselect.navbar-button.btn-lg.glyphicon.glyphicon-unchecked.navbar-text
-        span(ng-click='clearMarkers()' title='Clear Markers').noselect.navbar-button.btn-lg.glyphicon.glyphicon-map-marker.navbar-text
-        span(ng-click='clearAll()' title='Clear All').noselect.navbar-button.btn-lg.glyphicon.glyphicon-asterisk.navbar-text
+        a(ng-click='clearResults()' title='Clear Results' href="#").noselect.navbar-button.btn-lg.glyphicon.glyphicon-th-list.navbar-text
+        a(ng-click='clearShapes()' title='Clear Shapes' href="#").noselect.navbar-button.btn-lg.glyphicon.glyphicon-unchecked.navbar-text
+        a(ng-click='clearMarkers()' title='Clear Markers' href="#").noselect.navbar-button.btn-lg.glyphicon.glyphicon-map-marker.navbar-text
+        a(ng-click='clearAll()' title='Clear All' href="#").noselect.navbar-button.btn-lg.glyphicon.glyphicon-asterisk.navbar-text
 
     ul.nav.nav-tabs
         li(ng-repeat="tab in tabs" ng-class="{active:isActiveTab(tab.url)}" ng-click="onClickTab(tab)")
