@@ -3,9 +3,11 @@ import sys
 sys.path.append(".")
 import conf
 import commandlineLauncher
+from decorators import allow_all_origins
 import json
 
 @tangelo.restful
+@allow_all_origins
 def get(jobname=''):
 
     confObj = conf.get()

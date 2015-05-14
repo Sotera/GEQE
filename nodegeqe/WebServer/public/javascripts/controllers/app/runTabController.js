@@ -8,7 +8,9 @@ angular.module('NodeWebBase')
         $scope.dataSets= ["--select--"];
 
         $scope.polygonFiles = ["--select--"];
-        $scope.polyFile = "polyfile.json";
+        $scope.polyFile = "";
+
+        $scope.useTimeSeries = false;
 
         $scope.polyFileSelected = function(item){
             $scope.polyFile = item;
@@ -102,8 +104,6 @@ angular.module('NodeWebBase')
             }
 
 
-            var bML  = $("#useML").is(":checked");
-            var bBay = $("#useBayes").is(":checked");
             //change source based on Checkbox value
             var fThresh=$("#sTopN").val();
             var bPer = $("#bPercent").is(":checked");
@@ -120,8 +120,7 @@ angular.module('NodeWebBase')
                     fileAppOut: sName,
                     fScoreThresh: fThresh,
                     dataSet: dSet,
-                    useML: bML,
-                    useBayes: bBay,
+                    useTime:  $scope.useTimeSeries,
                     nFeatures: nFeat,
                     custStopWord: sSWords
                 },
@@ -181,27 +180,7 @@ angular.module('NodeWebBase')
             }
         };
 
-        $scope.toggleAdv = function() {
-            var bChecked = $("#bAdvanced").is(":checked");
-            var r1 = $("#hr1");
-            var r2 = $("#hr2");
-            var r3 = $("#hr3");
-            var r4 = $("#hr4");
-            var r5 = $("#hr5");
-            if( bChecked == true) {
-                r1.removeClass("invis");
-                r2.removeClass("invis");
-                //r3.removeClass("invis");
-                r4.removeClass("invis");
-                r5.removeClass("invis");
-            } else {
-                r1.addClass("invis");
-                r2.addClass("invis");
-                //r3.addClass("invis");
-                r4.addClass("invis");
-                r5.addClass("invis");
-            }
-        };
+
 
         //go ahead and get the data sets from the server
         //INIT

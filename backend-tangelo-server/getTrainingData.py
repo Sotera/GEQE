@@ -4,10 +4,13 @@ import tangelo
 import os
 import time
 from sets import Set
+sys.path.append(".")
+from decorators import allow_all_origins
 
 
 
 @tangelo.restful
+@allow_all_origins
 def get(filePath='./', fileAppOut='', maxOut = "500"):
     maxOut = int(maxOut)
     ssName  = filePath + "previewTrainingFiles/" + fileAppOut
