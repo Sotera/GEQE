@@ -4,6 +4,7 @@ import tangelo
 import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
+from scipy.spatial import ConvexHull
 
 sys.path.append(".")
 from decorators import allow_all_origins
@@ -44,6 +45,7 @@ class ScoreBin:
         self.lon = ''
         self.date = ''
         self.records = []
+        self.poly = []
         if record is not None:
             self.lat = record.lat
             self.lon = record.lon
@@ -64,13 +66,14 @@ class ScoreBin:
             'lon': self.lon,
             'nUnique': len(self.users),
             'nTotal': len(self.records),
+            'poly' : list(self.poly),
             'posts' : map(lambda x: x.toDict(),self.records)
         }
 
 def assignToCluster(recordList, epsilon, nMin):
     lalo = []
     for obj in recordList:
-        lalo.append([obj.lon, obj.lat])
+        lalo.append([float(obj.lon), float(obj.lat)])
 
     X = StandardScaler().fit_transform(lalo)
     db = DBSCAN(eps=epsilon, min_samples=nMin).fit(X)
@@ -78,9 +81,22 @@ def assignToCluster(recordList, epsilon, nMin):
         recordList[ind].cluster = db.labels_[ind]
     return
 
+def createHull(cluster):
+    loLa = set([])
+    for point in cluster.records:
+        loLa.add(str(point.lon)+","+str(point.lat))
+    loLa = map(lambda x: [x.split(",")[0],x.split(",")[1]],loLa)
+    loLa = np.array(loLa)
+    hull = ConvexHull(loLa)
+    polyPoints = []
+    for verts in hull.vertices:
+        polyPoints.append([loLa[verts,1],loLa[verts,0]])
+    cluster.poly = polyPoints
+
+
 @tangelo.restful
 @allow_all_origins
-def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon="false", bBinByDate="false", bCluster="false", fBinSize=.005, threshhold=None):
+def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon="false", bBinByDate="false", bCluster="false", fBinSize=.05, threshhold=None):
     #Add parameter to tune unique user enforcement
     nMinUniqueUsers = 3
 
@@ -98,7 +114,7 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
         i = 0
         for line in fileHandle:
             i = i +1
-            if  not bBinByDate and not bBinByLatLon and maxOut > 0 and i > maxOut:
+            if  not bBinByDate and not bBinByLatLon and not bCluster and maxOut > 0 and i > maxOut:
                 break
             recordList.append(ScoreRecord(line))
 
@@ -112,7 +128,6 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
         for record in recordList:
             bins.append( ScoreBin(record) )
 
-
     # Bin only by date
     elif bBinByDate and not bBinByLatLon and not bCluster:
         dateBinDict = {}
@@ -122,7 +137,6 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
             else:
                 dateBinDict[record.date].addRecord(record)
         bins.extend(dateBinDict.values())
-
 
     # bin only by lat lon
     elif bBinByLatLon and not bBinByDate and not bCluster:
@@ -139,7 +153,6 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
             else:
                 geoBinDict[key].addRecord(record)
         bins.extend(geoBinDict.values())
-
 
     # bin by both date and lat lon
     elif bBinByDate and bBinByLatLon and not bCluster:
@@ -184,9 +197,7 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
                     clustDict[key] = ScoreBin(record)
                 else:
                     clustDict[key].addRecord(record)
-            bins.extend(clustDict)
-
-
+            bins.extend(clustDict.values())
 
     elif bCluster and not bBinByDate:
         assignToCluster(recordList, fBinSize, 5)
@@ -203,8 +214,7 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
     else:
         raise ValueError("Invalid arguments.")
 
-
-    # try to read the dictionary file for this score file and return those resonse as well
+    # try to read the dictionary file for this score file and return those response as well
     retDict = {}
     try:
         dictName = filePath + "dictFiles/dict_" + fileAppOut
@@ -228,9 +238,15 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
     if bBinByLatLon or bCluster:
         bins = filter(lambda x: len(x.users)>=nMinUniqueUsers,bins)
 
+    # draw poly around cluster
+    if bCluster:
+        for cluster in bins:
+            createHull(cluster)
+
+
     # return the results
     retDict['total'] = len(bins)
-    if bBinByDate or bBinByLatLon:
+    if bBinByDate or bBinByLatLon or bCluster:
         bins = sorted(bins,key= lambda x: len(x.records), reverse=True)
         if maxOut > 0:
             bins = bins[:maxOut]
@@ -240,17 +256,3 @@ def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, bBinByLatLon
     retDict['sco'] = bins
 
     return json.dumps(retDict)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
