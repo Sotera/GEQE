@@ -3,11 +3,12 @@ extends layout
 block content
 	div(ng-controller='indexController')
 		.navbar.navbar-inverse
-			a.navbar-brand(href='#') Geo Event Query by Example
-			nb-settings
-			logout
+			a.navbar-brand(href='#') Geo Event Query by Example'
+			div.navbar-right
+				logout
+				nb-settings
 
-		div(ng-view)
+	div(ng-view)
 
 block scripts
 	script(src='/javascripts/controllers/indexController.js')
