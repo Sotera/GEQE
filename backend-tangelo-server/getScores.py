@@ -5,7 +5,7 @@ import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
 from scipy.spatial import ConvexHull
-
+import traceback
 sys.path.append(".")
 import conf
 from decorators import validate_user
@@ -92,11 +92,18 @@ def createHull(cluster):
         loLa.add(str(point.lon)+","+str(point.lat))
     loLa = map(lambda x: [x.split(",")[0],x.split(",")[1]],loLa)
     loLa = np.array(loLa)
-    hull = ConvexHull(loLa)
-    polyPoints = []
-    for verts in hull.vertices:
-        polyPoints.append([loLa[verts,1],loLa[verts,0]])
-    cluster.poly = polyPoints
+    try:
+        hull = ConvexHull(loLa)
+        polyPoints = []
+        for verts in hull.vertices:
+            polyPoints.append([loLa[verts,1],loLa[verts,0]])
+        cluster.poly = polyPoints
+    except:
+        tangelo.log(traceback.format_exc())
+        tangelo.log("number of records: "+str(len(cluster.records)))
+        tangelo.log("loLa[0]: "+str(loLa[0]))
+        tangelo.log("records:  \n"+json.dumps(cluster.toDict()))
+
 
 
 @tangelo.restful
