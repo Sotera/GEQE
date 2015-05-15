@@ -18,6 +18,17 @@ operationMapping = {
 
 @allow_all_origins
 def run(operation,user='demo'):
+    """
+    Get a list of items based on sub path
+    /populate/polygons:  return list of polygon sets
+    /populate/scores:  returns list of score sets
+    /poptulate/trainingdata returns list of training data sets
+    /populate/datasets: returns list of datasets available
+
+    :param operation:  (polygons | scores | trainingdata | datasets )
+    :param user: username
+    :return:  list or requested items
+    """
     if operation not in operationMapping:
         return "Unsupported operation: %s\nAllowed operations are: %s" % (operation, ", ".join(allowed))
 

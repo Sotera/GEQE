@@ -13,6 +13,13 @@ from decorators import allow_all_origins
 @allow_all_origins
 @validate_user
 def get(user='demo', fileAppOut='', maxOut = "500"):
+    """
+    Get the json object representing points in a training data set.
+    :param user: username
+    :param fileAppOut: name of training dataset
+    :param maxOut: max number of points to return
+    :return:  json Object representing points
+    """
 
     confObj = conf.get()
     filePath = confObj['root_data_path'] +'/' +user

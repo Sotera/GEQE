@@ -9,9 +9,11 @@ import json
 @tangelo.restful
 @allow_all_origins
 def get(jobname=''):
-
-    # TODO underlying bug here, we do not prevent multiple users from having the same jobname
-    # so users can stomp on each others jobs quite easily.
+    """
+    Get the status for a current job by jobname
+    :param jobname:
+    :return: job status
+    """
 
     # automatically append the job_ prefix to any job name
     if jobname != '' and 'job_' != jobname[:4]:  jobname = 'job_'+jobname
