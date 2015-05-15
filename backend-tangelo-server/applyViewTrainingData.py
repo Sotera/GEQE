@@ -10,10 +10,10 @@ import time
 import datetime
 import commandlineLauncher
 
-def generate_job_name(scoreFile):
+def generate_job_name(user,scoreFile):
     """ generate a job id based on the current time """
     filename = scoreFile if ('/' not in scoreFile) else scoreFile.split('/')[-1]
-    return 'job_training_data_'+filename
+    return 'job_training_data_'+user+'_'+filename
 
 
 
@@ -21,6 +21,16 @@ def generate_job_name(scoreFile):
 @allow_all_origins
 @validate_user
 def get(user='demo',filePolygon='',fileAppOut='',dataSet=''):
+    """
+    Filter the dataset based on the input polygon provided and return
+    the points
+
+    :param user:  username
+    :param filePolygon: polygon set to use for filtering
+    :param fileAppOut: name of resulting output
+    :param dataSet:  dataset to execute over
+    :return:  jobname:   job_training_data_username_<fileAppOut>
+    """
 
 
     # load the correct dataset by name from the data set config file
@@ -58,7 +68,7 @@ def get(user='demo',filePolygon='',fileAppOut='',dataSet=''):
     ])
 
 
-    jobname = generate_job_name(fileAppOut)
+    jobname = generate_job_name(user,fileAppOut)
 
     # write the job file
     if not os.path.isdir(filePath+'/jobFiles'):

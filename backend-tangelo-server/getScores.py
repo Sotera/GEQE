@@ -110,6 +110,21 @@ def createHull(cluster):
 @allow_all_origins
 @validate_user
 def get(user='demo', fileAppOut='appliedScores.csv', maxOut = -1, drawMode="cluster", bBinByDate="false", fBinSize=.05, threshhold=None):
+    """
+    Get a json data structure representing the scored data points from a geqe job
+
+    :param user: username
+    :param fileAppOut: name of the score set to load
+    :param maxOut: maximum number of bins (or points) to return
+    :param drawMode: (cluster | latlonbin | individual) Determines how data points are clustered into bins for the result set.
+        cluster - DBSCAN / convexHUll algorithim to find clustered points
+        latlonbin - simple lat / lon binning based on clipping lat/lon data.
+        individual - returns individual points without binning.
+    :param bBinByDate: (true/false)  cluster points by date to find events.
+    :param fBinSize: size for latlon binning
+    :param threshhold: minimum score of data points to return
+    :return:  JSON data for scored points in bins
+    """
 
     confObj = conf.get()
     filePath = confObj['root_data_path'] +'/' +user
