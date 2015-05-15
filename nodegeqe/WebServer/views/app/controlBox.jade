@@ -79,38 +79,37 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                             div.form-group-sm
                                 label(for="scoreSelect") Job Name:
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="popScore()" title="Refresh file list.")
-                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="getScores()" title="Load scores.")
                                 select.form-control( name="scoreSelect" id="scoreSelect" ng-model="getScoresModel.fileAppOut")
                                     option( ng-repeat="item in scoreFiles" value="{{item}}") {{item}}
                             div.form-group-sm
                                 label(for="sMaxEntries")  Max Points:
                                 input.form-control(type="number" id="sMaxEntries" ng-model="getScoresModel.maxOut" step="any" novalidate)
                             div.form-group-sm
-                                label(for="epsilon") Cluster Epsilon(km):
-                                input.form-control(type="number" id="epsilon" value="1" step="any" novalidate)
-                            div.form-group-sm
                                 label(for="sBinSize") Bin Size:
                                 input.form-control(type="number" id="sBinSize" ng-model="getScoresModel.fBinSize" step="any" novalidate)
+                            fieldset.scheduler-border
+                                legend.scheduler-border Draw Mode
+                                div.form-group-sm
+                                    label(for='drawClusters') Clusters
+                                    input.form-control-sm(type="radio" ng-model="getScoresModel.drawMode" value="cluster" id="drawClusters" name="binBy")
+                                div.form-group-sm
+                                    label(for='aggScores') Lat-Lon bins
+                                    input.form-control-sm(type="radio" ng-model="getScoresModel.drawMode" value="latlonbin" id="aggScores" name="binBy")
+                                div.form-group-sm
+                                    label(for='indPosts') All Posts
+                                    input.form-control-sm(type="radio" ng-model="getScoresModel.drawMode" value="none" id="indPosts" name="binBy")
                             div.form-group-sm
-                                label(for='drawClusters') Draw Clusters:
-                                input.form-control-sm(type="radio" ng-model="getScoresModel.drawMode" value="cluster" id="drawClusters" name="binBy")
-                            div.form-group-sm
-                                label(for='aggScores') Bin by Lat-Lon:
-                                input.form-control-sm(type="radio" ng-model="getScoresModel.drawMode" value="latlonbin" id="aggScores" name="binBy")
-                            div.form-group-sm
-                                label(for='indPosts') Individual Posts:
-                                input.form-control-sm(type="radio" ng-model="getScoresModel.drawMode" value="none" id="indPosts" name="binBy")
-                            div.form-group-sm
-                                label(for='aggTime') Bin as time series:
+                                label(for='aggTime') Bin as Time Series:
                                 input.form-control-sm( type="checkbox" ng-model="getScoresModel.bBinByDate" id="aggTime" name="aggTime")
+                            button.form-control.btn.btn-default(ng-click="getScores()" title='Draw Scores to the map') Show Scores
                         fieldset.scheduler-border
                             legend.scheduler-border Training Results
                             div.form-group-sm
                                 label(for="trainingSelect") Job Name:
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='populateTrainingSelect()' title="Refresh file list.")
-                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="drawTrainingData()" title="Draw training data to the map.")
                                 select.form-control(name="trainingSelect" ng-model="trainingDataModel.fileAppOut" id="trainingSelect")
                                     option( ng-repeat="item in trainingFiles" value="{{item}}") {{item}}
+                                button.form-control.btn.btn-default(ng-click="drawTrainingData()" title='Draw training data to the map.') Show Training Data
 
     table.table.table-striped
         tr

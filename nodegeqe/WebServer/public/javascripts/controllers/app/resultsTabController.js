@@ -64,15 +64,15 @@ angular.module('NodeWebBase')
                 data: $scope.getScoresModel,
                 dataType: "json",
                 success: function (response) {
+
+                    if(!response.sco || response.sco.length == 0)
+                    {
+                        $rootScope.showErrorMessage("Get Scores","No Scores Returned");
+                    }
+
                     //clean old point array, needed to removed points from map if you decrease number of entries
                     $rootScope.$emit("setTermDictionary", response.dic);
-
-                    if($scope.getScoresModel.drawMode =="none" || $scope.getScoresModel.drawMode =="latlonbin") {
-                        $rootScope.$emit("clearMarkers",['score']);
-                        $rootScope.$emit("drawMapMarkers", response.sco, $scope.getScoresModel.fBinSize, "score", $scope.getScoresModel.drawMode =="latlonbin");
-                    }
-                    if($scope.getScoresModel.drawMode =="cluster")
-                        $rootScope.$emit("drawShapes",response.sco ,"score");
+                    $rootScope.$emit("loadNavData", response.sco, $scope.getScoresModel);
 
                     //write dictionary to results box
                     var strRet = '';
