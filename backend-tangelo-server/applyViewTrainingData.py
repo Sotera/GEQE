@@ -13,7 +13,7 @@ import commandlineLauncher
 def generate_job_name(user,scoreFile):
     """ generate a job id based on the current time """
     filename = scoreFile if ('/' not in scoreFile) else scoreFile.split('/')[-1]
-    return 'job_training_data_'+user+'_'+filename
+    return user+'_'+filename
 
 
 
@@ -29,7 +29,7 @@ def get(user='demo',filePolygon='',fileAppOut='',dataSet=''):
     :param filePolygon: polygon set to use for filtering
     :param fileAppOut: name of resulting output
     :param dataSet:  dataset to execute over
-    :return:  jobname:   job_training_data_username_<fileAppOut>
+    :return:  jobname:   username_Ap<fileAppOut>
     """
 
 
