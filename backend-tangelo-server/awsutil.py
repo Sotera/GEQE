@@ -83,7 +83,7 @@ def submitJob(jobname,jobConf,polyFilePath,bucket):
 
 
     JOB_QUEUE_URL = getBytesFromS3(bucket,'WAITING_QUEUE')
-
+    jobname = 'jobs/'+jobname
     saveBytesToS3(bucket,jobname+'/job.conf',json.dumps(jobConf))
 
     with open(polyFilePath,'r') as handle:
@@ -98,6 +98,7 @@ def submitJob(jobname,jobConf,polyFilePath,bucket):
 
 
 def getStatus(jobname,bucket):
+    jobname = 'jobs/'+jobname
     s3 = boto3.resource('s3')
     s3bucket = s3.Bucket(bucket)
     keys =  [x.key.replace(jobname+'/','') for x in s3bucket.objects.filter(Prefix=jobname)]
@@ -115,10 +116,10 @@ def getAllJobStatus(bucket):
     s3 = boto3.resource('s3')
     s3bucket = s3.Bucket(bucket)
     keys =  [x.key for x in s3bucket.objects.all()]
-    keys = filter(lambda x: x[:3] == 'job' and 'STATUS_' in x,keys)
+    keys = filter(lambda x: x[:5] == 'jobs/' and 'STATUS_' in x,keys)
     statusList = []
     for key in keys:
-        (job,status) = key.split('/')
+        (dir,job,status) = key.split('/')
         status = status.replace('STATUS_','')
         statusList.append({'jobname':job,'status':status})
     return statusList
