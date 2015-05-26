@@ -1,5 +1,5 @@
 angular.module('NodeWebBase')
-    .controller('detailsController', ['$scope','$rootScope','$window','ngDialog', function ($scope, $rootScope,$window, ngDialog) {
+    .controller('detailsController', ['$scope','$rootScope','$window','$http','ngDialog', function ($scope, $rootScope,$window,$http, ngDialog) {
         $scope.scopeName = 'detailsController';
         $scope.data = {"nTotal":0};
         $scope.currentItemIndex = null;
@@ -54,16 +54,14 @@ angular.module('NodeWebBase')
         };
 
         $scope.findSocialMediaLink = function(username, socialMediaType, callback){
-            $.ajax({
+            $http({
+                method:"GET",
                 url:  "app/socialMediaQuery/" + username,
-                data : {
+                params : {
                     socialMediaType: socialMediaType
-                },
-                dataType: "json",
-                success: function (response) {
+                }}).success(function (response) {
                     callback(response);
-                }
-            });
+                })
         };
 
         $scope.loadSocialPage = function(url){
@@ -171,16 +169,12 @@ angular.module('NodeWebBase')
         };
 
         $scope.getUser = function(){
-            $.ajax({
+            $http({
                 url:  "app/twitter/user",
-                data : {
+                params : {
                     "screen_name":"twitterapi"
-                },
-                dataType: "json",
-                success: function (response) {
+                }}).success(function (response){
                     $scope.user = response;
-                },
-                error: $rootScope.showError
-            });
+                }).error($rootScope.showError)
         };
     }]);
