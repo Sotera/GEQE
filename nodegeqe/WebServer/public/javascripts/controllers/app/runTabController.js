@@ -2,40 +2,64 @@
  * Created by jlueders on 4/13/15.
  */
 angular.module('NodeWebBase')
-    .controller('runTabController', function ($scope, $rootScope) {
+    .controller('runTabController', function ($scope, $rootScope,$http) {
 
         $scope.jobs = [];
-        $scope.dataSets= ["--select--"];
+        $scope.dataSets= [];
+        $scope.dataSetSelected="";
 
-        $scope.polygonFiles = ["--select--"];
+        $scope.polygonFiles = [];
         $scope.polyFile = "";
-
-        $scope.useTimeSeries = false;
 
         $scope.polyFileSelected = function(item){
             $scope.polyFile = item;
         };
 
+        $scope.run={
+                sTopN:"",
+                sFileName:"",
+                bPercent:"",
+                cStopW:"",
+                useTimeSeries:false,
+                sTopPercent:""
+            };
+
+        $scope.training={
+            fileName:""
+        }
+
+        //http://jimhoskins.com/2012/12/17/angularjs-and-apply.html
+        // No need to call $scope.$apply -> $http does it automatically
         $scope.populatePolygonSelect = function() {
             if(!$rootScope.isAppConfigured())
                 return;
-            $.ajax({
+
+            $http({
+                method:"GET",
                 url: "app/controlBox/populate/polygons",
                 data : {
                     user: $rootScope.username
-                },
-                dataType: "json",
-                success: function (response) {
-                    $scope.$apply(function() {
+                }}).success(function (response) {
                         $scope.polygonFiles = response.lFiles;
-                    });
-                },
-                error: $rootScope.showError
-            });
+                }).error($rootScope.showError);
+
+            //$.ajax({
+            //    url: "app/controlBox/populate/polygons",
+            //    data : {
+            //        user: $rootScope.username
+            //    },
+            //    dataType: "json",
+            //    success: function (response) {
+            //        $scope.$apply(function() {
+            //            $scope.polygonFiles = response.lFiles;
+            //        });
+            //    },
+            //    error: $rootScope.showError
+            //});
         };
 
         $scope.drawPolygonFile = function(){
-            $rootScope.$emit("drawPolygonFile",$scope.polyFile)
+            $rootScope.$emit("drawPolygonFile", $scope.polyFile)
         };
 
         $scope.saveList = function(){
@@ -47,46 +71,59 @@ angular.module('NodeWebBase')
                         if(!$rootScope.isAppConfigured())
                             return;
                         var pName = $scope.polyFile;
-                        $.ajax({
+
+                        $http({
+                            method:"GET",
                             url: "app/controlBox/writePoly",
                             data: {
                                 user: $rootScope.username,
                                 filePolygon: pName,
                                 fileString: resultsText
-                            },
-                            dataType: "text",
-                            success: function (response) {
+                            }}).success(function (response) {
                                 $("#resultsText").text(pName + " written");
-                            },
-                            error: $rootScope.showError
-                        });
+                            }).error($rootScope.showError)
                     }
                 });
         };
 
-        $scope.getDataSets = function(){
-            if(!$rootScope.isAppConfigured())
+        $scope.getDataSets = function() {
+            if (!$rootScope.isAppConfigured())
                 return;
-            $.ajax({
-                url: "app/controlBox/populate/datasets",
-                dataType: "json",
-                success: function (response) {
-                    $scope.$apply(function(){
-                        $scope.dataSets= response;
-                    });
 
-                },
-                error: $rootScope.showError
-            });
-        };
+            $http({
+                method: "GET",
+                url: "app/controlBox/populate/datasets"
+            })
+                .success(function (response) {
+                    $scope.dataSets = response;
+                })
+                .error($rootScope.showError);
 
+            //    $.ajax({
+            //        url: "app/controlBox/populate/datasets",
+            //        dataType: "json",
+            //        success: function (response) {
+            //            $scope.$apply(function(){
+            //                $scope.dataSets= response;
+            //            });
+            //
+            //        },
+            //        error: $rootScope.showError
+            //    });
+            //    $http({method:"GET", url:"app/controlBox/getDataSets"}).success(function (response) {
+            //            $scope.dataSets= response;
+            //        }).error($rootScope.showError);
+            //};
+        }
         $scope.applyScores = function() {
+
             if(!$rootScope.isAppConfigured())
                 return;
 
-            var pName = $("#pFileName").val();
-            var dSet = $("#dataSetSelect").val();
-            var sName = $("#sFileName").val();
+
+            var pName = $scope.polyFile;
+            var dSet = $scope.dataSetSelected;
+            var sName = $scope.run.sFileName;
 
             if(!dSet || dSet === "--select--") {
                 $rootScope.showErrorMessage("Query Job", "Please select a data set.");
@@ -104,14 +141,18 @@ angular.module('NodeWebBase')
 
 
             //change source based on Checkbox value
-            var fThresh=$("#sTopN").val();
-            var bPer = $("#bPercent").is(":checked");
+            var fThresh=$scope.cStopW;
+            var bPer = $scope.run.bPercent;
+
             if(bPer==true){
-                fThresh=$("#sTopPercent").val();
+                fThresh=$scope.sTopPercent;
             }
-            var nFeat = $("#nFeat").val();
-            var sSWords = $("#cStopW").val();
-            $.ajax({
+
+            var nFeat = $scope.run.nFeat;
+            var sSWords = $scope.cStopW;
+
+            $http({
+                method:"GET",
                 url: "app/controlBox/applyScores",
                 data: {
                     user: $rootScope.username,
@@ -122,20 +163,17 @@ angular.module('NodeWebBase')
                     useTime:  $scope.useTimeSeries,
                     nFeatures: nFeat,
                     custStopWord: sSWords
-                },
-                dataType: "text",
-                success: function (response) {
+                }}).success(function (response) {
                     $rootScope.$emit("refreshJobsList");
-                },
-                error: $rootScope.showError
-            });
-        };
+                }).error($rootScope.showError)
+        }
+
         $scope.applyTraining = function() {
             if(!$rootScope.isAppConfigured())
                 return;
-            var pName = $("#pFileName").val();
-            var dSet = $("#dataSetSelect").val();
-            var tName = $("#tFileName").val();
+            var pName = $scope.polyFile;
+            var dSet = $scope.dataSetSelected;
+            var tName = $scope.training.FileName;
             if(!dSet || dSet === "--select--"){
                 $rootScope.showErrorMessage("Training Job", "Please select a data set.")
                 return;
@@ -150,20 +188,17 @@ angular.module('NodeWebBase')
                 return;
             }
 
-            $.ajax({
+            $http({
+                method:"GET",
                 url: "app/controlBox/applyViewTrainingData",
                 data: {
                     user: $rootScope.username,
                     filePolygon: pName,
                     fileAppOut: tName,
                     dataSet: dSet
-                },
-                dataType: "text",
-                success: function (response) {
+                }}).success(function (response) {
                     $rootScope.$emit("refreshJobsList");
-                },
-                error: $rootScope.showError
-            });
+                }).error($rootScope.showError);
         };
 
         $scope.modReturn = function() {
