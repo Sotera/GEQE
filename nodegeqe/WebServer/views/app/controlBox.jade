@@ -18,8 +18,8 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                         div.form-group-sm
                             label(for='dataSetSelect') Data Set:
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='getDataSets()' title="Refresh file list.")
-                            select.form-control(id="dataSetSelect" ng-options="item for item in dataSets" ng-model="dataSetSelected")
-                                  option(value="") --select--
+                            select.form-control(id="dataSetSelect" ng-options="item for item in dataSets | orderBy: item" ng-model="dataSetSelected")
+                                  option(value="") --Select--
                         div.form-group-sm
                             div.input-group
                                 label(for='pFileName') Polygon:
@@ -31,8 +31,8 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                                         button.btn.btn-sm.btn-default(type="button" id="pFileDropButton" data-toggle="dropdown" aria-expanded="false")
                                             span.caret
                                         ul.scrollable-menu.dropdown-menu(role="menu")
-                                            li(ng-repeat="item in polygonFiles" ng-click="polyFileSelected(item)" value="{{item}}") {{item}}
-                                    input.form-control(type="text" ng-model="polyFile" id="polyFile")
+                                            li(ng-repeat="item in polygonFiles | orderBy: item" ng-click="polyFileSelected(item)" value="{{item}}") {{item}}
+                                    input.form-control(type="text" ng-model="polyFile" name="polyFile")
                         fieldset.scheduler-border
                             legend.scheduler-border Run Query Job
                             div.form-group-sm
@@ -79,8 +79,8 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                             div.form-group-sm
                                 label(for="scoreSelect") Job Name:
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="popScore()" title="Refresh file list.")
-                                select.form-control( name="scoreSelect" id="scoreSelect" ng-model="getScoresModel.fileAppOut")
-                                    option( ng-repeat="item in scoreFiles" value="{{item}}") {{item}}
+                                select.form-control( name="scoreSelect" id="scoreSelect" ng-options="item for item in scoreFiles | orderBy: item"  ng-model="getScoresModel.fileAppOut")
+                                    option( value="") --Select--
                             div.form-group-sm
                                 label(for="sMaxEntries")  Max Points:
                                 input.form-control(type="number" id="sMaxEntries" ng-model="getScoresModel.maxOut" step="any" novalidate)
@@ -107,10 +107,9 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                             div.form-group-sm
                                 label(for="trainingSelect") Job Name:
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='populateTrainingSelect()' title="Refresh file list.")
-                                select.form-control(name="trainingSelect" ng-model="trainingDataModel.fileAppOut" id="trainingSelect")
-                                    option( ng-repeat="item in trainingFiles" value="{{item}}") {{item}}
+                                select.form-control(name="trainingSelect" ng-options="item for item in trainingFiles | orderBy: item" ng-model="trainingDataModel.fileAppOut" id="trainingSelect")
+                                    option(value="") --Select--
                                 button.form-control.btn.btn-default(ng-click="drawTrainingData()" title='Draw training data to the map.') Show Training Data
-
     table.table.table-striped
         tr
             th
