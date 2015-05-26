@@ -2,48 +2,38 @@
  * Created by jlueders on 4/13/15.
  */
 angular.module('NodeWebBase')
-    .controller('resultsTabController', function ($scope, $rootScope) {
+    .controller('resultsTabController', function ($scope, $rootScope, $http) {
         $scope.scoreFiles = [];
         $scope.polygonFiles = [];
         $scope.trainingFiles = [];
 
 
         $scope.popScore = function() {
-            if(!$rootScope.isAppConfigured())
+            if (!$rootScope.isAppConfigured())
                 return;
 
-            $.ajax({
+            $http({
+                method: "GET",
                 url: "app/controlBox/populate/scores",
-                data : {
-                    user: $rootScope.username,
-                },
-                dataType: "json",
-                success: function (response) {
-                    $scope.$apply(function(){
-                        $scope.scoreFiles = response.lFiles;
-                    });
-
-                },
-                error: $rootScope.showError
-            });
-        };
+                params: {
+                    user: $rootScope.username
+                }
+            }).success(function (response) {
+                $scope.scoreFiles = response.lFiles;
+            }).error($rootScope.showError)
+        }
 
         $scope.populatePolygonSelect = function() {
             if(!$rootScope.isAppConfigured())
                 return;
-            $.ajax({
+            $http({
+                method:"GET",
                 url: "app/controlBox/populate/polygons",
-                data : {
+                params : {
                     user: $rootScope.username
-                },
-                dataType: "json",
-                success: function (response) {
-                    $scope.$apply(function() {
-                        $scope.polygonFiles = response.lFiles;
-                    });
-                },
-                error: $rootScope.showError
-            });
+                }}).success(function (response) {
+                    $scope.polygonFiles = response.lFiles;
+                }).error($rootScope.showError)
         };
 
         $scope.getScoresModel = {
@@ -54,17 +44,18 @@ angular.module('NodeWebBase')
             bBinByDate: false,
             fBinSize:.005
         };
+
         $scope.getScores = function() {
             if(!$rootScope.isAppConfigured())
                 return;
             var drawMarkers = $("#drawMarkers").is(":checked");
             $scope.getScoresModel.user = $rootScope.username;
-            $.ajax({
-                url: "app/controlBox/getScores",
-                data: $scope.getScoresModel,
-                dataType: "json",
-                success: function (response) {
 
+            $http({
+                method: "GET",
+                url: "app/controlBox/getScores",
+                params: $scope.getScoresModel
+            }).success(function (response) {
                     if(!response.sco || response.sco.length == 0)
                     {
                         $rootScope.showErrorMessage("Get Scores","No Scores Returned");
@@ -97,9 +88,7 @@ angular.module('NodeWebBase')
                         strRet = strRet + "</table>";
                     }
                     $rootScope.$emit("displayResults",strRet)
-                },
-                error: $rootScope.showError
-            });
+                }).error($rootScope.showError)
         };
 
 
@@ -116,40 +105,34 @@ angular.module('NodeWebBase')
             if(!$rootScope.isAppConfigured())
                 return;
 
-            $.ajax({
+            $http({
+                method:"GET",
                 url: "app/controlBox/populate/trainingdata",
-                data : {
+                params:{
                     user: $rootScope.username
-                },
-                dataType: "json",
-                success: function (response) {
-                    $scope.$apply(function(){
+                }}).success(function (response) {
                         $scope.trainingFiles = response.lFiles;
-                    });
-
-                },
-                error: $rootScope.showError
-            });
+                 }).error($rootScope.showError)
         };
 
         $scope.trainingDataModel = {
             user: "",
             fileAppOut:""
         };
+
         $scope.drawTrainingData = function() {
             if(!$rootScope.isAppConfigured())
                 return;
             $scope.trainingDataModel.user = $rootScope.username;
-            $.ajax({
+            $http({
+                method:"GET",
                 url: "app/controlBox/getTrainingData",
-                data: $scope.trainingDataModel,
-                dataType: "json",
-                success: function (response) {
+                params: $scope.trainingDataModel})
+                .success(function (response) {
                     $rootScope.$emit("clearMarkers",['training']);
                     $rootScope.$emit("drawMapMarkers",response.sco,null, "training");
-                },
-                error: $rootScope.showError
-            });
+                })
+                .error($rootScope.showError)
         };
 
 
