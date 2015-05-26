@@ -6,9 +6,9 @@ angular.module('NodeWebBase')
 
         $scope.jobs = [];
         $scope.dataSets= [];
-        $scope.dataSetSelected="";
-
         $scope.polygonFiles = [];
+
+        $scope.dataSetSelected="";
         $scope.polyFile = "";
 
         $scope.polyFileSelected = function(item){
@@ -21,7 +21,8 @@ angular.module('NodeWebBase')
                 bPercent:"",
                 cStopW:"",
                 useTimeSeries:false,
-                sTopPercent:""
+                sTopPercent:"",
+                nFeat:""
             };
 
         $scope.training={
@@ -37,25 +38,11 @@ angular.module('NodeWebBase')
             $http({
                 method:"GET",
                 url: "app/controlBox/populate/polygons",
-                data : {
+                params : {
                     user: $rootScope.username
                 }}).success(function (response) {
                         $scope.polygonFiles = response.lFiles;
                 }).error($rootScope.showError);
-
-            //$.ajax({
-            //    url: "app/controlBox/populate/polygons",
-            //    data : {
-            //        user: $rootScope.username
-            //    },
-            //    dataType: "json",
-            //    success: function (response) {
-            //        $scope.$apply(function() {
-            //            $scope.polygonFiles = response.lFiles;
-            //        });
-            //    },
-            //    error: $rootScope.showError
-            //});
         };
 
         $scope.drawPolygonFile = function(){
@@ -75,7 +62,7 @@ angular.module('NodeWebBase')
                         $http({
                             method:"GET",
                             url: "app/controlBox/writePoly",
-                            data: {
+                            params: {
                                 user: $rootScope.username,
                                 filePolygon: pName,
                                 fileString: resultsText
@@ -93,37 +80,24 @@ angular.module('NodeWebBase')
             $http({
                 method: "GET",
                 url: "app/controlBox/populate/datasets"
-            })
-                .success(function (response) {
+            }).success(function (response) {
                     $scope.dataSets = response;
-                })
-                .error($rootScope.showError);
-
-            //    $.ajax({
-            //        url: "app/controlBox/populate/datasets",
-            //        dataType: "json",
-            //        success: function (response) {
-            //            $scope.$apply(function(){
-            //                $scope.dataSets= response;
-            //            });
-            //
-            //        },
-            //        error: $rootScope.showError
-            //    });
-            //    $http({method:"GET", url:"app/controlBox/getDataSets"}).success(function (response) {
-            //            $scope.dataSets= response;
-            //        }).error($rootScope.showError);
-            //};
+            }).error($rootScope.showError);
         }
+
         $scope.applyScores = function() {
 
             if(!$rootScope.isAppConfigured())
                 return;
+            var pName = $scope.polyFile,
+                dSet = $scope.dataSetSelected,
+                sName = $scope.run.sFileName,
+                //change source based on Checkbox value
+                fThresh=$scope.cStopW,
+                bPer = $scope.run.bPercent,
+                nFeat = $scope.run.nFeat,
+                sSWords = $scope.cStopW;
 
-
-            var pName = $scope.polyFile;
-            var dSet = $scope.dataSetSelected;
-            var sName = $scope.run.sFileName;
 
             if(!dSet || dSet === "--select--") {
                 $rootScope.showErrorMessage("Query Job", "Please select a data set.");
@@ -139,22 +113,15 @@ angular.module('NodeWebBase')
                 return;
             }
 
-
-            //change source based on Checkbox value
-            var fThresh=$scope.cStopW;
-            var bPer = $scope.run.bPercent;
-
             if(bPer==true){
                 fThresh=$scope.sTopPercent;
             }
 
-            var nFeat = $scope.run.nFeat;
-            var sSWords = $scope.cStopW;
 
             $http({
                 method:"GET",
                 url: "app/controlBox/applyScores",
-                data: {
+                params: {
                     user: $rootScope.username,
                     filePolygon: pName,
                     fileAppOut: sName,
@@ -191,7 +158,7 @@ angular.module('NodeWebBase')
             $http({
                 method:"GET",
                 url: "app/controlBox/applyViewTrainingData",
-                data: {
+                params: {
                     user: $rootScope.username,
                     filePolygon: pName,
                     fileAppOut: tName,
