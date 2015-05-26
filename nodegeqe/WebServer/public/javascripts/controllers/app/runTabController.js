@@ -185,6 +185,8 @@ angular.module('NodeWebBase')
 
         //go ahead and get the data sets from the server
         //INIT
-        $scope.getDataSets();
-        $scope.populatePolygonSelect();
+        $scope.$watch($rootScope.isAppConfigured ,function(newVal,oldVal) {
+            $scope.getDataSets();
+            $scope.populatePolygonSelect();
+        })
     });

@@ -137,8 +137,10 @@ angular.module('NodeWebBase')
 
 
         ///INIT
-        $scope.popScore();
-        $scope.populatePolygonSelect();
-        $scope.populateTrainingSelect();
-    });
+        $scope.$watch($rootScope.isAppConfigured ,function(newVal,oldVal) {
+            $scope.popScore();
+            $scope.populatePolygonSelect();
+            $scope.populateTrainingSelect();
+        })
+   });
 
