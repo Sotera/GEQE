@@ -3,9 +3,9 @@
  */
 angular.module('NodeWebBase')
     .controller('resultsTabController', function ($scope, $rootScope) {
-        $scope.scoreFiles = ["--select--"];
-        $scope.polygonFiles = ["--select--"];
-        $scope.trainingFiles = ["--select--"];
+        $scope.scoreFiles = [];
+        $scope.polygonFiles = [];
+        $scope.trainingFiles = [];
 
 
         $scope.popScore = function() {
