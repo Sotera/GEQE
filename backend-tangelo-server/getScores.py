@@ -5,251 +5,71 @@ import numpy as np
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
 from scipy.spatial import ConvexHull
-import traceback
+
 sys.path.append(".")
-import conf
-from decorators import validate_user
 from decorators import allow_all_origins
-
-
-def binCoordinate(strCord, fBinSize):
-    return str(int(float(strCord)/fBinSize)*fBinSize)
-
-
-class ScoreRecord:
-    def __init__(self,text):
-        text = text.strip().split('\t')
-        text = map(lambda x: x.strip(),text)
-        self.lat = text[0]
-        self.lon = text[1]
-        self.text = text[2]
-        self.score = str((int(float(text[3])*10000.)*1.)/10000.)
-        self.username = text[4]
-        self.date = text[5]
-        self.img = text[6] if len(text) > 6 else None
-        self.cluster = -1
-
-    def toDict(self):
-        obj = {
-            'date':self.date,
-            'sco': self.score,
-            'cap': self.text,
-            'usr': self.username,
-            'lon':self.lon,
-            'lat':self.lat,
-        }
-        if self.img is not None and len(self.img) >0:
-            obj['img'] = self.img
-        return obj
-
-class ScoreBin:
-    def __init__(self,record=None):
-        self.users = set([])
-        self.lat = ''
-        self.lon = ''
-        self.date = ''
-        self.records = []
-        self.poly = []
-        if record is not None:
-            self.lat = record.lat
-            self.lon = record.lon
-            self.date = record.date
-            self.records.append(record)
-            self.users.add(record.username)
-
-    def addRecord(self,record):
-        self.records.append(record)
-        self.users.add(record.username)
-        if record.date < self.date:
-            self.date = record.date
-
-    def toDict(self):
-        return {
-            'date': self.date,
-            'lat': self.lat,
-            'lon': self.lon,
-            'nUnique': len(self.users),
-            'nTotal': len(self.records),
-            'poly' : list(self.poly),
-            'posts' : map(lambda x: x.toDict(),self.records)
-        }
-
-def assignToCluster(recordList, epsilon, nMin):
-    lalo = []
-    for obj in recordList:
-        lalo.append([float(obj.lon), float(obj.lat)])
-
-    X = StandardScaler().fit_transform(lalo)
-    db = DBSCAN(eps=epsilon, min_samples=nMin).fit(X)
-    for ind in range(len(recordList)):
-        recordList[ind].cluster = db.labels_[ind]
-    return
-
-
-def createHull(cluster):
-    loLa = set([])
-    for point in cluster.records:
-        loLa.add(str(point.lon)+","+str(point.lat))
-    loLa = map(lambda x: [x.split(",")[0],x.split(",")[1]],loLa)
-    loLa = np.array(loLa)
-    try:
-        hull = ConvexHull(loLa)
-        polyPoints = []
-        for verts in hull.vertices:
-            polyPoints.append([loLa[verts,1],loLa[verts,0]])
-        cluster.poly = polyPoints
-    except:
-        tangelo.log(traceback.format_exc())
-        tangelo.log("number of records: "+str(len(cluster.records)))
-        tangelo.log("loLa[0]: "+str(loLa[0]))
-        tangelo.log("records:  \n"+json.dumps(cluster.toDict()))
-
 
 
 @tangelo.restful
 @allow_all_origins
-@validate_user
-def get(user='demo', fileAppOut='appliedScores.csv', maxOut = -1, drawMode="cluster", bBinByDate="false", fBinSize=.05, threshhold=None):
-    """
-    Get a json data structure representing the scored data points from a geqe job
-
-    :param user: username
-    :param fileAppOut: name of the score set to load
-    :param maxOut: maximum number of bins (or points) to return
-    :param drawMode: (cluster | latlonbin | individual) Determines how data points are clustered into bins for the result set.
-        cluster - DBSCAN / convexHUll algorithim to find clustered points
-        latlonbin - simple lat / lon binning based on clipping lat/lon data.
-        individual - returns individual points without binning.
-    :param bBinByDate: (true/false)  cluster points by date to find events.
-    :param fBinSize: size for latlon binning
-    :param threshhold: minimum score of data points to return
-    :return:  JSON data for scored points in bins
-    """
-
-    confObj = conf.get()
-    filePath = confObj['root_data_path'] +'/' +user
-
-    #Add parameter to tune unique user enforcement
-    nMinUniqueUsers = 3
-
+def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, threshhold=None):
     maxOut = int(maxOut)
     if threshhold is not None: threshhold = float(threshhold)
-    bCluster = drawMode == "cluster"
-    bBinByLatLon = drawMode == "latlonbin"
-    bBinByDate = bBinByDate == "true" or bBinByDate == "True"
-    fBinSize = float(fBinSize)
-    ssName  = filePath + "/scoreFiles/" + fileAppOut
+    ssName  = filePath + "scoreFiles/" + fileAppOut
 
-    # read all score records from file
-    recordList = []
-    with open(ssName, 'r') as fileHandle:
-        i = 0
-        for line in fileHandle:
-            i = i +1
-            if  not bBinByDate and not bBinByLatLon and not bCluster and maxOut > 0 and i > maxOut:
-                break
-            recordList.append(ScoreRecord(line))
-
-    if threshhold is not None:
-        recordList = filter(lambda x: float(x.score) >= threshhold,recordList)
-
-    bins = []
-
-    # no binning - one record per bin
-    if not bBinByDate and not bBinByLatLon and not bCluster:
-        for record in recordList:
-            bins.append( ScoreBin(record) )
-
-    # Bin only by date
-    elif bBinByDate and not bBinByLatLon and not bCluster:
-        dateBinDict = {}
-        for record in recordList:
-            if record.date not in dateBinDict:
-                dateBinDict[record.date] = ScoreBin(record)
-            else:
-                dateBinDict[record.date].addRecord(record)
-        bins.extend(dateBinDict.values())
-
-    # bin only by lat lon
-    elif bBinByLatLon and not bBinByDate and not bCluster:
-        geoBinDict = {}
-        for record in recordList:
-            binlat = binCoordinate(record.lat,fBinSize=fBinSize)
-            binlon = binCoordinate(record.lon,fBinSize=fBinSize)
-            key = (binlat,binlon)
-            if key not in geoBinDict:
-                newBin = ScoreBin(record)
-                newBin.lat = binlat
-                newBin.lon = binlon
-                geoBinDict[key] = newBin
-            else:
-                geoBinDict[key].addRecord(record)
-        bins.extend(geoBinDict.values())
-
-    # bin by both date and lat lon
-    elif bBinByDate and bBinByLatLon and not bCluster:
-        dateDict = {}
-        for record in recordList:
-            if record.date not in dateDict:
-                dateDict[record.date] = [record]
-            else:
-                dateDict[record.date].append(record)
-
-        for date,records in dateDict.iteritems():
-            geoBinDict = {}
-            for record in records:
-                binlat = binCoordinate(record.lat,fBinSize=fBinSize)
-                binlon = binCoordinate(record.lon,fBinSize=fBinSize)
-                key = (binlat,binlon)
-                if key not in geoBinDict:
-                    newBin = ScoreBin(record)
-                    newBin.lat = binlat
-                    newBin.lon = binlon
-                    geoBinDict[key] = newBin
-                else:
-                    geoBinDict[key].addRecord(record)
-            bins.extend(geoBinDict.values())
-
-    # both cluster options make same calls, divide between date bin and not deeper.
-    elif bCluster and bBinByDate:
-        dateDict = {}
-        for record in recordList:
-            if record.date not in dateDict:
-                dateDict[record.date] = [record]
-            else:
-                dateDict[record.date].append(record)
-
-        for date,records in dateDict.iteritems():
-            assignToCluster(records, fBinSize, 3)
-            records = filter(lambda x: x.cluster != -1, records)
-            clustDict = {}
-            for record in records:
-                key = str(record.cluster)
-                if key not in clustDict:
-                    clustDict[key] = ScoreBin(record)
-                else:
-                    clustDict[key].addRecord(record)
-            bins.extend(clustDict.values())
-
-    elif bCluster and not bBinByDate:
-        assignToCluster(recordList, fBinSize, 5)
-        recordList = filter(lambda x: x.cluster != -1, recordList)
-        clustDict = {}
-        for record in recordList:
-            key = str(record.cluster)
-            if key not in clustDict:
-                clustDict[key] = ScoreBin(record)
-            else:
-                clustDict[key].addRecord(record)
-        bins.extend(clustDict.values())
-
-    else:
-        raise ValueError("Invalid arguments.")
+    #get data
+    dIn = json.load(open(ssName,'r'))
+    rDict = {}
+    lScores = []
+    #handle data differently for "event" and "place" types
+    if dIn["type"] == "event":
+        #Add summary values
+        for date, dBin in dIn["dates"].iteritems():
+            nCluster = 0
+            hiScore = -1
+            for cluster in dBin["clusters"]:
+                nCluster = nCluster + 1
+                score = 1.*cluster["nTotal"]/cluster["background"]
+                lScores.append(score)
+                cluster["score"] = score
+                if score > hiScore: hiScore = score
+            dBin["hiScore"] = hiScore
+            dBin["nCluster"] = nCluster
+        #If the max Out parameter is sent, only include those values
+        if maxOut != -1 and len(lScores)>maxOut:
+            lScores.sort(reverse=True)
+            sThresh = lScores[maxOut]
+            rDict["type"] = "event"
+            rDict["dates"] = {}
+            for date, dBin in dIn["dates"].iteritems():
+                nCluster = 0
+                for cluster in dBin["clusters"]:
+                    if cluster["score"]>sThresh:
+                        nCluster = nCluster + 1
+                        if date not in rDict["dates"].keys():
+                            rDict["dates"][date] = {}
+                            rDict["dates"][date]["clusters"] = [cluster]
+                            rDict["dates"][date]["hiScore"] = cluster["score"]
+                        else:
+                            rDict["dates"][date]["clusters"].append(cluster)
+                            if rDict["dates"][date]["hiScore"] < cluster["score"]: rDict["dates"][date]["clusters"] = cluster["score"]
+                if date in rDict["dates"].keys():
+                    rDict["dates"][date]["nCluster"] = nCluster
+    elif dIn["type"] == "place":
+        for cluster in dIn["clusters"]:
+            cluster["score"] = 1.*cluster["nTotal"]/cluster["background"]
+        nClust = len(dIn["clusters"])
+        if nClust > maxOut and maxOut !=-1:
+            dIn["clusters"].sort(key=lambda x: x["score"],reverse=True)
+            sThresh = dIn["clusters"][maxOut]["score"]
+            dIn["clusters"] = filter(lambda x: x["score"]>sThresh, dIn["clusters"])
+        rDict = dIn
+        rDict["nCluster"] = nClust
+        rDict["hiScore"] = dIn["clusters"][0]["score"]
 
     # try to read the dictionary file for this score file and return those response as well
-    retDict = {}
     try:
-        dictName = filePath + "/dictFiles/dict_" + fileAppOut
+        dictName = filePath + "dictFiles/dict_" + fileAppOut
         lWordScores = []
         f2 = open(dictName,'r')
         for line in f2:
@@ -257,34 +77,15 @@ def get(user='demo', fileAppOut='appliedScores.csv', maxOut = -1, drawMode="clus
         if len(lWordScores[0])==6:
             lWordClean = map(lambda x: [x[0], x[2], x[4], str((1.*int(float(x[5])*10000.))/10000.)], lWordScores)
             lWordSorted = sorted(lWordClean,key=lambda x: float(x[3]),reverse=True)
-            retDict["dic"] = lWordSorted
+            rDict["dic"] = lWordSorted
         else:
             lWordClean = map(lambda x: [x[0], int(x[1])], lWordScores)
-            retDict["dic"] = lWordClean
+            rDict["dic"] = lWordClean
 
     except:
-        retDict["dic"] = "No dictionary file"
+        rDict["dic"] = "No dictionary file"
     finally:
         f2.close()
 
-    if bBinByLatLon or bCluster:
-        bins = filter(lambda x: len(x.users)>=nMinUniqueUsers,bins)
-
-    # draw poly around cluster
-    if bCluster:
-        for cluster in bins:
-            createHull(cluster)
-
-
     # return the results
-    retDict['total'] = len(bins)
-    if bBinByDate or bBinByLatLon or bCluster:
-        bins = sorted(bins,key= lambda x: len(x.records), reverse=True)
-        if maxOut > 0:
-            bins = bins[:maxOut]
-    bins = map(lambda x: x.toDict(),bins)
-    for i in range(len(bins)):
-        bins[i]['index'] = i
-    retDict['sco'] = bins
-
-    return json.dumps(retDict)
+    return json.dumps(rDict)
