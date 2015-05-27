@@ -1,6 +1,4 @@
 import boto3
-import os
-import datetime
 import json
 import sys
 from threading import Thread
@@ -70,6 +68,9 @@ def getBytesFromS3(bucket,key):
     object = s3.Object(bucket, key)
     return object.get()['Body'].read()
 
+
+def getClusterStatus(bucket):
+    return getBytesFromS3(bucket,'CLUSTER_STATUS')
 
 
 def submitJob(jobname,jobConf,polyFilePath,bucket):
