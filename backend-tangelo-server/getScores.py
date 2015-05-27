@@ -72,21 +72,19 @@ def get(user='demo', fileAppOut='appliedScores.csv', maxOut = -1, threshhold=Non
     try:
         dictName = filePath + "dictFiles/dict_" + fileAppOut
         lWordScores = []
-        f2 = open(dictName,'r')
-        for line in f2:
-            lWordScores.append(line.split('\t'))
-        if len(lWordScores[0])==6:
-            lWordClean = map(lambda x: [x[0], x[2], x[4], str((1.*int(float(x[5])*10000.))/10000.)], lWordScores)
-            lWordSorted = sorted(lWordClean,key=lambda x: float(x[3]),reverse=True)
-            rDict["dic"] = lWordSorted
-        else:
-            lWordClean = map(lambda x: [x[0], int(x[1])], lWordScores)
-            rDict["dic"] = lWordClean
-
+        with open(dictName,'r') as f2:
+            for line in f2:
+                lWordScores.append(line.split('\t'))
+            if len(lWordScores[0])==6:
+                lWordClean = map(lambda x: [x[0], x[2], x[4], str((1.*int(float(x[5])*10000.))/10000.)], lWordScores)
+                lWordSorted = sorted(lWordClean,key=lambda x: float(x[3]),reverse=True)
+                rDict["dic"] = lWordSorted
+            else:
+                lWordClean = map(lambda x: [x[0], int(x[1])], lWordScores)
+                rDict["dic"] = lWordClean
     except:
         rDict["dic"] = "No dictionary file"
-    finally:
-        f2.close()
+
 
     # return the results
     return json.dumps(rDict)
