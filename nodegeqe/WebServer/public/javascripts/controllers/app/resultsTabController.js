@@ -21,7 +21,7 @@ angular.module('NodeWebBase')
             }).success(function (response) {
                 $scope.scoreFiles = response.lFiles;
             }).error($rootScope.showError)
-        }
+        };
 
         $scope.populatePolygonSelect = function() {
             if(!$rootScope.isAppConfigured())
@@ -61,9 +61,8 @@ angular.module('NodeWebBase')
                         $rootScope.showErrorMessage("Get Scores","No Scores Returned");
                     }
 
-                    //clean old point array, needed to removed points from map if you decrease number of entries
-                    $rootScope.$emit("setTermDictionary", response.dic);
                     $rootScope.$emit("loadNavData", response.sco, $scope.getScoresModel);
+                    $rootScope.$emit("setTermDictionary", response.dic);
 
                     //write dictionary to results box
                     var strRet = '';
@@ -137,10 +136,11 @@ angular.module('NodeWebBase')
 
 
         ///INIT
-        $scope.$watch($rootScope.isAppConfigured ,function(newVal,oldVal) {
+        var watchRemoval = $scope.$watch($rootScope.isAppConfigured ,function(newVal,oldVal) {
             $scope.popScore();
             $scope.populatePolygonSelect();
             $scope.populateTrainingSelect();
+            watchRemoval();
         })
    });
 

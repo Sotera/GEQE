@@ -16,24 +16,19 @@ angular.module('NodeWebBase')
         $scope.currentItem = $scope.defaultItem;
 
         $rootScope.$on('loadItemData', function (event, data) {
-            $scope.$apply(function () {
-                $scope.data = data;
-                $scope.currentItemIndex = 0;
-                $scope.displayIndex = 1;
-                $scope.currentItem = $scope.data.posts[0];
-                $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
-                $("#caption").html($scope.displayCaptionHtml);
-            });
-
+            $scope.data = data;
+            $scope.currentItemIndex = 0;
+            $scope.displayIndex = 1;
+            $scope.currentItem = $scope.data.posts[0];
+            $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
+            $("#caption").html($scope.displayCaptionHtml);
             $scope.getAccount();
         });
 
         $rootScope.$on("setTermDictionary", function(event,data){
-            $scope.$apply(function () {
-                    angular.forEach(data,function(entry,idx){
-                        $scope.termArray.push(entry[0]);
-                    })
-                });
+            angular.forEach(data,function(entry,idx){
+                $scope.termArray.push(entry[0]);
+            })
         });
 
         $rootScope.$on('clearResults', function (event) {
@@ -65,14 +60,12 @@ angular.module('NodeWebBase')
         };
 
         $scope.loadSocialPage = function(url){
-            $scope.$apply(function () {
                 if(url.responseText === ""){
                     $scope.socialMediaUrl = $scope.currentItem.img;
                     return;
                 }
 
                 $scope.socialMediaUrl = url.responseText;
-            });
         };
 
         $scope.getAccount = function(){
@@ -97,9 +90,7 @@ angular.module('NodeWebBase')
 
             $scope.findSocialMediaLink($scope.currentItem.usr,"twitter", function(data){
                 if(data) {
-                    $scope.$apply(function(){
                         $scope.currentItem.img = data.profile_image_url.replace('_normal','');
-                    });
 
                 }
             });
