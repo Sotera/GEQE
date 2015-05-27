@@ -6,6 +6,10 @@ Provides an interface between client applications and a spark cluster to run GEQ
 #Change summary
 
 ```
+2015-05-27:
+  Added clusterStatus call.
+
+
 2015-05-14: 
   Removed filePath and subDir references from API to abstract away file system details from users.
   Replaced getFileContents with getPolygon
@@ -124,4 +128,10 @@ Get the json object representing points in a training data set.
     :param user: username
     :return:  list or requested items
 ```  
+
+##clusterStatus
+
+```
+Returns WAITING or OFF to indicate status of backend cluster.
+```
 
