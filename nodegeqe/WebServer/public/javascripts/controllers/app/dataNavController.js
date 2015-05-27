@@ -15,18 +15,18 @@ angular.module('NodeWebBase')
             $rootScope.$emit("clearAll");
             dataDetails.bBinByDate?$scope.sortDataByDate(data):$scope.setData(data);
 
-            $scope.$apply(function () {
-                $scope.currentCatalogIndex = 0;
-                $scope.currentCatalogTitle = "";
-                $scope.currentCatalogTitleStart = "";
-                $scope.currentCatalogTitleFinish = "";
-                if($scope.catalog.length >1){
-                    $scope.currentCatalogTitleStart = $scope.catalog[0].title;
-                    $scope.currentCatalogTitleFinish =  $scope.catalog[$scope.catalog.length - 1].title;;
-                }
-                $scope.singleItem = $scope.catalog.length == 1;
-                $scope.sendCurrentData();
-            });
+            $scope.currentCatalogIndex = 0;
+            $scope.currentCatalogTitle = "";
+            $scope.currentCatalogTitleStart = "";
+            $scope.currentCatalogTitleFinish = "";
+            if($scope.catalog.length >1){
+                $scope.currentCatalogTitleStart = $scope.catalog[0].title;
+                $scope.currentCatalogTitleFinish =  $scope.catalog[$scope.catalog.length - 1].title;;
+            }
+            $scope.singleItem = $scope.catalog.length == 1;
+            $scope.sendCurrentData();
+
+
         });
 
         $scope.setData = function(data){

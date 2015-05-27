@@ -154,14 +154,13 @@ angular.module('NodeWebBase')
         };
 
         me.drawPolygonFile = function (fileName) {
-            $.ajax({
+            $http({
+                method:"GET",
                 url: "app/controlBox/getPolygon",
-                data: {
+                params: {
                     user: $rootScope.username,
                     fileName: fileName
-                },
-                dataType: "json",
-                success: function (response) {
+                }}).success(function (response) {
                     var latLngs = [];
                     var latLngList = [];
                     try {
@@ -201,12 +200,9 @@ angular.module('NodeWebBase')
                     });
 
                     me.calculateBounds(latLngList);
-                },
-                error: function (jqxhr, testStatus, reason) {
+                }).error(function (jqxhr, testStatus, reason) {
                     $("#resultsText").text(reason);
-                }
-            });
-
+                })
         };
 
         me.clearAll = function () {
