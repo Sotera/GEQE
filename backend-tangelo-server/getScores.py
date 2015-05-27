@@ -2,14 +2,20 @@ import sys
 import json
 import tangelo
 sys.path.append(".")
+import conf
 from decorators import allow_all_origins
 
 
 @tangelo.restful
 @allow_all_origins
-def get(filePath='./', fileAppOut='appliedScores.csv', maxOut = -1, threshhold=None):
+def get(user='demo', fileAppOut='appliedScores.csv', maxOut = -1, threshhold=None):
     maxOut = int(maxOut)
     if threshhold is not None: threshhold = float(threshhold)
+
+
+    confObj = conf.get()
+    if '..' in user: raise ValueError("Invalid user.")
+    filePath = confObj['root_data_path']+'/'+user +'/'
     ssName  = filePath + "scoreFiles/" + fileAppOut
 
     #get data
