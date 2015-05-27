@@ -1,11 +1,6 @@
 import sys
 import json
 import tangelo
-import numpy as np
-from sklearn.cluster import DBSCAN
-from sklearn.preprocessing import StandardScaler
-from scipy.spatial import ConvexHull
-
 sys.path.append(".")
 from decorators import allow_all_origins
 
