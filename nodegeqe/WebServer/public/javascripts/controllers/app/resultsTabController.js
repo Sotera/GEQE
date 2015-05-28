@@ -38,11 +38,7 @@ angular.module('NodeWebBase')
 
         $scope.getScoresModel = {
             user: "",
-            fileAppOut: "",
-            maxOut: -1,
-            drawMode:"cluster",
-            bBinByDate: false,
-            fBinSize:.005
+            fileAppOut: ""
         };
 
         $scope.getScores = function() {
@@ -56,12 +52,22 @@ angular.module('NodeWebBase')
                 url: "app/controlBox/getScores",
                 params: $scope.getScoresModel
             }).success(function (response) {
-                    if(!response.sco || response.sco.length == 0)
+                    if((!response.clusters || response.clusters == 0) &&
+                        (!response.dates || response.dates == 0))
                     {
                         $rootScope.showErrorMessage("Get Scores","No Scores Returned");
                     }
+                    var details = {
+                        "binByDate":true
+                    };
+                    if(response.clusters) {
+                        details.binByDate = false;
+                        $rootScope.$emit("loadNavData", response.clusters, details);
+                    }
+                    else{
+                        $rootScope.$emit("loadNavData", response.dates, details);
+                    }
 
-                    $rootScope.$emit("loadNavData", response.sco, $scope.getScoresModel);
                     $rootScope.$emit("setTermDictionary", response.dic);
 
                     //write dictionary to results box
@@ -129,7 +135,7 @@ angular.module('NodeWebBase')
                 params: $scope.trainingDataModel})
                 .success(function (response) {
                     $rootScope.$emit("clearMarkers",['training']);
-                    $rootScope.$emit("drawMapMarkers",response.sco,null, "training");
+                    $rootScope.$emit("drawMapMarkers",response.sco, "training");
                 })
                 .error($rootScope.showError)
         };

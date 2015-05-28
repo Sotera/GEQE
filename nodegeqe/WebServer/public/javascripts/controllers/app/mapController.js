@@ -432,10 +432,10 @@ angular.module('NodeWebBase')
         };
 
 
-        $rootScope.$on('drawMapMarkers', function (event, data, binSize, markerType) {
+        $rootScope.$on('drawMapMarkers', function (event, data, markerType) {
             switch (markerType) {
                 case "score":
-                    $scope.drawScoreMarkers(data, binSize);
+                    $scope.drawScoreMarkers(data);
                     break;
                 case "training":
                     $scope.drawTrainingMarkers(data);

@@ -293,7 +293,7 @@ angular.module('NodeWebBase')
                 me.scoreShapes.push(polygon);
             });
             me.calculateBounds(locations);
-            $rootScope.$emit("drawMapMarkers",clusters,0,'cluster');
+            $rootScope.$emit("drawMapMarkers",clusters,'cluster');
 
         };
     }]);

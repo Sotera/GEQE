@@ -30,13 +30,13 @@ angular.module('NodeWebBase')
 
             });
 
-            $rootScope.$on('drawMapMarkers', function (event, data, binSize, markerType, isBinned) {
+            $rootScope.$on('drawMapMarkers', function (event, data, markerType) {
                 switch (markerType) {
                     case "cluster":
                         me.drawClusterMarkers(data);
                         break;
                     case "score":
-                        me.drawScoreMarkers(data, binSize, isBinned);
+                        me.drawScoreMarkers(data);
                         break;
                     case "training":
                         me.drawTrainingMarkers(data);
@@ -219,11 +219,10 @@ angular.module('NodeWebBase')
                 me.putTrainingMarker(markerLocation, capPScor, item);
 
             });
-
             me.calculateBounds(locations);
         };
 
-        me.drawScoreMarkers = function(data, binSize, isBinned){
+        me.drawScoreMarkers = function(data){
             var locations = [];
             angular.forEach(data, function(item){
                 var capPScor = 'Rank: ' + item['index'].toString() +
@@ -235,21 +234,12 @@ angular.module('NodeWebBase')
                     '-------------------------------------' + '\n';
                 });
 
-                var strLat = item['lat'];
-                var strLon = item['lon'];
+                var strLat = parseFloat(item['lat']);
+                var strLon = parseFloat(item['lon']);
 
-                var shiftLat = parseFloat(strLat);
-                var shiftLon = parseFloat(strLon);
-
-                if(isBinned) {
-                    shiftLat >= 0.0 ? shiftLat = shiftLat + binSize / 2:shiftLat = shiftLat - binSize / 2;
-                    shiftLon >= 0.0 ? shiftLon = shiftLon + binSize / 2:shiftLon = shiftLon - binSize / 2;
-                }
-
-                var markerLocation = new google.maps.LatLng(shiftLat, shiftLon);
+                var markerLocation = new google.maps.LatLng(strLat, strLon);
                 locations.push(markerLocation);
                 me.putScoreMarker(markerLocation, capPScor, item, data.length,item['index']);
-
             });
 
             me.calculateBounds(locations);

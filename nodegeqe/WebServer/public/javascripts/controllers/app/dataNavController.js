@@ -13,7 +13,7 @@ angular.module('NodeWebBase')
             $scope.dataDetails = dataDetails;
 
             $rootScope.$emit("clearAll");
-            dataDetails.bBinByDate?$scope.sortDataByDate(data):$scope.setData(data);
+            dataDetails.binByDate?$scope.sortDataByDate(data):$scope.setData(data);
 
             $scope.currentCatalogIndex = 0;
             $scope.currentCatalogTitle = "";
@@ -88,13 +88,7 @@ angular.module('NodeWebBase')
             $rootScope.$emit("clearMarkers",['score']);
             $rootScope.$emit("clearMarkers",['training']); //<- lame need to add cluster marker set too
             $rootScope.$emit("clearCurrentShapes");
-
-            if($scope.dataDetails.drawMode =="none" || $scope.dataDetails.drawMode =="latlonbin") {
-                $rootScope.$emit("drawMapMarkers", $scope.catalog[$scope.currentCatalogIndex].data,
-                    $scope.dataDetails.fBinSize, "score", $scope.dataDetails.drawMode =="latlonbin");
-            }
-            if($scope.dataDetails.drawMode =="cluster")
-                $rootScope.$emit("drawShapes",$scope.catalog[$scope.currentCatalogIndex].data ,"score");
+            $rootScope.$emit("drawShapes",$scope.catalog[$scope.currentCatalogIndex].data ,"score");
         }
 
 
