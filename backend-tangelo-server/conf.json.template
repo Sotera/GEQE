@@ -3,7 +3,7 @@
          "SPARK_SUBMIT_PATH" : "/home/hadoop/spark/bin/",
          "SPARK_OPTIONS" : [
              "--master" , "yarn-client",
-             "--py-files" , "lib/shapeReader.py,lib/pointClass.py,lib/fspLib.py",
+             "--py-files" , "lib/clustering.py,lib/to_parquet.py,lib/shapeReader.py,lib/pointClass.py,lib/fspLib.py",
              "--executor-memory" , "16g",
              "--driver-memory" ,  "8g",
              "--num-executors", "2",
