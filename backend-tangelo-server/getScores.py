@@ -21,41 +21,34 @@ def get(user='demo', fileAppOut='appliedScores.csv', maxOut = -1, threshhold=Non
     #get data
     dIn = json.load(open(ssName,'r'))
     rDict = {}
-    lScores = []
     #handle data differently for "event" and "place" types
     if dIn["type"] == "event":
-        #Add summary values
-        for date, dBin in dIn["dates"].iteritems():
-            nCluster = 0
-            hiScore = -1
-            for cluster in dBin["clusters"]:
-                nCluster = nCluster + 1
-                score = 1.*cluster["nTotal"]/cluster["background"]
-                lScores.append(score)
-                cluster["score"] = score
-                if score > hiScore: hiScore = score
-            dBin["hiScore"] = hiScore
-            dBin["nCluster"] = nCluster
-        #If the max Out parameter is sent, only include those values
-        if maxOut != -1 and len(lScores)>maxOut:
-            lScores.sort(reverse=True)
-            sThresh = lScores[maxOut]
-            rDict["type"] = "event"
-            rDict["dates"] = {}
+        sThresh = -1.
+        if maxOut != -1:
+            lScores = []
             for date, dBin in dIn["dates"].iteritems():
-                nCluster = 0
                 for cluster in dBin["clusters"]:
-                    if cluster["score"]>sThresh:
-                        nCluster = nCluster + 1
-                        if date not in rDict["dates"].keys():
-                            rDict["dates"][date] = {}
-                            rDict["dates"][date]["clusters"] = [cluster]
-                            rDict["dates"][date]["hiScore"] = cluster["score"]
-                        else:
-                            rDict["dates"][date]["clusters"].append(cluster)
-                            if rDict["dates"][date]["hiScore"] < cluster["score"]: rDict["dates"][date]["clusters"] = cluster["score"]
-                if date in rDict["dates"].keys():
-                    rDict["dates"][date]["nCluster"] = nCluster
+                    score = 1.*cluster["nTotal"]/cluster["background"]
+                    cluster["score"] = score
+                    lScores.append(score)
+            if len(lScores)>maxOut:
+                lScores.sort(reverse=True)
+                sThresh = lScores[maxOut]
+        rDict["type"] = "event"
+        rDict["dates"] = []
+        for date in sorted(dIn["dates"].keys()):
+            nCluster = 0
+            theJson = {"date":date, "clusters":[]}
+            hiScore = -1
+            for cluster in dIn["dates"][date]["clusters"]:
+                if cluster["score"]>sThresh:
+                    nCluster = nCluster + 1
+                    theJson["clusters"].append(cluster)
+                    if hiScore < cluster["score"]: hiScore=cluster["score"]
+            if nCluster > 0:
+                theJson["nClusters"]=nCluster
+                theJson["hiScore"]=hiScore
+                rDict["dates"].append(theJson)
     elif dIn["type"] == "place":
         for cluster in dIn["clusters"]:
             cluster["score"] = 1.*cluster["nTotal"]/cluster["background"]
