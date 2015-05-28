@@ -52,48 +52,40 @@ angular.module('NodeWebBase')
                 url: "app/controlBox/getScores",
                 params: $scope.getScoresModel
             }).success(function (response) {
-                    if((!response.clusters || response.clusters == 0) &&
-                        (!response.dates || response.dates == 0))
-                    {
-                        $rootScope.showErrorMessage("Get Scores","No Scores Returned");
-                    }
-                    var details = {
-                        "binByDate":true
-                    };
-                    if(response.clusters) {
-                        details.binByDate = false;
-                        $rootScope.$emit("loadNavData", response.clusters, details);
-                    }
-                    else{
-                        $rootScope.$emit("loadNavData", response.dates, details);
-                    }
 
-                    $rootScope.$emit("setTermDictionary", response.dic);
+                if((!response.clusters || response.clusters == 0) &&
+                    (!response.dates || response.dates == 0))
+                {
+                    $rootScope.showErrorMessage("Get Scores","No Scores Returned");
+                }
 
-                    //write dictionary to results box
-                    var strRet = '';
-                    if( typeof(response.dic)=="string")
+                $rootScope.$emit("loadNavData", response);
+                $rootScope.$emit("setTermDictionary", response.dic);
+
+                //write dictionary to results box
+                var strRet = '';
+                if( typeof(response.dic)=="string")
+                {
+                    strRet = response.dic;
+                } else {
+                    if( response.dic[0][2] != undefined)
                     {
-                        strRet = response.dic;
-                    } else {
-                        if( response.dic[0][2] != undefined)
+                        strRet = '<table class=table table-striped"><tr><th>Term</th><th>Score</th><th>In Count</th><th>Out Count</th></tr>';
+                        for( i=0; i<response.dic.length; i++)
                         {
-                            strRet = '<table class=table table-striped"><tr><th>Term</th><th>Score</th><th>In Count</th><th>Out Count</th></tr>';
-                            for( i=0; i<response.dic.length; i++)
-                            {
-                                strRet = strRet + '<tr><td>' + response.dic[i][0] + '</td><td>' + response.dic[i][3] + '</td><td>' + response.dic[i][1] + '</td><td>' + response.dic[i][2] + '</td></tr>';
-                            }
-                        } else {
-                            strRet = '<table class="table table-condensed"><tr><th>Term</th><th>Rank</th></tr>';
-                            for( i=0; i<response.dic.length; i++)
-                            {
-                                strRet = strRet + '<tr><td>' + response.dic[i][0] + '</td><td>' + response.dic[i][1] + '</td></tr>';
-                            }
+                            strRet = strRet + '<tr><td>' + response.dic[i][0] + '</td><td>' + response.dic[i][3] + '</td><td>' + response.dic[i][1] + '</td><td>' + response.dic[i][2] + '</td></tr>';
                         }
-                        strRet = strRet + "</table>";
+                    } else {
+                        strRet = '<table class="table table-condensed"><tr><th>Term</th><th>Rank</th></tr>';
+                        for( i=0; i<response.dic.length; i++)
+                        {
+                            strRet = strRet + '<tr><td>' + response.dic[i][0] + '</td><td>' + response.dic[i][1] + '</td></tr>';
+                        }
                     }
-                    $rootScope.$emit("displayResults",strRet)
-                }).error($rootScope.showError)
+                    strRet = strRet + "</table>";
+                }
+                $rootScope.$emit("displayResults",strRet)
+            }).error($rootScope.showError)
         };
 
 

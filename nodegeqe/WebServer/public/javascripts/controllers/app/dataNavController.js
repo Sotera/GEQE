@@ -3,17 +3,15 @@ angular.module('NodeWebBase')
         $scope.scopeName = 'dataNavController';
         $scope.catalog = [];
         $scope.currentCatalogIndex = 0;
-        $scope.dataDetails = null;
         $scope.currentCatalogTitle = "None";
         $scope.currentCatalogTitleStart = "";
         $scope.currentCatalogTitleFinish = "";
         $scope.singleItem = true;
 
-        $rootScope.$on('loadNavData', function (event, data, dataDetails) {
-            $scope.dataDetails = dataDetails;
+        $rootScope.$on('loadNavData', function (event, data) {
 
             $rootScope.$emit("clearAll");
-            dataDetails.binByDate?$scope.sortDataByDate(data):$scope.setData(data);
+            data.type==="event"?$scope.sortDataByDate(data.dates):$scope.setData(data.clusters);
 
             $scope.currentCatalogIndex = 0;
             $scope.currentCatalogTitle = "";
