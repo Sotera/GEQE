@@ -29,8 +29,6 @@ angular.module('NodeWebBase')
             fileName:""
         }
 
-        //http://jimhoskins.com/2012/12/17/angularjs-and-apply.html
-        // No need to call $scope.$apply -> $http does it automatically
         $scope.populatePolygonSelect = function() {
             if(!$rootScope.isAppConfigured())
                 return;

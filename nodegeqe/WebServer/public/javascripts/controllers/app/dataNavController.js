@@ -57,7 +57,7 @@ angular.module('NodeWebBase')
                     };
                     $scope.catalog.push(catalogItem);
                 }
-                catalogItem.data.push(group);
+                catalogItem.data = catalogItem.data.concat(group.clusters);
             });
         };
 
