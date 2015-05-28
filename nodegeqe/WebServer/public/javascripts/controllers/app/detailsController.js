@@ -16,13 +16,15 @@ angular.module('NodeWebBase')
         $scope.currentItem = $scope.defaultItem;
 
         $rootScope.$on('loadItemData', function (event, data) {
-            $scope.data = data;
-            $scope.currentItemIndex = 0;
-            $scope.displayIndex = 1;
-            $scope.currentItem = $scope.data.posts[0];
-            $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
-            $("#caption").html($scope.displayCaptionHtml);
-            $scope.getAccount();
+            $scope.$apply(function() {
+                $scope.data = data;
+                $scope.currentItemIndex = 0;
+                $scope.displayIndex = 1;
+                $scope.currentItem = $scope.data.posts[0];
+                $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
+                $("#caption").html($scope.displayCaptionHtml);
+                $scope.getAccount();
+            });
         });
 
         $rootScope.$on("setTermDictionary", function(event,data){

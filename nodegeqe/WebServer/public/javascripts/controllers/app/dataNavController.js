@@ -19,7 +19,7 @@ angular.module('NodeWebBase')
             $scope.currentCatalogTitleFinish = "";
             if($scope.catalog.length >1){
                 $scope.currentCatalogTitleStart = $scope.catalog[0].title;
-                $scope.currentCatalogTitleFinish =  $scope.catalog[$scope.catalog.length - 1].title;;
+                $scope.currentCatalogTitleFinish =  $scope.catalog[$scope.catalog.length - 1].title;
             }
             $scope.singleItem = $scope.catalog.length == 1;
             $scope.sendCurrentData();
