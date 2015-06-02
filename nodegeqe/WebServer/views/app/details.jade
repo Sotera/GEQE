@@ -1,16 +1,20 @@
 div( ng-controller='detailsController')
-    div( id='details' percent-Height percent='53' ng-style="style")
+    div( id='details' percent-Height percent='65' ng-style="style")
         div
-            nav.navbar.navbar-default.navbar-inverse(ng-controller='dataNavController')
-                h4.navbar-brand.my-navbar-brand {{currentCatalogTitle}}
+            div(ng-controller='dataNavController')
+                div(style="height:80px" ng-click = 'onChartClick()')
+                    linechart(data='chartModel' options='options' on-focus="onChartFocus")
+                div
+                    nav.navbar.navbar-default.navbar-inverse
+                        h4.navbar-brand.my-navbar-brand {{currentCatalogTitle}}
 
-                span(ng-class="(singleItem) ? 'hidden' : ''").noselect.navbar-left.navbar-text
-                    |{{currentCatalogTitleStart}}
-                span(ng-class="(singleItem) ? 'hidden' : ''").noselect.navbar-right.navbar-text
-                    |{{currentCatalogTitleFinish}}
+                        span(ng-class="(singleItem) ? 'hidden' : ''").noselect.navbar-left.navbar-text
+                            |{{currentCatalogTitleStart}}
+                        span(ng-class="(singleItem) ? 'hidden' : ''").noselect.navbar-right.navbar-text
+                            |{{currentCatalogTitleFinish}}
 
-                span(ng-class="(singleItem) ? 'hidden' : ''" ng-click='previous()' title='Previous').noselect.navbar-button.btn-lg.glyphicon.glyphicon-backward.navbar-left.navbar-text
-                span(ng-class="(singleItem) ? 'hidden' : ''" ng-click='next()' title='Next').noselect.navbar-button.btn-lg.glyphicon.glyphicon-forward.navbar-right.navbar-text
+                        span(ng-class="(singleItem) ? 'hidden' : ''" ng-click='previous()' title='Previous').noselect.navbar-button.btn-lg.glyphicon.glyphicon-backward.navbar-left.navbar-text
+                        span(ng-class="(singleItem) ? 'hidden' : ''" ng-click='next()' title='Next').noselect.navbar-button.btn-lg.glyphicon.glyphicon-forward.navbar-right.navbar-text
             div.container-fluid
                 div.row
                     div.col-lg-2

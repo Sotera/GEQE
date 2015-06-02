@@ -1,5 +1,5 @@
 angular.module('NodeWebBase')
-    .controller('detailsController', ['$scope','$rootScope','$window','$http','ngDialog', function ($scope, $rootScope,$window,$http, ngDialog) {
+    .controller('detailsController', ['$scope','$rootScope','$window','$http','$timeout','ngDialog', function ($scope, $rootScope,$window,$http, $timeout, ngDialog) {
         $scope.scopeName = 'detailsController';
         $scope.data = {"nTotal":0};
         $scope.currentItemIndex = null;
@@ -16,7 +16,7 @@ angular.module('NodeWebBase')
         $scope.currentItem = $scope.defaultItem;
 
         $rootScope.$on('loadItemData', function (event, data) {
-            $scope.$apply(function() {
+            $timeout(function(){
                 $scope.data = data;
                 $scope.currentItemIndex = 0;
                 $scope.displayIndex = 1;
@@ -25,6 +25,7 @@ angular.module('NodeWebBase')
                 $("#caption").html($scope.displayCaptionHtml);
                 $scope.getAccount();
             });
+
         });
 
         $rootScope.$on("setTermDictionary", function(event,data){

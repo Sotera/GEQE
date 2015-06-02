@@ -1,4 +1,4 @@
-angular.module('NodeWebBase', ['ngRoute', 'logout','nbSettings','ngCookies', 'ngDialog'])
+angular.module('NodeWebBase', ['ngRoute', 'logout','nbSettings','ngCookies', 'ngDialog','n3-line-chart'])
 	.controller('layoutController', ['$scope','$rootScope', function ($scope,$rootScope) {
 		$rootScope.themes = [
 			{
