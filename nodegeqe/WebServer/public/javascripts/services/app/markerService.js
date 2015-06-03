@@ -121,11 +121,14 @@ angular.module('NodeWebBase')
         me.putTrainingMarker = function(location,caption,item){
             if(!me.markers['training'])
                 me.markers['training'] = [];
+
+            var icon = me.getIcon("#3C85E6");
             var marker = new google.maps.Marker({
                 position: location,
                 map: me.map,
-                icon: me.getIcon("#3C85E6"),
-                title:caption
+                icon: icon,
+                title:caption,
+                originalIcon : icon
             });
 
             me.markers['training'].push(marker);
@@ -153,30 +156,33 @@ angular.module('NodeWebBase')
             });
         };
 
-        me.selectMarker=function(marker,icon){
+        me.selectMarker=function(marker){
             if(me.selectedMarker){
-                me.selectedMarker.setIcon(icon);
+
+                me.selectedMarker.setIcon(me.selectedMarker.originalIcon);
             }
             marker.setIcon(me.getIcon("#00FF00"));
             me.selectedMarker = marker;
         };
 
-        me.putScoreMarker = function(location, caption, item, numMarkers, markerIndex) {
+        me.putScoreMarker = function(location, caption, item, minScore, maxScore, score) {
 
             if(!me.markers['score'])
                 me.markers['score'] = [];
+            var icon = me.getIcon(me.interpolateColor(0,maxScore,score));
             var marker = new google.maps.Marker({
                 position: location,
                 map: me.map,
-                icon: me.getIcon(me.interpolateColor(0,1,markerIndex)),
+                icon: icon,
                 title:caption,
-                markerIndex:markerIndex
+                markerItem:item,
+                originalIcon:icon
             });
 
             me.markers['score'].push(marker);
 
             google.maps.event.addListener(marker, 'click', function() {
-                me.selectMarker(marker,me.getIcon(me.interpolateColor(0,numMarkers,marker.markerIndex)));
+                me.selectMarker(marker);
                 $rootScope.$emit("loadItemData",item);
             });
         };
@@ -201,6 +207,14 @@ angular.module('NodeWebBase')
 
         me.drawClusterMarkers = function(data){
             var locations = [];
+            var minScore = 1;
+            var maxScore = 0;
+            angular.forEach(data, function(item) {
+                if(item['score'] > maxScore)
+                    maxScore = item['score'];
+                if(item['score'] < minScore)
+                    minScore = item['score'];
+            });
 
             angular.forEach(data, function(item){
 
@@ -217,7 +231,7 @@ angular.module('NodeWebBase')
 
                 var markerLocation = new google.maps.LatLng(lat, lon);
                 locations.push(markerLocation);
-                me.putScoreMarker(markerLocation, capPScor, item, data.length,item['score']);
+                me.putScoreMarker(markerLocation, capPScor, item, minScore,maxScore,item['score']);
 
             });
             me.calculateBounds(locations);
