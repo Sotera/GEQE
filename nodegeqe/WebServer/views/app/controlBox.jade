@@ -81,6 +81,9 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="popScore()" title="Refresh file list.")
                                 select.form-control( name="scoreSelect" id="scoreSelect" ng-options="item for item in scoreFiles | orderBy: item"  ng-model="getScoresModel.fileAppOut")
                                     option( value="") --Select--
+                            div.form-group-sm
+                                label(for="sMaxEntries")  Max Points:
+                                input.form-control(type="number" id="sMaxEntries" ng-model="getScoresModel.maxOut" step="any" novalidate)
                             button.form-control.btn.btn-default(ng-click="getScores()" title='Draw Scores to the map') Show Scores
                         fieldset.scheduler-border
                             legend.scheduler-border Training Results

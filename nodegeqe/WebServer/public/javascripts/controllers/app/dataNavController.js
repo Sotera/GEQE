@@ -43,6 +43,32 @@ angular.module('NodeWebBase')
         });
 
         $scope.setData = function(data){
+            var maxScore = 0;
+            $scope.chartModel = [];
+            $scope.catalog = [{
+                'title':'All Clusters',
+                'data':data.clusters,
+                'hiScore':data.hiScore,
+                'nClusters':data.nCluster,
+                'x':0
+            }];
+
+            angular.forEach(data.clusters,function(group,idx){
+                var catalogItem = $scope.getCatalogItem(group.date);
+                if(maxScore < group.score)
+                    maxScore = group.score;
+                if(!catalogItem){
+                    catalogItem = {
+                        'title':'cluster',
+                        'x':idx,
+                        'hiScore':group.score,
+                        'nClusters':group.posts.length
+                    };
+                    $scope.chartModel.push(catalogItem);
+                    return;
+                }
+                console.log("Duplicate Date in Time Series");
+            });
 
             $scope.options = {
                 lineMode: "cardinal",
@@ -55,7 +81,7 @@ angular.module('NodeWebBase')
                 },
                 axes: {
                     x: {key: 'x'},
-                    y2: {max:1},
+                    y2: {min:0,max:maxScore * 1.1},
                     y:{min:0}
                 },
                 series: [
@@ -82,29 +108,7 @@ angular.module('NodeWebBase')
                 }
             };
 
-            $scope.chartModel = [];
-            $scope.catalog = [{
-                'title':'All Clusters',
-                'data':data.clusters,
-                'hiScore':data.hiScore,
-                'nClusters':data.nCluster,
-                'x':0
-            }];
 
-            angular.forEach(data.clusters,function(group,idx){
-                var catalogItem = $scope.getCatalogItem(group.date);
-                if(!catalogItem){
-                    catalogItem = {
-                        'title':'cluster',
-                        'x':idx,
-                        'hiScore':group.score,
-                        'nClusters':group.posts.length
-                    };
-                    $scope.chartModel.push(catalogItem);
-                    return;
-                }
-                console.log("Duplicate Date in Time Series");
-            });
         };
 
         $scope.getCatalogItem = function(title){
@@ -119,6 +123,30 @@ angular.module('NodeWebBase')
 
         $scope.sortDataByDate = function(data){
             $scope.catalog = [];
+            var maxScore = 0;
+            angular.forEach(data,function(group,idx){
+                var catalogItem = $scope.getCatalogItem(group.date);
+                if(!catalogItem){
+                    catalogItem = {
+                        'title':group.date,
+                        'x':idx,
+                        'data':group.clusters,
+                        'hiScore':group.hiScore,
+                        'nClusters':group.nClusters
+                    };
+                    $scope.catalog.push(catalogItem);
+                    if(maxScore < group.hiScore)
+                        maxScore = group.hiScore;
+                    return;
+                }
+
+
+
+                console.log("Duplicate Date in Time Series");
+            });
+
+            $scope.chartModel = $scope.catalog;
+
             $scope.options = {
                 lineMode: "cardinal",
                 drawLegend:false,
@@ -130,7 +158,7 @@ angular.module('NodeWebBase')
                 },
                 axes: {
                     x: {key: 'x'},
-                    y2: {max:1},
+                    y2: {min:0,max:maxScore * 1.1},
                     y:{min:0}
                 },
                 series: [
@@ -157,23 +185,7 @@ angular.module('NodeWebBase')
                 }
             };
 
-            angular.forEach(data,function(group,idx){
-                var catalogItem = $scope.getCatalogItem(group.date);
-                if(!catalogItem){
-                    catalogItem = {
-                        'title':group.date,
-                        'x':idx,
-                        'data':group.clusters,
-                        'hiScore':group.hiScore,
-                        'nClusters':group.nClusters
-                    };
-                    $scope.catalog.push(catalogItem);
-                    return;
-                }
-                console.log("Duplicate Date in Time Series");
-            });
 
-            $scope.chartModel = $scope.catalog;
         };
 
         $scope.onChartFocus = function(d, i, position){

@@ -87,8 +87,8 @@ angular.module('NodeWebBase')
             var delta = componentDiff * percent;
 
             if(c1 < c2)
-                return c2 - delta;
-            return c2 + delta;
+                return c1 + delta;
+            return c1 - delta;
         };
 
         me.interpolateColor = function(min,max,val)
@@ -97,7 +97,7 @@ angular.module('NodeWebBase')
                 return me.rgbToHex(0,0,0);
             if(val > max)
                 return me.rgbToHex(255,255,255);
-            var percent = Math.abs(val - min) / Math.abs(max - min);
+            var percent = val/max-min;
             var minColorRGB = [220,210,210];
             var maxColorRGB = [255,98,0];
 
@@ -168,7 +168,7 @@ angular.module('NodeWebBase')
             var marker = new google.maps.Marker({
                 position: location,
                 map: me.map,
-                icon: me.getIcon(me.interpolateColor(0,numMarkers,markerIndex)),
+                icon: me.getIcon(me.interpolateColor(0,1,markerIndex)),
                 title:caption,
                 markerIndex:markerIndex
             });
@@ -204,7 +204,8 @@ angular.module('NodeWebBase')
 
             angular.forEach(data, function(item){
 
-                var capPScor = '  Total: ' + item['nTotal'] + '\n' +
+                var capPScor = '  Total: ' + item['nTotal'] + '\n'  +
+                    '  |  Score: ' + item['score'] +
                     '--------------------------------------------------------------' + '\n';
                 angular.forEach(item['posts'], function(post,idx){
                     capPScor+= post['cap'] + '\n' +
@@ -216,7 +217,7 @@ angular.module('NodeWebBase')
 
                 var markerLocation = new google.maps.LatLng(lat, lon);
                 locations.push(markerLocation);
-                me.putTrainingMarker(markerLocation, capPScor, item);
+                me.putScoreMarker(markerLocation, capPScor, item, data.length,item['score']);
 
             });
             me.calculateBounds(locations);
