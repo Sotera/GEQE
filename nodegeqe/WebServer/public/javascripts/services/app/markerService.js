@@ -209,6 +209,8 @@ angular.module('NodeWebBase')
             var locations = [];
             var minScore = 1;
             var maxScore = 0;
+            var center_lat, center_lon;
+
             angular.forEach(data, function(item) {
                 if(item['score'] > maxScore)
                     maxScore = item['score'];
@@ -217,6 +219,8 @@ angular.module('NodeWebBase')
             });
 
             angular.forEach(data, function(item){
+                center_lat = 0.0;
+                center_lon = 0.0;
 
                 var capPScor = '  Total: ' + item['nTotal'] + '\n'  +
                     '  |  Score: ' + item['score'] +
@@ -226,10 +230,13 @@ angular.module('NodeWebBase')
                     '-------------------------------------' + '\n';
                 });
 
-                var lat = parseFloat(item.posts[0]['lat']);
-                var lon = parseFloat(item.posts[0]['lon']);
 
-                var markerLocation = new google.maps.LatLng(lat, lon);
+                angular.forEach(item['poly'], function(poly,idx){
+                    center_lat+=poly[0];
+                    center_lon+=poly[1];
+                })
+
+                var markerLocation = new google.maps.LatLng(center_lat / item.poly.length,  center_lon / item.poly.length);
                 locations.push(markerLocation);
                 me.putScoreMarker(markerLocation, capPScor, item, minScore,maxScore,item['score']);
 
