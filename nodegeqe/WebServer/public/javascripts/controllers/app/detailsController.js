@@ -117,19 +117,24 @@ angular.module('NodeWebBase')
         };
 
         $scope.highlightText = function(text){
-            var words = text.split(' ');
-            angular.forEach($scope.termArray,function(term,idx){
+            var words = text.split(" "),
+                termList=$scope.termArray.join("|"),
+                alpha={};
+
                 angular.forEach(words,function(word,idx){
-                    if(word.toLowerCase() == term.toLowerCase()){
-                        words[idx] = '<span class="highlight">' + word + "</span>";
-                    }
-                    else{
+
+                    if(alpha = word.replace(/[^a-zA-Z0-9]/,"").match(new RegExp(termList,"i"))){
+                        // alpha = ["runners", index: 0, input: "runners"]
+                        // we get the matched word [0] and the searched word (['input'])
+                        if(alpha[0].length == alpha['input'].length){
+                            // Prevents matching keyword 'an' with 'another'
+                            words[idx] = '<span class="highlight">' + word + "</span>";
+                        }
                     }
                 });
-            });
+
             var highlights = words.join(' ');
             return $scope.replaceURLWithHTMLLinks(highlights);
-
         };
 
         $scope.next = function(){
