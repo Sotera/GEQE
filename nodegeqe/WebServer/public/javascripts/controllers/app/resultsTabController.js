@@ -136,10 +136,12 @@ angular.module('NodeWebBase')
 
         ///INIT
         var watchRemoval = $scope.$watch($rootScope.isAppConfigured ,function(newVal,oldVal) {
-            $scope.popScore();
-            $scope.populatePolygonSelect();
-            $scope.populateTrainingSelect();
-            watchRemoval();
+            if( newVal ){ // Don't do anything if Undefined.
+                $scope.popScore();
+                $scope.populatePolygonSelect();
+                $scope.populateTrainingSelect();
+                watchRemoval();
+           }
         })
    });
 
