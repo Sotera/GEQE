@@ -85,6 +85,10 @@ def submitJob(jobname,jobConf,polyFilePath,bucket):
 
     JOB_QUEUE_URL = getBytesFromS3(bucket,'WAITING_QUEUE')
     jobname = 'jobs/'+jobname
+
+    # if a job directory with matching name exists delete it
+    deleteFromBucket(bucket,jobname)
+
     saveBytesToS3(bucket,jobname+'/job.conf',json.dumps(jobConf))
 
     with open(polyFilePath,'r') as handle:
@@ -96,6 +100,10 @@ def submitJob(jobname,jobConf,polyFilePath,bucket):
     start_consumer_thread(bucket)
 
 
+def deleteFromBucket(bucket,key):
+    s3 = boto3.resource('s3')
+    bucket = s3.Bucket(bucket)
+    bucket.delete_objects(Delete={'Objects':[{'Key':key}]})
 
 
 def getStatus(jobname,bucket):
