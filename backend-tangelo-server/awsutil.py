@@ -87,7 +87,13 @@ def submitJob(jobname,jobConf,polyFilePath,bucket):
     jobname = 'jobs/'+jobname
 
     # if a job directory with matching name exists delete it
-    deleteFromBucket(bucket,jobname)
+    s3 = boto3.resource('s3')
+    s3Bucket = s3.Bucket(bucket)
+    allkeys =  [x.key for x in s3Bucket.objects.all()]
+    allkeys = filter(lambda x: jobname == x[:len(jobname)],allkeys)
+    for key in allkeys:
+        s3Bucket.delete_objects(Delete={'Objects':[{'Key':key}]})
+
 
     saveBytesToS3(bucket,jobname+'/job.conf',json.dumps(jobConf))
 
