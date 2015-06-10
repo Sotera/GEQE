@@ -6,7 +6,7 @@ from decorators import allow_all_origins
 from decorators import validate_user
 import json
 import traceback
-
+import os
 
 
 
@@ -28,10 +28,16 @@ def get(user='demo',jobname=''):
         jobname = prefix+jobname
 
     jobObj = None
+    if not os.path.exists(filePath+jobname):
+        result = {'error':'no such job for user '+str(user)}
+        tangelo.log(str(result))
+        return result
     try:
         with open(filePath+jobname,'r') as jobFileHandle:
             jobObj = json.loads(jobFileHandle.read())
         return jobObj
     except:
+        result = {'error': 'internal error'}
+        tangelo.log(str(result))
         tangelo.log(traceback.format_exc())
-        return{}
+        return result
