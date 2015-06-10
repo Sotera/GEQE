@@ -20,7 +20,7 @@ angular.module('NodeWebBase')
                 $scope.data = data;
                 $scope.currentItemIndex = 0;
                 $scope.displayIndex = 1;
-                $scope.currentItem = $scope.data.posts[0];
+                $scope.currentItem = $scope.data.posts?$scope.data.posts[0]:$scope.data;
                 $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
                 $("#caption").html($scope.displayCaptionHtml);
                 $scope.getAccount();

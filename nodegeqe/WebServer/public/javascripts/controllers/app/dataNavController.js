@@ -226,8 +226,7 @@ angular.module('NodeWebBase')
 
             $scope.currentCatalogTitle = $scope.catalog[$scope.currentCatalogIndex].title;
 
-            $rootScope.$emit("clearMarkers",['score']);
-            $rootScope.$emit("clearMarkers",['training']); //<- lame need to add cluster marker set too
+            $rootScope.$emit("clearMarkers",['score','training','item']);
             $rootScope.$emit("clearCurrentShapes");
             $rootScope.$emit("drawShapes",$scope.catalog[$scope.currentCatalogIndex].data ,"score");
         }

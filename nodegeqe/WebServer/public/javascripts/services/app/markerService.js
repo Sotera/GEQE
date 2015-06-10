@@ -5,6 +5,7 @@ angular.module('NodeWebBase')
         me.map = null;
         me.drawingManager = null;
         me.markers = {};
+        me.itemMarkers = [];
 
         me.init = function(map){
             me.map = map;
@@ -39,10 +40,11 @@ angular.module('NodeWebBase')
                         me.drawScoreMarkers(data);
                         break;
                     case "training":
-                        me.drawTrainingMarkers(data);
+                        me.drawTypeMarkers(data,markerType,true);
                         break;
                 }
             });
+
         };
 
         me.calculateBounds = function(locations){
@@ -54,7 +56,7 @@ angular.module('NodeWebBase')
         };
 
         me.clearAll = function(){
-            me.clearMarkers(['training','score']);
+            me.clearMarkers(['training','score','item']);
         };
 
         me.clearMarkers = function(types){
@@ -118,9 +120,9 @@ angular.module('NodeWebBase')
             };
         };
 
-        me.putTrainingMarker = function(location,caption,item){
-            if(!me.markers['training'])
-                me.markers['training'] = [];
+        me.putTypeMarker = function(location,caption,item,type){
+            if(!me.markers[type])
+                me.markers[type] = [];
 
             var icon = me.getIcon("#3C85E6");
             var marker = new google.maps.Marker({
@@ -131,24 +133,7 @@ angular.module('NodeWebBase')
                 originalIcon : icon
             });
 
-            me.markers['training'].push(marker);
-
-            google.maps.event.addListener(marker, 'dblclick', function() {
-                me.selectMarker(marker,me.getIcon("#3C85E6"));
-                $rootScope.$emit("loadItemData",item);
-
-                var locations = [];
-
-                angular.forEach(item.pointList, function(point){
-                    var lat = point[0];
-                    var lon = point[1];
-
-                    var markerLocation = new google.maps.LatLng(lat, lon);
-                    locations.push(markerLocation);
-                });
-
-                me.calculateBounds(locations);
-            });
+            me.markers[type].push(marker);
 
             google.maps.event.addListener(marker, 'click', function() {
                 me.selectMarker(marker,me.getIcon("#3C85E6"));
@@ -181,13 +166,22 @@ angular.module('NodeWebBase')
 
             me.markers['score'].push(marker);
 
+            google.maps.event.addListener(marker, 'dblclick', function() {
+                me.selectMarker(marker);
+
+                if(!marker.markerItem.nTotal || marker.markerItem.nTotal <= 0)
+                    return;
+                me.clearMarkers(['item']);
+                me.drawTypeMarkers(marker.markerItem.posts,'item',false);
+            });
+
             google.maps.event.addListener(marker, 'click', function() {
                 me.selectMarker(marker);
-                $rootScope.$emit("loadItemData",item);
+                $rootScope.$emit("loadItemData",marker.markerItem);
             });
         };
 
-        me.drawTrainingMarkers = function(data){
+        me.drawTypeMarkers = function(data,type,zoomTo){
             var locations = [];
 
             angular.forEach(data, function(item){
@@ -198,11 +192,12 @@ angular.module('NodeWebBase')
 
                 var markerLocation = new google.maps.LatLng(lat, lon);
                 locations.push(markerLocation);
-                me.putTrainingMarker(markerLocation, capPScor, item);
+                me.putTypeMarker(markerLocation, capPScor, item,type);
 
             });
 
-            me.calculateBounds(locations);
+            if(zoomTo)
+                me.calculateBounds(locations);
         };
 
         me.drawClusterMarkers = function(data){
@@ -234,14 +229,13 @@ angular.module('NodeWebBase')
                 angular.forEach(item['poly'], function(poly,idx){
                     center_lat+=poly[0];
                     center_lon+=poly[1];
-                })
+                });
 
                 var markerLocation = new google.maps.LatLng(center_lat / item.poly.length,  center_lon / item.poly.length);
                 locations.push(markerLocation);
                 me.putScoreMarker(markerLocation, capPScor, item, minScore,maxScore,item['score']);
 
             });
-            me.calculateBounds(locations);
         };
 
         me.drawScoreMarkers = function(data){
