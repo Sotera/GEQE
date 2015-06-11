@@ -5,24 +5,28 @@ div( ng-controller='detailsController')
                 div(style="height:80px" ng-click = 'onChartClick()')
                     linechart(data='chartModel' options='options' on-focus="onChartFocus")
                 div
-                    nav.navbar.navbar-default.navbar-inverse
-                        h4.navbar-brand.my-navbar-brand {{currentCatalogTitle}}
+                    nav.navbar.navbar-default.navbar-inverse(style="font-size:12px")
+                        span.navbar-brand.my-navbar-brand {{currentCatalogTitle}}
 
                         span(ng-class="(singleItem) ? 'hidden' : ''").noselect.navbar-left.navbar-text
                             |{{currentCatalogTitleStart}}
                         span(ng-class="(singleItem) ? 'hidden' : ''").noselect.navbar-right.navbar-text
                             |{{currentCatalogTitleFinish}}
 
-                        span(ng-class="(singleItem) ? 'hidden' : ''" ng-click='previous()' title='Previous').noselect.navbar-button.btn-lg.glyphicon.glyphicon-backward.navbar-left.navbar-text
-                        span(ng-class="(singleItem) ? 'hidden' : ''" ng-click='next()' title='Next').noselect.navbar-button.btn-lg.glyphicon.glyphicon-forward.navbar-right.navbar-text
+                        a(ng-class="(singleItem) ? 'hidden' : ''" ng-click='previous()' title='Previous' href="#")
+                             span.noselect.navbar-button.btn-lg.glyphicon.glyphicon-backward.navbar-left.navbar-text
+                        a(ng-class="(singleItem) ? 'hidden' : ''" ng-click='next()' title='Next' href="#")
+                             span.noselect.navbar-button.btn-lg.glyphicon.glyphicon-forward.navbar-right.navbar-text
             div.container-fluid
                 div.row
                     div.col-lg-2
-                        span(ng-click='previous()' title='Previous').noselect.navbar-button.btn-lg.glyphicon.glyphicon-arrow-left.navbar-left.navbar-text
+                        a(ng-click='previous()' title='Previous' href="#")
+                          span.noselect.navbar-button.btn-lg.glyphicon.glyphicon-arrow-left.navbar-left.navbar-text
                     div.col-lg-8
                         h4.navbar-brand.my-navbar-brand {{displayIndex}} of {{data.nTotal}} Items
                     div.col-lg-2
-                        span(ng-click='next()' title='Next').noselect.navbar-button.btn-lg.glyphicon.glyphicon-arrow-right.navbar-right.navbar-text
+                        a(ng-click='next()' title='Next' href="#")
+                           span.noselect.navbar-button.btn-lg.glyphicon.glyphicon-arrow-right.navbar-right.navbar-text
             img.img-thumbnail.detailsImg(ng-click="showImage(currentItem.img)" ng-src="{{currentItem.img}}")
             h3.text-center
                 a(href='{{socialMediaUrl}}' target="_blank") {{currentItem.usr}}
