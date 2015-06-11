@@ -2,7 +2,7 @@
  * Created by jlueders on 4/13/15.
  */
 angular.module('NodeWebBase')
-    .controller('runTabController', function ($scope, $rootScope,$http) {
+    .controller('runTabController', ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
 
         $scope.jobs = [];
         $scope.dataSets= [];
@@ -190,4 +190,4 @@ angular.module('NodeWebBase')
                 watchRemoval();
             }
         })
-    });
+    }]);

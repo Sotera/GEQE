@@ -1,4 +1,3 @@
-
 angular.module('NodeWebBase')
    .controller('mapController', ['$scope','$rootScope','$http','ngDialog',function ($scope, $rootScope, $http, ngDialog) {
         $scope.data = {};

@@ -2,7 +2,7 @@
  * Created by jlueders on 4/13/15.
  */
 angular.module('NodeWebBase')
-    .controller('resultsTabController', function ($scope, $rootScope, $http) {
+    .controller('resultsTabController', ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
         $scope.scoreFiles = [];
         $scope.polygonFiles = [];
         $scope.trainingFiles = [];
@@ -143,5 +143,5 @@ angular.module('NodeWebBase')
                 watchRemoval();
            }
         })
-   });
+   }]);
 

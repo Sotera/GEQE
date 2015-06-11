@@ -1,5 +1,6 @@
 angular.module('NodeWebBase')
-    .controller('detailsController', ['$scope','$rootScope','$window','$http','$timeout','ngDialog', function ($scope, $rootScope,$window,$http, $timeout, ngDialog) {
+    .controller('detailsController', ['$scope','$rootScope','$window','$http','$timeout','ngDialog',
+        function ($scope, $rootScope,$window,$http, $timeout, ngDialog) {
         $scope.scopeName = 'detailsController';
         $scope.data = {"nTotal":0};
         $scope.currentItemIndex = null;

@@ -1,5 +1,5 @@
 angular.module('NodeWebBase')
-    .controller('resultsController', function ($scope, $sce, $rootScope) {
+    .controller('resultsController',['$scope','$sce','$rootScope',function ($scope, $sce, $rootScope) {
 
         $rootScope.$on('displayResults', function (event, data) {
             $("#resultsText").html(data);
@@ -7,4 +7,4 @@ angular.module('NodeWebBase')
         $rootScope.$on('clearResults', function (event) {
             $("#resultsText").html("");
         });
-    });
+    }]);

@@ -1,5 +1,5 @@
 angular.module('NodeWebBase')
-    .controller('tabsController', function ($scope, $rootScope, $http) {
+    .controller('tabsController', ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
         $scope.tabs = [{
             title: 'Run',
             url: 'one.tpl.html'
@@ -54,5 +54,4 @@ angular.module('NodeWebBase')
             $scope.clearResults();
         };
 
-
-    });
+ }]);

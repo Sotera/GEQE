@@ -1,6 +1,6 @@
 angular.module('NodeWebBase')
     .constant('userUrl', 'app/users')
-    .controller('mainController', function ($scope, $rootScope, $http, $cookies, ngDialog) {
+    .controller('mainController', ['$scope','$rootScope','$http','$cookies','ngDialog', function ($scope, $rootScope, $http, $cookies, ngDialog) {
         $scope.scopeName = "mainController";
 
 
@@ -33,7 +33,7 @@ angular.module('NodeWebBase')
             });
         };
 
-        $rootScope.showError = function(jqxhr, testStatus, reason){
+        $rootScope.showError = function(data, status, headers, config){
             ngDialog.openConfirm({
                 template: '/views/app/genericError',
                 controller: ['$scope', function ($scope) {
@@ -67,4 +67,4 @@ angular.module('NodeWebBase')
         .error($rootScope.showError);
         ///END INIT
 
-    });
+    }]);
