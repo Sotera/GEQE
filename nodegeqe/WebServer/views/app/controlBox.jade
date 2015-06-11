@@ -60,10 +60,10 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                             div( id="hr3" )
                                 div.form-group-sm
                                     label Query by Location
-                                    input.form-control-sm( style="margin-left: 5px;" type ="radio", value="0" ng-model="useTimeSeries" ng-value="false")
+                                      input.form-control-sm( style="margin-left: 5px;" type ="radio" value="0" ng-model="run.useTimeSeries")
                                     br
                                     label Query by Event
-                                    input.form-control-sm( style="margin-left: 5px;" type ="radio", value="1" ng-model="useTimeSeries" ng-value="true")
+                                      input.form-control-sm( style="margin-left: 5px;" type ="radio" value="1" ng-model="run.useTimeSeries")
 
                             button.form-control.btn.btn-default(ng-click="applyScores()" title='Start Query Job') Start Job
                         fieldset.scheduler-border
