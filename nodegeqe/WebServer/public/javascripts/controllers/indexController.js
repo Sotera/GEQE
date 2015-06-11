@@ -1,7 +1,12 @@
 angular.module('NodeWebBase')
-		.config(function ($routeProvider) {
+		.config(function ($routeProvider, $compileProvider) {
 			$routeProvider
-			.otherwise({templateUrl: '/views/app/main'})
+			.otherwise({templateUrl: '/views/app/main'});
+
+        //https://docs.angularjs.org/guide/production
+        //Tools like Protractor and Batarang need this information to run, but you can disable
+        // this in production for a significant performance boost.
+            $compileProvider.debugInfoEnabled(false);
 		})
 		.controller('indexController', function ($scope) {
 
