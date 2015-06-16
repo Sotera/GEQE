@@ -1,6 +1,6 @@
 
 angular.module('NodeWebBase')
-   .controller('mapController', ['$scope','$rootScope','$http','ngDialog',function ($scope, $rootScope, $http, ngDialog) {
+   .controller('mapController', ['$scope','$rootScope','$http','ngDialog','themeChangedMsg',function ($scope, $rootScope, $http, ngDialog,themeChangedMsg) {
         $scope.data = {};
         $scope.scopeName = 'mapController';
         var myLatlng = new google.maps.LatLng(41.495753190958816,-81.70090198516846);
@@ -84,7 +84,7 @@ angular.module('NodeWebBase')
         google.maps.event.addListener(drawingManager, 'polygoncomplete', handleShape);
         google.maps.event.addListener(drawingManager, 'rectanglecomplete', handleShape);
 
-        $rootScope.$on('themeChanged', function (event) {
+        themeChangedMsg.listen(function () {
             if($rootScope.theme.mapStyles){
                 $scope.map.setOptions({styles: $rootScope.theme.mapStyles});
             }

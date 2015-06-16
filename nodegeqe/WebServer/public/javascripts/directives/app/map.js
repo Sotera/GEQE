@@ -1,6 +1,7 @@
 angular.module('NodeWebBase')
-    .controller('mapController',['$scope','$rootScope','shapeService','markerService',function($scope, $rootScope, shapeService, markerService){
-        $rootScope.$on('themeChanged', function (event) {
+    .controller('mapController',['$scope','$rootScope','shapeService','markerService','themeChangedMsg',
+        function($scope, $rootScope, shapeService, markerService,themeChangedMsg){
+        themeChangedMsg.listen(function (event) {
             if($rootScope.theme.mapStyles){
                 $scope.map.setOptions({styles: $rootScope.theme.mapStyles});
             }

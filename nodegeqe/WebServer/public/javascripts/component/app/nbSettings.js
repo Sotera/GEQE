@@ -4,7 +4,7 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
         return {
         };
     })
-    .directive('nbSettings', function (userUrl) {
+    .directive('nbSettings', ['userUrl','changeThemeMsg','setFullNameMsg',function (userUrl,changeThemeMsg,setFullNameMsg) {
         return{
             restrict: 'E',
             templateUrl: '/views/app/settingsLink',
@@ -22,11 +22,11 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
                             $scope.cancel = function(){
                                 $scope.closeThisDialog(null);
                                 if($scope.data.themeName != $scope.currentTheme )
-                                    $rootScope.$emit("changeTheme", $scope.currentTheme );
+                                    changeThemeMsg.broadcast($scope.currentTheme);
                             };
 
                             $scope.changeTheme = function(){
-                                $rootScope.$emit("changeTheme", $scope.data.themeName);
+                                changeThemeMsg.broadcast($scope.data.themeName);
                             };
 
                             $scope.save = function(){
@@ -45,7 +45,7 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
                                     $rootScope.fullname = $scope.data.fullname;
                                     $rootScope.serviceHostName = $scope.data.serviceHostName;
                                     $rootScope.servicePort = $scope.data.servicePort;
-                                    $rootScope.$emit("setfullname");
+                                    setFullNameMsg.broadcast();
                                     $scope.closeThisDialog(null);
                                 }).error($rootScope.showError);
                             };
@@ -66,4 +66,4 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
                 };
             }
         };
-    });
+    }]);
