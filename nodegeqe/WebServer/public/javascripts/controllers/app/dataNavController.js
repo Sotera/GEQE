@@ -111,6 +111,15 @@ angular.module('NodeWebBase')
 
         };
 
+        $scope.catalogItemSelected = function(selection){
+            angular.forEach($scope.catalog,function(item,idx){
+               if(item === selection){
+                   $scope.currentCatalogIndex = idx;
+                   $scope.sendCurrentData();
+               }
+            });
+        };
+
         $scope.getCatalogItem = function(title){
             var catalogItem = null;
             angular.forEach($scope.catalog,function(item,idx){

@@ -1,5 +1,5 @@
 angular.module('NodeWebBase', ['ngRoute', 'logout','nbSettings','ngCookies', 'ngDialog','n3-line-chart'])
-	.controller('layoutController', ['$scope','$rootScope', function ($scope,$rootScope) {
+	.controller('layoutController', ['$scope','$rootScope','themeChangedMsg','changeThemeMsg', function ($scope,$rootScope,themeChangedMsg,changeThemeMsg) {
 		$rootScope.themes = [
 			{
 				name: 'Bootstrap',
@@ -38,12 +38,12 @@ angular.module('NodeWebBase', ['ngRoute', 'logout','nbSettings','ngCookies', 'ng
 
 		$rootScope.theme = $rootScope.themes[0];
 
-		$rootScope.$on('changeTheme', function (event, themeName) {
+		changeThemeMsg.listen(function (event, themeName) {
 			angular.forEach($rootScope.themes, function(theme){
 				if(theme.name === themeName)
 				{
 					$rootScope.theme = theme;
-					$rootScope.$emit('themeChanged');
+					themeChangedMsg.broadcast();
 				}
 			});
 
