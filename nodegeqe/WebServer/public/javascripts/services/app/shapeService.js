@@ -1,6 +1,6 @@
 
 angular.module('NodeWebBase')
-    .service('shapeService', ['$rootScope', '$http','ngDialog',function ($rootScope, $http, ngDialog) {
+    .service('shapeService', ['$rootScope', '$http','ngDialog','themeChangedMsg',function ($rootScope, $http, ngDialog,themeChangedMsg) {
         var me = this;
         me.shapes = [];
         me.scoreShapes = [];
@@ -48,7 +48,7 @@ angular.module('NodeWebBase')
                 }
             });
 
-            $rootScope.$on('themeChanged', function (event) {
+            themeChangedMsg.listen( function () {
                 if ($rootScope.theme.shapeStyles) {
                     drawingManager.setOptions({
                         polygonOptions: $rootScope.theme.shapeStyles,

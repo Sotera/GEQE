@@ -1,8 +1,8 @@
 angular.module('NodeWebBase')
     .constant('userUrl', 'app/users')
-    .controller('mainController', ['$scope','$rootScope','$http','$cookies','ngDialog', function ($scope, $rootScope, $http, $cookies, ngDialog) {
+    .controller('mainController', ['$scope', '$rootScope', '$http', '$cookies', 'ngDialog','changeThemeMsg','setFullNameMsg',
+        function ($scope, $rootScope, $http, $cookies, ngDialog,changeThemeMsg, setFullNameMsg) {
         $scope.scopeName = "mainController";
-
 
         $scope.initWithSettings = function(res){
 
@@ -11,8 +11,8 @@ angular.module('NodeWebBase')
             $rootScope.serviceHostName = res.serviceHostName;
             $rootScope.servicePort = res.servicePort;
 
-            $rootScope.$emit("setfullname");
-            $rootScope.$emit("changeTheme", res.themeName);
+            setFullNameMsg.broadcast();
+            changeThemeMsg.broadcast(res.themeName);
         };
 
         $rootScope.isAppConfigured = function(){
@@ -67,4 +67,4 @@ angular.module('NodeWebBase')
         .error($rootScope.showError);
         ///END INIT
 
-    }]);
+    });

@@ -5,8 +5,12 @@ div( ng-controller='detailsController')
                 div(style="height:80px" ng-click = 'onChartClick()')
                     linechart(data='chartModel' options='options' on-focus="onChartFocus")
                 div
-                    nav.navbar.navbar-default.navbar-inverse(style="font-size:12px")
-                        span.navbar-brand.my-navbar-brand {{currentCatalogTitle}}
+                    nav.navbar.navbar-default.navbar-inverse
+                        li.dropdown.navbar-brand.my-navbar-brand.list-unstyled
+                            a.dropdown-toggle(data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false") {{currentCatalogTitle}}
+                                span.caret
+                            ul.dropdown-menu
+                                li(ng-repeat="item in catalog" ng-click="catalogItemSelected(item)") {{item.title}}
 
                         span(ng-class="(singleItem) ? 'hidden' : ''").noselect.navbar-left.navbar-text
                             |{{currentCatalogTitleStart}}
