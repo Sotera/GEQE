@@ -7,6 +7,7 @@ div( ng-controller='detailsController')
                 div
                     nav.navbar.navbar-default.navbar-inverse
                       div.container-fluid
+
                         ul.nav.navbar-nav.navbar-left.col-sm-4
                             li.navbar-text.noselect(ng-class="(singleItem) ? 'hidden' : ''")
                                 | {{currentCatalogTitleStart}}
@@ -21,6 +22,7 @@ div( ng-controller='detailsController')
                                 ul.scrollable-menu.dropdown-menu(role="menu")
                                   li(ng-repeat="item in catalog", ng-click="catalogItemSelected(item)")
                                     a(href="#") {{item.title}}
+
                         ul.nav.navbar-nav.navbar-right.col-sm-4
                             li.noselect(ng-class="(singleItem) ? 'hidden' : ''")
                                 a.noselect.glyphicon.glyphicon-forward(ng-click='next()', title='Next', href="#")
