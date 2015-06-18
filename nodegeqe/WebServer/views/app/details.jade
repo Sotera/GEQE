@@ -6,11 +6,13 @@ div( ng-controller='detailsController')
                     linechart(data='chartModel' options='options' on-focus="onChartFocus")
                 div
                     nav.navbar.navbar-default.navbar-inverse
-                        li.dropdown.navbar-brand.my-navbar-brand.list-unstyled
-                            a.dropdown-toggle(data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false") {{currentCatalogTitle}}
+                        div.navbar-brand.my-navbar-brand(style="text-align:center")
+                            div.dropdown(style="margin:auto;position:static")
+                              a.dropdown-toggle(data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false") {{currentCatalogTitle}}
                                 span.caret
-                            ul.dropdown-menu
-                                li(ng-repeat="item in catalog" ng-click="catalogItemSelected(item)") {{item.title}}
+                              ul.scrollable-menu.dropdown-menu(role="menu", style="overflow:scroll; width:50%;margin-left:25%; text-align:center;")
+                                li(ng-repeat="item in catalog" ng-click="catalogItemSelected(item)")
+                                  a(href="#") {{item.title}}
 
                         span(ng-class="(singleItem) ? 'hidden' : ''").noselect.navbar-left.navbar-text
                             |{{currentCatalogTitleStart}}

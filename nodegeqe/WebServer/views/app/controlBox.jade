@@ -28,11 +28,11 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="drawPolygonFile()" title="Draw polygons to the map.")
                                 div(style="display:inline-table; width:100%")
                                     div.input-group-btn
-                                        button.btn.btn-sm.btn-default.dropdown-toggle(type="button" id="pFileDropButton" data-toggle="dropdown" aria-expanded="false")
+                                        button.btn.btn-sm.btn-default.dropdown-toggle(type="button", id="pFileDropButton", data-toggle="dropdown", aria-expanded="false")
                                             span.caret
-                                        ul.scrollable-menu.dropdown-menu(role="menu")
+                                        ul.scrollable-menu.dropdown-menu(role="menu", style="overflow:scroll")
                                             li(ng-repeat="item in polygonFiles | orderBy: item" ng-click="polyFileSelected(item)" value="{{item}}")
-                                               a(href='') {{item}}
+                                               a(href='#') {{item}}
                                     input.form-control(type="text" ng-model="polyFile" name="polyFile")
                         fieldset.scheduler-border
                             legend.scheduler-border Run Query Job
