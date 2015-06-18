@@ -67,4 +67,4 @@ angular.module('NodeWebBase')
         .error($rootScope.showError);
         ///END INIT
 
-    });
+    }]);

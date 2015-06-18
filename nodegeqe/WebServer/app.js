@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
+just_include=require('just_include')(__dirname);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

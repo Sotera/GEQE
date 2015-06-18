@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var netHelpers = require('netHelpers');
+var netHelpers = just_include('netHelpers');
 
 var makeServiceCall = function(req,res,routeName, serviceHostName, servicePort){
 
