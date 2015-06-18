@@ -4,6 +4,17 @@ angular.module('NodeWebBase')
         function ($scope, $rootScope, $http, $cookies, ngDialog,changeThemeMsg, setFullNameMsg) {
         $scope.scopeName = "mainController";
 
+
+        // Close pop up windows with Esc key. For some reason it's not functioning by default.
+        //http://stackoverflow.com/questions/1481626/how-to-handle-esc-keydown-on-javascript-popup-window
+        $(document).keydown(function(e) {
+             // ESCAPE key pressed
+             if (e.keyCode == 27) {
+                  ngDialog.closeAll();
+              }
+         });
+
+
         $scope.initWithSettings = function(res){
 
             $rootScope.username = res.username;
