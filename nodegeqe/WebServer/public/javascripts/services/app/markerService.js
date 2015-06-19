@@ -1,11 +1,11 @@
 
 angular.module('NodeWebBase')
-    .service('markerService', ['$rootScope',function ($rootScope) {
+    .service('markerService', ['$rootScope','applyFilterMsg',function ($rootScope,applyFilterMsg) {
         var me = this;
         me.map = null;
         me.drawingManager = null;
         me.markers = {};
-        me.itemMarkers = [];
+        me.filterText = '';
 
         me.init = function(map){
             me.map = map;
@@ -45,6 +45,22 @@ angular.module('NodeWebBase')
                 }
             });
 
+            applyFilterMsg.listen(me.applyFilter)
+
+        };
+
+        me.applyFilter = function(filterText){
+            me.filterText = filterText;
+            angular.forEach(me.markers['item'],function(item){
+                if(filterText != '') {
+                    var cap = item.markerItem.cap.toLowerCase();
+                    if (cap.indexOf(filterText.toLowerCase()) < 0) {
+                        item.setMap(null);
+                        return;
+                    }
+                }
+                item.setMap(me.map);
+            });
         };
 
         me.calculateBounds = function(locations){
@@ -131,6 +147,7 @@ angular.module('NodeWebBase')
                 map: me.map,
                 icon: icon,
                 title:caption,
+                markerItem:item,
                 originalIcon : icon
             });
 
