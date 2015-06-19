@@ -43,7 +43,7 @@ body{
 .detailsImg{
     display:block;
     margin:auto;
-    max-height: 256px;
+    max-height: 64px;
 }
 legend.scheduler-border {
     font-size: 1.2em !important;
@@ -139,6 +139,11 @@ div[class^="col-"]{
 .navbar-button{
     margin: auto;
 }
+
+.navbar-right{
+    margin-right: 0;
+}
+
 .noselect {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -160,6 +165,7 @@ div[class^="col-"]{
 .invis {
     display:none;
 }
+
 
 .nav-tabs > li > a {
     padding: 0px 4px;

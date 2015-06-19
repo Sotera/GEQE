@@ -1,33 +1,29 @@
 div( ng-controller='detailsController')
-    div( id='details' percent-Height percent='65' ng-style="style")
+    div( id='details' percent-Height percent='46' ng-style="style")
         div
             div(ng-controller='dataNavController')
                 div(style="height:80px" ng-click = 'onChartClick()')
                     linechart(data='chartModel', options='options', on-focus="onChartFocus")
                 div
                     nav.navbar.navbar-default.navbar-inverse
-                      div.container-fluid
-
-                        ul.nav.navbar-nav.navbar-left.col-sm-4
-                            li.navbar-text.noselect(ng-class="(singleItem) ? 'hidden' : ''")
-                                | {{currentCatalogTitleStart}}
-
-                            li.noselect(ng-class="(singleItem) ? 'hidden' : ''")
-                                a.glyphicon.glyphicon-backward(href="#",ng-click='previous()',title='Previous')
-
-                        ul.col-md-4(style="padding:0")
-                            li.dropdown
-                                a.nav.navbar-nav.navbar-brand.dropdown-toggle.navbar-text.my-navbar-brand(href="#", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false", style="margin-left:0px") {{currentCatalogTitle}}
-                                  span.caret
-                                ul.scrollable-menu.dropdown-menu(role="menu")
-                                  li(ng-repeat="item in catalog", ng-click="catalogItemSelected(item)")
-                                    a(href="#") {{item.title}}
-
-                        ul.nav.navbar-nav.navbar-right.col-sm-4
-                            li.noselect(ng-class="(singleItem) ? 'hidden' : ''")
-                                a.noselect.glyphicon.glyphicon-forward(ng-click='next()', title='Next', href="#")
-                            li.noselect.navbar-text(ng-class="(singleItem) ? 'hidden' : ''")
-                                |{{currentCatalogTitleFinish}}
+                        div.container-fluid
+                            div.row
+                                div.col-sm-4
+                                    ul.nav.navbar-nav.navbar-left
+                                        li.noselect(ng-class="(singleItem) ? 'hidden' : ''")
+                                            a.noselect.glyphicon.glyphicon-backward(href="#",ng-click='previous()',title='Previous')
+                                div.col-sm-4
+                                    ul.list-unstyled(style="padding:0")
+                                        li.dropdown
+                                            a.nav.navbar-nav.navbar-brand.dropdown-toggle.navbar-text.my-navbar-brand(href="#", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false", style="margin-left:0px") {{currentCatalogTitle}}
+                                              span.caret
+                                            ul.scrollable-menu.dropdown-menu(role="menu")
+                                              li(ng-repeat="item in catalog", ng-click="catalogItemSelected(item)")
+                                                a(href="#") {{item.title}}
+                                div.col-sm-4
+                                    ul.nav.navbar-nav.navbar-right
+                                        li.noselect(ng-class="(singleItem) ? 'hidden' : ''")
+                                            a.noselect.glyphicon.glyphicon-forward(href="#",ng-click='next()', title='Next')
 
             div.container-fluid
                 div.row
@@ -41,11 +37,14 @@ div( ng-controller='detailsController')
                     div.col-lg-2
                         a(ng-click='next()' title='Next' href="#")
                            span.noselect.navbar-button.btn-lg.glyphicon.glyphicon-arrow-right.navbar-right.navbar-text
-            img.thumbnail.detailsImg(ng-click="showImage(currentItem.img)" ng-src="{{currentItem.img}}")
-            h3.text-center
-                a(href='{{socialMediaUrl}}' target="_blank") {{currentItem.usr}}
+            div.container-fluid
+                div.row
+                    div.col-sm-4
+                        img.thumbnail.detailsImg(ng-click="showImage(currentItem.img)" ng-src="{{currentItem.img}}")
+                    div.col-sm-8
+                        p User:
+                            a(href='{{socialMediaUrl}}' target="_blank") {{currentItem.usr}}
+                        p Date: {{currentItem.date}}
         div
-            p score: {{currentItem.sco}}
-            p date: {{currentItem.date}}
             div.caption
             p(id="caption")
