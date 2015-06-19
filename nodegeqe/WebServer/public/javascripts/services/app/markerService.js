@@ -49,7 +49,7 @@ angular.module('NodeWebBase')
 
         };
 
-        me.applyFilter = function(filterText){
+        me.applyFilter = function(event,filterText){
             me.filterText = filterText;
             angular.forEach(me.markers['item'],function(item){
                 if(filterText != '') {

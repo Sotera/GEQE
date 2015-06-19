@@ -31,15 +31,17 @@ div( ng-controller='detailsController')
 
             div.container-fluid
                 div.row
+                    input.form-control(type="string" ng-model='filterText' ng-change="filterChanged()" placeholder="Filter" novalidate)
+                div.row
                     div.col-lg-2
                         a(ng-click='previous()' title='Previous' href="#")
                           span.noselect.navbar-button.btn-lg.glyphicon.glyphicon-arrow-left.navbar-left.navbar-text
                     div.col-lg-8
-                        h4.navbar-brand.my-navbar-brand {{displayIndex}} of {{data.nTotal}} Items
+                        h4.navbar-brand.my-navbar-brand {{displayIndex}} of {{posts.length}} Items
                     div.col-lg-2
                         a(ng-click='next()' title='Next' href="#")
                            span.noselect.navbar-button.btn-lg.glyphicon.glyphicon-arrow-right.navbar-right.navbar-text
-            img.img-thumbnail.detailsImg(ng-click="showImage(currentItem.img)" ng-src="{{currentItem.img}}")
+            img.thumbnail.detailsImg(ng-click="showImage(currentItem.img)" ng-src="{{currentItem.img}}")
             h3.text-center
                 a(href='{{socialMediaUrl}}' target="_blank") {{currentItem.usr}}
         div
