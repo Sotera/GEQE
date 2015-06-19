@@ -132,20 +132,32 @@ angular.module('NodeWebBase')
 
         $scope.sortDataByDate = function(data){
             $scope.catalog = [];
-            var maxScore = 0;
+            var minPosts = -1;
+            var maxPosts = 0;
+
             angular.forEach(data,function(group,idx){
                 var catalogItem = $scope.getCatalogItem(group.date);
+
+                var totalPosts = 0;
+                angular.forEach(group.clusters,function(cluster){
+                    totalPosts += cluster.posts.length;
+                });
+
+                if(totalPosts < minPosts || minPosts == -1)
+                    minPosts = totalPosts;
+
+                if(totalPosts>maxPosts)
+                    maxPosts = totalPosts;
+
                 if(!catalogItem){
                     catalogItem = {
                         'title':group.date,
                         'x':idx,
                         'data':group.clusters,
-                        'hiScore':group.hiScore,
-                        'nClusters':group.nClusters
+                        'nClusters':group.nClusters,
+                        'totalPosts':totalPosts
                     };
                     $scope.catalog.push(catalogItem);
-                    if(maxScore < group.hiScore)
-                        maxScore = group.hiScore;
                     return;
                 }
 
@@ -167,7 +179,7 @@ angular.module('NodeWebBase')
                 },
                 axes: {
                     x: {key: 'x'},
-                    y2: {min:0,max:maxScore * 1.1},
+                    y2: {min:minPosts,max:maxPosts * 1.1},
                     y:{min:0}
                 },
                 series: [
@@ -177,7 +189,7 @@ angular.module('NodeWebBase')
                         color: "#ff7f0e"
                     },
                     {
-                        y: "hiScore",
+                        y: "totalPosts",
                         axis:"y2",
                         thickness:"2px",
                         color: "#1f77b4"
@@ -189,7 +201,7 @@ angular.module('NodeWebBase')
                         if(series.y === "nClusters"){
                             return "C  " + y;
                         }
-                        return "S  " + y;
+                        return "P  " + y;
                     }
                 }
             };
