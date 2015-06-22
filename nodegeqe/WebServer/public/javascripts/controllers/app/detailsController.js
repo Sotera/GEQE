@@ -1,4 +1,9 @@
 angular.module('NodeWebBase')
+    .filter('dateParse', function($filter) {
+        return function(input,format,timezone) {
+            return (!!input) ? $filter('date')( Date.parse(input), format, timezone) : '';
+        };
+    })
     .controller('detailsController', ['$scope','$rootScope','$window','$http','$timeout','ngDialog','applyFilterMsg',
         function ($scope, $rootScope,$window,$http, $timeout, ngDialog,applyFilterMsg) {
         $scope.scopeName = 'detailsController';
