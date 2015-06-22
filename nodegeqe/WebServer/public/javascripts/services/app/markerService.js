@@ -45,6 +45,10 @@ angular.module('NodeWebBase')
                 }
             });
 
+            /*$rootScope.$on("loadItemData",function());
+            me.selectMarker(marker);
+            $rootScope.$emit("loadItemData",marker.markerItem);
+*/
             applyFilterMsg.listen(me.applyFilter)
 
         };
