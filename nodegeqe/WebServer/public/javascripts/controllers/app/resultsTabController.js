@@ -39,7 +39,7 @@ angular.module('NodeWebBase')
         $scope.getScoresModel = {
             user: "",
             fileAppOut: "",
-            maxOut:20
+            maxOut:50
         };
 
         $scope.getScores = function() {
