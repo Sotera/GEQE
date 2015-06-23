@@ -127,15 +127,26 @@ angular.module('NodeWebBase')
             )
         };
 
-        me.getIcon = function (color) {
+        me.getIcon = function (color,type) {
+            if(type === "cluster" || type == "score")
+                return {
+                    path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z M -2,-30 a 2,2 0 1,1 4,0 2,2 0 1,1 -4,0',
+                    fillColor: color,
+                    fillOpacity: 1,
+                    strokeColor: '#000',
+                    strokeWeight: 2,
+                    scale: 1
+                };
+
             return {
-                path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z M -2,-30 a 2,2 0 1,1 4,0 2,2 0 1,1 -4,0',
+                path: 'm 0,0 0,-4 -5,-5 0,-10 10,0 0,10 -5,5 z',
                 fillColor: color,
                 fillOpacity: 1,
                 strokeColor: '#000',
                 strokeWeight: 2,
-                scale: 1
+                scale: 1.2
             };
+
         };
 
         me.putTypeMarker = function(location,caption,item,type,index,maxIndex){
@@ -145,7 +156,7 @@ angular.module('NodeWebBase')
             var minColorRGB = [176,196,222];
             var maxColorRGB = [65,105,225];
 
-            var icon = me.getIcon(me.interpolateColor(0,maxIndex,index,minColorRGB,maxColorRGB));
+            var icon = me.getIcon(me.interpolateColor(0,maxIndex,index,minColorRGB,maxColorRGB),type);
             var marker = new google.maps.Marker({
                 position: location,
                 map: me.map,
@@ -158,29 +169,31 @@ angular.module('NodeWebBase')
             me.markers[type].push(marker);
 
             google.maps.event.addListener(marker, 'click', function() {
-                me.selectMarker(marker,me.getIcon(me.interpolateColor(0,maxIndex,index,minColorRGB,maxColorRGB)));
+                me.selectMarker(marker,me.getIcon(me.interpolateColor(0,maxIndex,index,minColorRGB,maxColorRGB),type),type);
                 $rootScope.$emit("loadItemData",item);
             });
         };
 
-        me.selectMarker=function(marker){
+        me.selectMarker=function(marker,type){
             if(me.selectedMarker){
 
                 me.selectedMarker.setIcon(me.selectedMarker.originalIcon);
             }
-            marker.setIcon(me.getIcon("#00FF00"));
+            marker.setIcon(me.getIcon("#00FF00",type));
             me.selectedMarker = marker;
         };
 
         me.putScoreMarker = function(location, caption, item, minScore, maxScore, score) {
+            var type = 'score';
 
-            if(!me.markers['score'])
-                me.markers['score'] = [];
+            if(!me.markers[type])
+                me.markers[type] = [];
 
             var minColorRGB = [220,210,210];
             var maxColorRGB = [255,98,0];
 
-            var icon = me.getIcon(me.interpolateColor(0,maxScore,score,minColorRGB,maxColorRGB));
+
+            var icon = me.getIcon(me.interpolateColor(0,maxScore,score,minColorRGB,maxColorRGB),type);
             var marker = new google.maps.Marker({
                 position: location,
                 map: me.map,
@@ -190,10 +203,10 @@ angular.module('NodeWebBase')
                 originalIcon:icon
             });
 
-            me.markers['score'].push(marker);
+            me.markers[type].push(marker);
 
             google.maps.event.addListener(marker, 'dblclick', function() {
-                me.selectMarker(marker);
+                me.selectMarker(marker,type);
 
                 if(!marker.markerItem.nTotal || marker.markerItem.nTotal <= 0)
                     return;
@@ -202,7 +215,7 @@ angular.module('NodeWebBase')
             });
 
             google.maps.event.addListener(marker, 'click', function() {
-                me.selectMarker(marker);
+                me.selectMarker(marker,type);
                 $rootScope.$emit("loadItemData",marker.markerItem);
             });
         };
