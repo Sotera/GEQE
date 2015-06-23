@@ -210,21 +210,17 @@ angular.module('NodeWebBase')
         me.drawTypeMarkers = function(data,type,zoomTo){
             var locations = [];
 
-            var sortedData = data.sort(function(a,b){
-                var aDate = new Date(a.datetime);
-                var bDate = new Date(b.datetime);
-                return aDate>bDate?1:-1;
-            });
-
-            angular.forEach(sortedData, function(item,idx){
+            angular.forEach(data, function(item,idx){
                 var capPScor = item['cap'];
 
                 var lat = parseFloat(item['lat']);
                 var lon = parseFloat(item['lon']);
 
                 var markerLocation = new google.maps.LatLng(lat, lon);
+                var date = new Date(item.datetime).getHours();
                 locations.push(markerLocation);
-                me.putTypeMarker(markerLocation, capPScor, item,type,idx,data.length);
+
+                me.putTypeMarker(markerLocation, capPScor, item,type,date,23);
 
             });
 
