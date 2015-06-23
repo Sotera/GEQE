@@ -27,7 +27,7 @@ angular.module('NodeWebBase')
             $scope.getJobStatus();
         });
 
-        $scope.currentTab = 'one.tpl.html';
+        $scope.currentTab = 'two.tpl.html';
 
         $scope.onClickTab = function (tab) {
             $scope.currentTab = tab.url;
