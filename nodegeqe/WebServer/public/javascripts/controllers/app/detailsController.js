@@ -4,8 +4,8 @@ angular.module('NodeWebBase')
             return (!!input) ? $filter('date')( Date.parse(input), format, timezone) : '';
         };
     })
-    .controller('detailsController', ['$scope','$rootScope','$window','$http','$timeout','ngDialog','applyFilterMsg',
-        function ($scope, $rootScope,$window,$http, $timeout, ngDialog,applyFilterMsg) {
+    .controller('detailsController', ['$scope','$rootScope','$window','$http','$timeout','ngDialog','applyFilterMsg','itemDetailsLoadedMsg',
+        function ($scope, $rootScope,$window,$http, $timeout, ngDialog,applyFilterMsg,itemDetailsLoadedMsg) {
         $scope.scopeName = 'detailsController';
         $scope.data = {"nTotal":0};
         $scope.posts = null;
@@ -194,6 +194,16 @@ angular.module('NodeWebBase')
             return $scope.replaceURLWithHTMLLinks(highlights);
         };
 
+        $scope.loadCurrentItemDetails = function(){
+            $scope.displayIndex = $scope.currentItemIndex+1;
+            $scope.currentItem = $scope.posts[$scope.currentItemIndex];
+            $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
+            $("#caption").html($scope.displayCaptionHtml);
+            $scope.getAccount();
+
+            itemDetailsLoadedMsg.broadcast($scope.currentItem);
+        };
+
         $scope.next = function(){
             if(!$scope.data || !$scope.posts)
                 return;
@@ -202,11 +212,7 @@ angular.module('NodeWebBase')
             if($scope.currentItemIndex >= $scope.posts.length)
                 $scope.currentItemIndex = 0;
 
-            $scope.displayIndex = $scope.currentItemIndex+1;
-            $scope.currentItem = $scope.posts[$scope.currentItemIndex];
-            $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
-            $("#caption").html($scope.displayCaptionHtml);
-            $scope.getAccount();
+            $scope.loadCurrentItemDetails();
         };
 
         $scope.previous = function(){
@@ -217,11 +223,7 @@ angular.module('NodeWebBase')
             if($scope.currentItemIndex < 0)
                 $scope.currentItemIndex = $scope.posts.length-1;
 
-            $scope.displayIndex = $scope.currentItemIndex+1;
-            $scope.currentItem = $scope.posts[$scope.currentItemIndex];
-            $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
-            $("#caption").html($scope.displayCaptionHtml);
-            $scope.getAccount();
+            $scope.loadCurrentItemDetails();
         };
 
         $scope.getUser = function(){

@@ -1,6 +1,6 @@
 
 angular.module('NodeWebBase')
-    .service('markerService', ['$rootScope','applyFilterMsg',function ($rootScope,applyFilterMsg) {
+    .service('markerService', ['$rootScope','applyFilterMsg','itemDetailsLoadedMsg',function ($rootScope,applyFilterMsg,itemDetailsLoadedMsg) {
         var me = this;
         me.map = null;
         me.drawingManager = null;
@@ -45,12 +45,24 @@ angular.module('NodeWebBase')
                 }
             });
 
-            /*$rootScope.$on("loadItemData",function());
-            me.selectMarker(marker);
-            $rootScope.$emit("loadItemData",marker.markerItem);
-*/
+            $rootScope.$on("loadItemData",me.findSelectMarker);
+
+            itemDetailsLoadedMsg.listen(me.findSelectMarker);
+
             applyFilterMsg.listen(me.applyFilter)
 
+        };
+
+        me.findSelectMarker = function(event,item){
+            var types = ['cluster','score','training','item'];
+            angular.forEach(types,function(type){
+                var markers = me.markers[type];
+                angular.forEach(markers,function(marker){
+                    if(marker.markerItem === item) {
+                        me.selectMarker(marker,type);
+                    }
+                });
+            });
         };
 
         me.applyFilter = function(event,filterText){
