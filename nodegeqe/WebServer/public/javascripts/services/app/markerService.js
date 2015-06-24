@@ -139,7 +139,7 @@ angular.module('NodeWebBase')
             )
         };
 
-        me.getIcon = function (color,type) {
+        me.getIcon = function (color,type, scale) {
             if(type === "cluster" || type == "score")
                 return {
                     path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z M -2,-30 a 2,2 0 1,1 4,0 2,2 0 1,1 -4,0',
@@ -147,16 +147,16 @@ angular.module('NodeWebBase')
                     fillOpacity: 1,
                     strokeColor: '#000',
                     strokeWeight: 2,
-                    scale: 1
+                    scale: scale
                 };
 
             return {
-                path: 'm 0,0 0,-4 -5,-5 0,-10 10,0 0,10 -5,5 z',
+                path: 'm 0,0 -8,-8 0,-12 16,0 0,12 -8,8 z',
                 fillColor: color,
                 fillOpacity: 1,
                 strokeColor: '#000',
                 strokeWeight: 2,
-                scale: 1.2
+                scale: scale
             };
 
         };
@@ -168,7 +168,7 @@ angular.module('NodeWebBase')
             var minColorRGB = [176,196,222];
             var maxColorRGB = [65,105,225];
 
-            var icon = me.getIcon(me.interpolateColor(0,maxIndex,index,minColorRGB,maxColorRGB),type);
+            var icon = me.getIcon(me.interpolateColor(0,maxIndex,index,minColorRGB,maxColorRGB),type,1);
             var marker = new google.maps.Marker({
                 position: location,
                 map: me.map,
@@ -181,7 +181,7 @@ angular.module('NodeWebBase')
             me.markers[type].push(marker);
 
             google.maps.event.addListener(marker, 'click', function() {
-                me.selectMarker(marker,me.getIcon(me.interpolateColor(0,maxIndex,index,minColorRGB,maxColorRGB),type),type);
+                me.selectMarker(marker,me.getIcon(me.interpolateColor(0,maxIndex,index,minColorRGB,maxColorRGB),type,1),type);
                 $rootScope.$emit("loadItemData",item);
             });
         };
@@ -191,7 +191,7 @@ angular.module('NodeWebBase')
 
                 me.selectedMarker.setIcon(me.selectedMarker.originalIcon);
             }
-            marker.setIcon(me.getIcon("#00FF00",type));
+            marker.setIcon(me.getIcon("#00FF00",type,1.2));
             me.selectedMarker = marker;
         };
 
@@ -205,7 +205,7 @@ angular.module('NodeWebBase')
             var maxColorRGB = [255,98,0];
 
 
-            var icon = me.getIcon(me.interpolateColor(0,maxScore,score,minColorRGB,maxColorRGB),type);
+            var icon = me.getIcon(me.interpolateColor(0,maxScore,score,minColorRGB,maxColorRGB),type,1);
             var marker = new google.maps.Marker({
                 position: location,
                 map: me.map,
