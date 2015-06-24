@@ -44,9 +44,11 @@ def get(user='demo',filePolygon='',fileAppOut='',dataSet=''):
     dataSetName = dataSet
     dataSetPath = dataSetObj['path']
     dataSetType = dataSetObj['type']
+    dataSetPartitions = str(dataSetObj['partitions']) if 'partitions' in dataSetObj else None
 
     algorithm = "viewTrainingData.py"
 
+    jobname = generate_job_name(user,fileAppOut)
 
     # deploy using spark submit
     launchCommand = [ sparkSettings['SPARK_SUBMIT_PATH']+"spark-submit"]
@@ -56,19 +58,17 @@ def get(user='demo',filePolygon='',fileAppOut='',dataSet=''):
 
     if  'aws-emr' == confObj['deploy-mode'] :
         launchCommand.append('poly')
-        launchCommand.append('traindata')
+        launchCommand.append(jobname)
 
     else:
         launchCommand.append(filePath+"/inputFiles/"+filePolygon)
-        launchCommand.append(filePath+"/previewTrainingFiles/"+fileAppOut)
+        launchCommand.append(filePath+"/previewTrainingFiles/"+jobname)
 
 
-    launchCommand.extend(["-jobNm","geqe-viewTrainingData",
-                          "-datTyp",str(dataSetType)
-    ])
+    launchCommand.extend(["-datTyp",str(dataSetType)])
+    if dataSetPartitions is not None: launchCommand.extend(['-partitions',dataSetPartitions])
 
 
-    jobname = generate_job_name(user,fileAppOut)
 
     # write the job file
     if not os.path.isdir(filePath+'/jobFiles'):
