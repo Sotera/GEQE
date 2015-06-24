@@ -62,8 +62,7 @@ def get(user='demo',filePolygon='',fileAppOut='',dataSet=''):
 
     else:
         launchCommand.append(filePath+"/inputFiles/"+filePolygon)
-        launchCommand.append(filePath+"/previewTrainingFiles/"+jobname)
-
+        launchCommand.append(jobname)
 
     launchCommand.extend(["-datTyp",str(dataSetType)])
     if dataSetPartitions is not None: launchCommand.extend(['-partitions',dataSetPartitions])
@@ -84,7 +83,7 @@ def get(user='demo',filePolygon='',fileAppOut='',dataSet=''):
         jobFile.write(json.dumps(jobHeader))
 
     if 'local' == confObj['deploy-mode'] or 'cluster' == confObj['deploy-mode']:
-        commandlineLauncher.runCommand(jobname,launchCommand,confObj['workdir'])
+        commandlineLauncher.runCommand(jobname,launchCommand,confObj['workdir'],filePath)
         return jobname
 
     elif 'aws-emr' == confObj['deploy-mode']:
