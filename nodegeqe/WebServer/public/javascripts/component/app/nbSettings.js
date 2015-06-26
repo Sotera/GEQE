@@ -35,7 +35,9 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
                                     "email": $scope.data.email,
                                     "themeName": $scope.data.themeName,
                                     "serviceHostName":$scope.data.serviceHostName,
-                                    "servicePort":$scope.data.servicePort
+                                    "servicePort":$scope.data.servicePort,
+                                    "userLoggingEnabled":$scope.data.userLoggingEnabled,
+                                    "userLoggingUrl":$scope.data.userLoggingUrl
                                 },{
                                     params: {
                                         access_token: $cookies.access_token
@@ -45,6 +47,8 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
                                     $rootScope.fullname = $scope.data.fullname;
                                     $rootScope.serviceHostName = $scope.data.serviceHostName;
                                     $rootScope.servicePort = $scope.data.servicePort;
+                                    $rootScope.userLoggingEnabled = $scope.data.userLoggingEnabled;
+                                    $rootScope.userLoggingUrl = $scope.data.userLoggingUrl,
                                     setFullNameMsg.broadcast();
                                     $scope.closeThisDialog(null);
                                 }).error($rootScope.showError);

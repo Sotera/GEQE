@@ -79,25 +79,25 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                             legend.scheduler-border Query Results
                             div.form-group-sm
                                 label(for="scoreSelect") Job Name:
-                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="popScore()" title="Refresh file list.")
-                                select.form-control( name="scoreSelect" id="scoreSelect" ng-options="item for item in scoreFiles | orderBy: item"  ng-model="getScoresModel.fileAppOut")
+                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="popScore()" user-log elementtype='BUTTON' loggroup='results_tab' logtags='results,score files,refresh'  title="Refresh file list.")
+                                select.form-control( name="scoreSelect" id="scoreSelect" ng-options="item for item in scoreFiles | orderBy: item"  ng-model="getScoresModel.fileAppOut" user-log elementtype='DROPDOWNLIST' loggroup='results' logtags='score,select'  )
                                     option( value="") --Select--
                             div.form-group-sm
                                 label(for="sMaxEntries")  Max Points:
-                                input.form-control(type="number" id="sMaxEntries" ng-model="getScoresModel.maxOut" step="any" novalidate)
-                            button.form-control.btn.btn-default(ng-click="getScores()" title='Draw Scores to the map') Show Scores
+                                input.form-control(type="number" id="sMaxEntries" ng-model="getScoresModel.maxOut" user-log elementtype='TEXTBOX' loggroup='results_tab' logtags='results,max entries' step="any" novalidate)
+                            button.form-control.btn.btn-default(ng-click="getScores()" user-log elementtype='BUTTON' loggroup='results_tab' logtags='results,score files,show' title='Draw Scores to the map') Show Scores
                         fieldset.scheduler-border
                             legend.scheduler-border Training Results
                             div.form-group-sm
                                 label(for="trainingSelect") Job Name:
-                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='populateTrainingSelect()' title="Refresh file list.")
-                                select.form-control(name="trainingSelect" ng-options="item for item in trainingFiles | orderBy: item" ng-model="trainingDataModel.fileAppOut" id="trainingSelect")
+                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='populateTrainingSelect()' title="Refresh file list." user-log elementtype='BUTTON' loggroup='results_tab' logtags='results,training files,refresh' )
+                                select.form-control(name="trainingSelect" ng-options="item for item in trainingFiles | orderBy: item" ng-model="trainingDataModel.fileAppOut" id="trainingSelect" user-log elementtype='DROPDOWNLIST' loggroup='results_tab' logtags='training,select')
                                     option(value="") --Select--
-                                button.form-control.btn.btn-default(ng-click="drawTrainingData()" title='Draw training data to the map.') Show Training Data
+                                button.form-control.btn.btn-default(ng-click="drawTrainingData()" title='Draw training data to the map.' user-log elementtype='BUTTON' loggroup='results_tab' logtags='training files,show') Show Training Data
     table.table.table-striped
         tr
             th
-                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="getJobStatus()" title="Refresh Job Status.")
+                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="getJobStatus()" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
                 | Job Name
             th Job Status
         tbody(ng:repeat="job in jobs")

@@ -32,15 +32,30 @@
                 fieldset
                     div.col-sm-6
                         .control-group
-                            label.control-label(for='serviceHostNameTextBox') Service Host Name
+                            label.control-label(for='serviceHostNameTextBox') Service Url
                             .controls
                                 div.form-group.form-group-sm
                                     input#serviceHostNameTextBox.form-control(type='text', ng-model='data.serviceHostName')
+                    div.col-sm-6
                         .control-group
-                            label.control-label(for='servicePortTextBox') Service Port
+                            label.control-label(for='servicePortTextBox') Port
                             .controls
                                 div.form-group.form-group-sm
                                     input#servicePortTextBox.form-control(type='text', ng-model='data.servicePort')
+            div.row
+                p The following require a page refresh.
+                div.col-sm-6
+                    .control-group
+                        label.control-label(for='servicePortTextBox') Logging
+                        .controls
+                            div.form-group.form-group-sm
+                                input#servicePortTextBox.form-control(type='checkbox', ng-model='data.userLoggingEnabled')
+                div.col-sm-6
+                    .control-group
+                        label.control-label(for='servicePortTextBox') Logging Url
+                        .controls
+                            div.form-group.form-group-sm
+                                input#servicePortTextBox.form-control(type='text', ng-model='data.userLoggingUrl')
 div.modal-footer
     button.btn.btn-primary(ng-click="save()")
         | Save

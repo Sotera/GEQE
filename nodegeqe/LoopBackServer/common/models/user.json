@@ -21,8 +21,13 @@
     },
     "themeName": {
       "type": "string"
+    },
+    "userLoggingEnabled":{
+      "type": "boolean"
+    },
+    "userLoggingUrl":{
+      "type": "string"
     }
-
   },
   "validations": [],
   "relations": {},

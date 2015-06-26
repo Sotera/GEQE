@@ -21,6 +21,9 @@ angular.module('NodeWebBase')
             $rootScope.fullname = res.fullname;
             $rootScope.serviceHostName = res.serviceHostName;
             $rootScope.servicePort = res.servicePort;
+            $rootScope.userLoggingEnabled = res.userLoggingEnabled;
+            $rootScope.userLoggingUrl = res.userLoggingUrl;
+
 
             setFullNameMsg.broadcast();
             changeThemeMsg.broadcast(res.themeName);
