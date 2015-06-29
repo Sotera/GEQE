@@ -15,7 +15,11 @@ angular.module('NodeWebBase')
                 toolVersion: '0.1', //The semantic version of your tool
                 elementGroups: [ //A list of element groups used in your tool (see below)
                     'results_tab',
-                    'map'
+                    'run_tab',
+                    'control_box',
+                    'map',
+                    'nav_bar',
+                    'details'
                 ],
                 workerUrl: 'javascripts/userale/userale-worker.js', //The location of the User-ALE webworker file
                 debug: true, //Whether to log messages to console
