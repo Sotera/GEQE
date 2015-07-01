@@ -61,7 +61,7 @@ var applyRoute = function(routeName,req,res){
         console.log(error.message);
         res.status(500).send(error.message);
     })
-}
+};
 
 
 router.get('/populate/:vp', function (req, res) {

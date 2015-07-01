@@ -77,10 +77,10 @@ angular.module('NodeWebBase')
                             strRet = strRet + '<tr><td>' + response.dic[i][0] + '</td><td>' + response.dic[i][3] + '</td><td>' + response.dic[i][1] + '</td><td>' + response.dic[i][2] + '</td></tr>';
                         }
                     } else {
-                        strRet = '<table class="table table-condensed"><tr><th>Term</th><th>Rank</th></tr>';
+                        strRet = '<table class="table table-striped"><tr><th class="edge">Term</th><th class="edge">Rank</th></tr>';
                         for( i=0; i<response.dic.length; i++)
                         {
-                            strRet = strRet + '<tr><td>' + response.dic[i][0] + '</td><td>' + response.dic[i][1] + '</td></tr>';
+                            strRet = strRet + '<tr><td class="edge">' + response.dic[i][0] + '</td><td class="edge">' + response.dic[i][1] + '</td></tr>';
                         }
                     }
                     strRet = strRet + "</table>";

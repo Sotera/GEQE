@@ -94,16 +94,18 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                                 select.form-control(name="trainingSelect" ng-options="item for item in trainingFiles | orderBy: item" ng-model="trainingDataModel.fileAppOut" id="trainingSelect" user-log elementtype='DROPDOWNLIST' loggroup='results_tab' logtags='training,select')
                                     option(value="") --Select--
                                 button.form-control.btn.btn-default(ng-click="drawTrainingData()" title='Draw training data to the map.' user-log elementtype='BUTTON' loggroup='results_tab' logtags='training files,show') Show Training Data
+
     table.table.table-striped
-        tr
-            th
-                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="getJobStatus()" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
-                | Job Name
-            th Job Status
+        thead
+            tr
+                th.edge
+                    button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="getJobStatus()" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
+                    | Job Name
+                th.edge Job Status
         tbody(ng:repeat="job in jobs")
             tr
-                td {{job.jobname}}
-                td {{job.status}}
+                td.edge {{job.jobname}}
+                td.edge {{job.status}}
 
 
 

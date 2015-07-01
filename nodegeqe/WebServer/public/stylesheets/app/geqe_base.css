@@ -1,3 +1,6 @@
+
+@import url("table.css");
+
 html{
     height:100%;
 }
@@ -111,9 +114,8 @@ div[class^="col-"]{
     overflow:auto;
 }
 
-#resultsBox {
+.scrollTable {
     overflow:auto;
-    margin: 26px 0 0 0;
     font-family: Roboto, Arial;
     font-size: 13px;
 }
