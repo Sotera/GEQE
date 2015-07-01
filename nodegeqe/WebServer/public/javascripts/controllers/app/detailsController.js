@@ -177,7 +177,7 @@ angular.module('NodeWebBase')
             var words = text.split(" "),
                 termList=$scope.termArray.join("|"),
                 alpha={};
-
+                termList = termList.replace(/[\[\]\(\)]/g,'')
                 angular.forEach(words,function(word,idx){
 
                     if(alpha = word.replace(/[^a-zA-Z0-9]/,"").match(new RegExp(termList,"i"))){
