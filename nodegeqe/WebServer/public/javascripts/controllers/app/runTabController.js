@@ -12,7 +12,7 @@ angular.module('NodeWebBase')
         $scope.polyFile = "";
 
         $scope.polyFileSelected = function(item){
-            $scope.polyFile = item;
+            $scope.polyFile = item.name;
         };
 
         $scope.run={
@@ -35,18 +35,38 @@ angular.module('NodeWebBase')
 
             $http({
                 method:"GET",
-                url: "app/controlBox/populate/polygons",
-                params : {
-                    user: $rootScope.username
-                }}).success(function (response) {
-                        $scope.polygonFiles = response.lFiles;
-                }).error($rootScope.showError);
+                url: "app/sitelists/list/"+$rootScope.username,
+                params: {}
+            }).success(function (response) {
+               $scope.polygonFiles = response
+            }).error($rootScope.showError);
         };
+
 
         $scope.drawPolygonFile = function(){
-            $rootScope.$emit("drawPolygonFile", $scope.polyFile)
+            var modelId = $scope.getPolygonId()
+            if (!modelId)  $rootScope.showErrorMessage("Polygon name invalid.",'Polygon must be saved prior to use.');
+            else $rootScope.$emit("drawPolygonFile", modelId)
         };
 
+
+        /**
+         * Get the id for the current polyFile from the polygonList
+         * Undefined if the model has not been saved
+         */
+        $scope.getPolygonId = function(){
+            for  (i in $scope.polygonFiles){
+                if ($scope.polygonFiles[i].name == $scope.polyFile){
+                    return $scope.polygonFiles[i].id;
+                }
+            }
+            return undefined;
+        }
+
+
+        /**
+         * Save the site list (polygon)
+         */
         $scope.saveList = function(){
 
             $rootScope.$emit("getShapesText",
@@ -56,16 +76,20 @@ angular.module('NodeWebBase')
                         if(!$rootScope.isAppConfigured())
                             return;
                         var pName = $scope.polyFile;
+                        var siteList = JSON.parse(resultsText)
+                        siteList.name = pName
+                        siteList.username = $rootScope.username
+                        var modelId = $scope.getPolygonId();
+                        if (modelId) siteList.id = modelId
 
                         $http({
-                            method:"GET",
-                            url: "app/controlBox/writePoly",
+                            method:"POST",
+                            url: "app/sitelists/save",
                             params: {
-                                user: $rootScope.username,
-                                filePolygon: pName,
-                                fileString: resultsText
+                                siteList: siteList
                             }}).success(function (response) {
                                 $("#resultsText").text(pName + " written");
+                                $scope.populatePolygonSelect() // refresh the polygon list to get the new id
                             }).error($rootScope.showError)
                     }
                 });

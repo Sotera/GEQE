@@ -1,0 +1,38 @@
+{
+    "name": "sitelist",
+    "base": "PersistedModel",
+    "strict": false,
+    "idInjection": true,
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "username": {
+            "type": "string"
+        }
+    },
+    "validations": [],
+    "relations": {
+        "sites" :{
+            "type": "embedsMany",
+            "model": "site",
+            "property": "sites",
+            "options": {
+                "validate": true,
+                "forceId": false
+            }
+        }
+    },
+    "acls": [],
+    "methods": [],
+    "indexes":{
+        "username-sitename":{
+            "keys": {
+                "name":1,
+                "username":1
+            },
+            "options":{ "unique":true}
+        }
+    }
+
+}

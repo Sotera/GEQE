@@ -1,0 +1,32 @@
+{
+    "name": "dataset",
+    "base": "PersistedModel",
+    "strict": false,
+    "properties": {
+        "name": {
+            "type": "string",
+            "required": true,
+            "id":true
+        },
+        "path": {
+            "type": "string",
+            "required": true
+        },
+        "type": {
+            "type": "string",
+            "required": true
+        },
+        "partitions": {
+            "type": "Number",
+            "required": true
+        },
+        "description": {
+            "type": "string",
+            "required": false
+        }
+    },
+    "validations": [],
+    "relations": {},
+    "acls": [],
+    "methods": []
+}

@@ -153,14 +153,11 @@ angular.module('NodeWebBase')
             return site;
         };
 
-        me.drawPolygonFile = function (fileName) {
+        me.drawPolygonFile = function (modelId) {
             $http({
                 method:"GET",
-                url: "app/controlBox/getPolygon",
-                params: {
-                    user: $rootScope.username,
-                    fileName: fileName
-                }}).success(function (response) {
+                url: "app/sitelists/get/"+modelId
+                }).success(function (response) {
                     var latLngs = [];
                     var latLngList = [];
                     try {

@@ -32,7 +32,7 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                                             span.caret
                                         ul.scrollable-menu.dropdown-menu(role="menu", style="overflow:scroll")
                                             li(ng-repeat="item in polygonFiles | orderBy: item" ng-click="polyFileSelected(item)" value="{{item}}")
-                                               a(href='#') {{item}}
+                                               a(href='#') {{item.name}}
                                     input.form-control(type="text" ng-model="polyFile" name="polyFile")
                         fieldset.scheduler-border
                             legend.scheduler-border Run Query Job

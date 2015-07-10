@@ -30,5 +30,13 @@
   "user": {
     "dataSource": "testMongoDB",
     "public": true
+  },
+  "sitelist": {
+    "dataSource": "testMongoDB",
+    "public": true
+  },
+  "dataset": {
+    "dataSource": "testMongoDB",
+    "public": true
   }
 }
