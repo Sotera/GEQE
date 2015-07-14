@@ -152,38 +152,47 @@ angular.module('NodeWebBase')
                 }).error($rootScope.showError)
         }
 
-        $scope.applyTraining = function() {
-            if(!$rootScope.isAppConfigured())
-                return;
-            var pName = $scope.polyFile;
-            var dSet = $scope.dataSetSelected;
-            var tName = $scope.training.FileName;
-            if(!dSet || dSet === "--select--"){
-                $rootScope.showErrorMessage("Training Job", "Please select a data set.")
-                return;
-            }
-            if(!pName || pName === "--select--"){
-                $rootScope.showErrorMessage("Training Job", "Please select a polygon file name.");
-                return;
-            }
 
-            if(!tName){
-                $rootScope.showErrorMessage("Training Job", "Please select a training file name.");
+        $scope.applyTraining = function() {
+            if (!$rootScope.isAppConfigured())
                 return;
+            // verify inputs
+
+            if (!$scope.dataSetSelected || $scope.dataSetSelected === "--Select--") {
+                $rootScope.showErrorMessage("Query Job", "Please select a data set.");
+                return;
+            }
+            if (!$scope.polyFile || $scope.polyFile === "--Select--") {
+                $rootScope.showErrorMessage("Query Job", "Please select a polygon file name.");
+                return;
+            }
+            var siteListId = $scope.getPolygonId()
+            if (!siteListId) {
+                $rootScope.showErrorMessage("Query Job", "Save your polygon file prior to running query.");
+                return;
+            }
+            if (!$scope.training.FileName) {
+                $rootScope.showErrorMessage("Query Job", "Please select query jobname.");
+                return;
+            }
+            var jobObj = {
+                'name': $scope.training.FileName,
+                'username': $rootScope.username,
+                'queryType': 'training-data',
+                'siteListId': siteListId,
+                'datasetId': $scope.dataSetSelected.name
             }
 
             $http({
-                method:"GET",
-                url: "app/controlBox/applyViewTrainingData",
-                params: {
-                    user: $rootScope.username,
-                    filePolygon: pName,
-                    fileAppOut: tName,
-                    dataSet: dSet
-                }}).success(function (response) {
-                    $rootScope.$emit("refreshJobsList");
-                }).error($rootScope.showError);
-        };
+                method: "POST",
+                url: "app/jobs",
+                params: jobObj
+            }).success(function (response) {
+                $rootScope.$emit("refreshJobsList");
+            }).error($rootScope.showError)
+
+        }
+
 
         $scope.modReturn = function() {
             var bChecked = $("#bPercent").is(":checked");
