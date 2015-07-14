@@ -101,9 +101,9 @@ angular.module('NodeWebBase')
 
             $http({
                 method: "GET",
-                url: "app/controlBox/populate/datasets"
+                url: "app/datasets"
             }).success(function (response) {
-                    $scope.dataSets = response;
+                $scope.dataSets = response;
             }).error($rootScope.showError);
         }
 

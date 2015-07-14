@@ -18,7 +18,7 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                         div.form-group-sm
                             label(for='dataSetSelect') Data Set:
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='getDataSets()' title="Refresh file list." user-log elementtype='BUTTON' loggroup='run_tab' logtags='run,refresh,data_set_files')
-                            select.form-control(id="dataSetSelect" ng-options="item for item in dataSets | orderBy: item" ng-model="dataSetSelected" user-log elementtype='DROPDOWNLIST' loggroup='run_tab' logtags='run,select,data_set_files')
+                            select.form-control(id="dataSetSelect" ng-options="item.name for item in dataSets | orderBy: item.name" ng-model="dataSetSelected" user-log elementtype='DROPDOWNLIST' loggroup='run_tab' logtags='run,select,data_set_files')
                                   option(value="") --Select--
                         div.form-group-sm
                             div.input-group
