@@ -2,11 +2,11 @@
     "name": "job",
     "base": "PersistedModel",
     "strict": false,
+    "idInjection": true,
     "properties": {
         "name": {
             "type": "string",
-            "required": true,
-            "id":true
+            "required": true
         },
         "status": {
             "type":"string",
