@@ -38,5 +38,9 @@
   "dataset": {
     "dataSource": "testMongoDB",
     "public": true
+  },
+  "job": {
+        "dataSource": "testMongoDB",
+        "public": true
   }
 }

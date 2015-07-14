@@ -42,11 +42,11 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                             div.form-group-sm
                                 div(id="rankReturnInput")
                                     label(for='sTopN') Return top:
-                                    input.form-control(ng-model="run.sTopN" id="sTopN" value="300" placeholder="300" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,top')
+                                    input.form-control(ng-model="run.sTopN" id="sTopN" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,top')
                             div.form-group-sm
                                 div( id="percentReturnInput" class="invis")
                                     label(for='sTopPercent') Return Percent:
-                                    input.form-control(ng-model="run.sTopPercent" id="sTopPercent" value="0.0001" placeholder="0.0001")
+                                    input.form-control(ng-model="run.sTopPercent" id="sTopPercent" )
 
                             div(id="hr1" )
                                 div.form-group-sm
@@ -104,7 +104,7 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                 th.edge Job Status
         tbody(ng:repeat="job in jobs")
             tr
-                td.edge {{job.jobname}}
+                td.edge {{job.name}}
                 td.edge {{job.status}}
 
 

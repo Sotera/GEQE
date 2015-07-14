@@ -32,6 +32,7 @@ app.use('/app/controlBox', require('./routes/app/controlBox'));
 app.use('/app/users', require('./routes/app/users'));
 app.use('/app/sitelists',require('./routes/app/sitelists'));
 app.use('/app/datasets',require('./routes/app/datasets'));
+app.use('/app/jobs',require('./routes/app/jobs'));
 app.use('/app/socialMediaQuery', require('./routes/app/socialMediaQuery'));
 
 // catch 404 and forward to error handler

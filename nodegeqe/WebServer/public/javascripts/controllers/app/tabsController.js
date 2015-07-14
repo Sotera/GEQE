@@ -17,9 +17,12 @@ angular.module('NodeWebBase')
 
             $http({
                 method:"GET",
-                url: "app/controlBox/jobStatus"})
+                url: "app/jobs/get",
+                params: {
+                    "username": $rootScope.username
+                }})
                 .success(function (response) {
-                        $scope.jobs= response;
+                    $scope.jobs= response;
                 }).error($rootScope.showError);
         };
 

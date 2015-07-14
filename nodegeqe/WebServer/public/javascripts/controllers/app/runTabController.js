@@ -8,20 +8,20 @@ angular.module('NodeWebBase')
         $scope.dataSets= [];
         $scope.polygonFiles = [];
 
-        $scope.dataSetSelected="";
-        $scope.polyFile = "";
+        $scope.dataSetSelected="--Select--";
+        $scope.polyFile = "--Select--";
 
         $scope.polyFileSelected = function(item){
             $scope.polyFile = item.name;
         };
 
         $scope.run={
-                sTopN:"",
+                sTopN:"300",
                 sFileName:"",
                 bPercent:"",
                 cStopW:"",
                 useTimeSeries:false,
-                sTopPercent:"",
+                sTopPercent:"0.0001",
                 nFeat:""
             };
 
@@ -107,52 +107,47 @@ angular.module('NodeWebBase')
             }).error($rootScope.showError);
         }
 
+
         $scope.applyScores = function() {
 
             if(!$rootScope.isAppConfigured())
                 return;
-            var pName = $scope.polyFile,
-                dSet = $scope.dataSetSelected,
-                sName = $scope.run.sFileName,
-                //change source based on Checkbox value
-                fThresh=$scope.cStopW,
-                bPer = $scope.run.bPercent,
-                nFeat = $scope.run.nFeat,
-                sSWords = $scope.cStopW;
 
+            // verify inputs
 
-            if(!dSet || dSet === "--select--") {
+            if(!$scope.dataSetSelected || $scope.dataSetSelected === "--Select--") {
                 $rootScope.showErrorMessage("Query Job", "Please select a data set.");
                 return;
             }
-            if(!pName || pName === "--select--"){
+            if(!$scope.polyFile || $scope.polyFile === "--Select--"){
                 $rootScope.showErrorMessage("Query Job", "Please select a polygon file name.");
                 return;
             }
-
-            if(!sName){
-                $rootScope.showErrorMessage("Query Job", "Please select a score file name.");
+            var siteListId = $scope.getPolygonId()
+            if (!siteListId){
+                $rootScope.showErrorMessage("Query Job","Save your polygon file prior to running query.");
+                return;
+            }
+            if(!$scope.run.sFileName){
+                $rootScope.showErrorMessage("Query Job", "Please select query jobname.");
                 return;
             }
 
-            if(bPer==true){
-                fThresh=$scope.sTopPercent;
+            var jobObj = {
+                'name' : $scope.run.sFileName,
+                'username': $rootScope.username,
+                'queryType': (!$scope.run.useTimeSeries || $scope.run.useTimeSeries == 0) ? 'location' : 'event',
+                'limit': ($scope.run.bPercent) ? $scope.run.sTopPercent : $scope.run.sTopN,
+                'customStopWords': $scope.run.cStopW,
+                'siteListId':  siteListId,
+                'datasetId' :$scope.dataSetSelected.name
             }
 
-
             $http({
-                method:"GET",
-                url: "app/controlBox/applyScores",
-                params: {
-                    user: $rootScope.username,
-                    filePolygon: pName,
-                    fileAppOut: sName,
-                    fScoreThresh: fThresh,
-                    dataSet: dSet,
-                    useTime:  $scope.useTimeSeries,
-                    nFeatures: nFeat,
-                    custStopWord: sSWords
-                }}).success(function (response) {
+                    method:"POST",
+                    url: "app/jobs",
+                    params: jobObj
+                }).success(function (response) {
                     $rootScope.$emit("refreshJobsList");
                 }).error($rootScope.showError)
         }
