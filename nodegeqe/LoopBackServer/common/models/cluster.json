@@ -1,0 +1,34 @@
+{
+    "name": "cluster",
+    "base": "PersistedModel",
+    "strict": false,
+    "idInjection": false,
+    "properties": {
+        "nUnique": {
+            "type": "number",
+            "required": true
+        },
+        "lat": {
+            "type": "number",
+            "required": true
+        },
+        "lon": {
+            "type": "number",
+            "required": true
+        }
+    },
+    "validations": [],
+    "relations": {
+        "dateRangeList" :{
+            "type" : "embedsMany",
+            "model": "daterange",
+            "property": "dates",
+            "options": {
+                "validate": true,
+                "forceId": false
+            }
+        }
+    },
+    "acls": [],
+    "methods": []
+}

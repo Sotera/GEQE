@@ -1,0 +1,42 @@
+{
+    "name": "resultset",
+    "base": "PersistedModel",
+    "strict": false,
+    "idInjection": true,
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "username": {
+            "type": "string"
+        },
+        "created" : {
+            "type": "Date",
+            "defaultFn": "now"
+        }
+    },
+    "validations": [],
+    "relations": {
+        "sites" :{
+            "type": "embedsMany",
+            "model": "cluster",
+            "property": "clusters",
+            "options": {
+                "validate": true,
+                "forceId": false
+            }
+        }
+    },
+    "acls": [],
+    "methods": [],
+    "indexes":{
+        "username-sitename":{
+            "keys": {
+                "name":1,
+                "username":1
+            },
+            "options":{ "unique":true}
+        }
+    }
+
+}
