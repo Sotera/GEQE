@@ -63,29 +63,6 @@ angular.module('NodeWebBase')
                 $rootScope.$emit("loadNavData", response);
                 $rootScope.$emit("setTermDictionary", response.dic);
 
-                //write dictionary to results box
-                var strRet = '';
-                if( typeof(response.dic)=="string")
-                {
-                    strRet = response.dic;
-                } else {
-                    if( response.dic[0][2] != undefined)
-                    {
-                        strRet = '<table class=table table-striped"><tr><th>Term</th><th>Score</th><th>In Count</th><th>Out Count</th></tr>';
-                        for( i=0; i<response.dic.length; i++)
-                        {
-                            strRet = strRet + '<tr><td>' + response.dic[i][0] + '</td><td>' + response.dic[i][3] + '</td><td>' + response.dic[i][1] + '</td><td>' + response.dic[i][2] + '</td></tr>';
-                        }
-                    } else {
-                        strRet = '<table class="table table-striped"><tr><th class="edge">Term</th><th class="edge">Rank</th></tr>';
-                        for( i=0; i<response.dic.length; i++)
-                        {
-                            strRet = strRet + '<tr><td class="edge">' + response.dic[i][0] + '</td><td class="edge">' + response.dic[i][1] + '</td></tr>';
-                        }
-                    }
-                    strRet = strRet + "</table>";
-                }
-                $rootScope.$emit("displayResults",strRet)
             }).error($rootScope.showError)
         };
 
