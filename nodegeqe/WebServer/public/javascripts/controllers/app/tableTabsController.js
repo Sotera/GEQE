@@ -1,15 +1,14 @@
 angular.module('NodeWebBase')
-    .controller('tabsController', ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
+    .controller('tableTabsController', ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
         $scope.tabs = [{
-            title: 'Run',
-            url: 'one.tpl.html'
+            title: 'Jobs',
+            url: 'jobsTab'
+        },
+        {
+            title: 'Data',
+            url: 'dataTab'
 
-        }, {
-            title: 'Results',
-            url: 'two.tpl.html'
         }];
-
-
 
         $scope.getJobStatus = function(){
             if(!$rootScope.isAppConfigured())
@@ -30,7 +29,7 @@ angular.module('NodeWebBase')
             $scope.getJobStatus();
         });
 
-        $scope.currentTab = 'two.tpl.html';
+        $scope.currentTab = 'jobsTab';
 
         $scope.onClickTab = function (tab) {
             $scope.currentTab = tab.url;
@@ -40,21 +39,11 @@ angular.module('NodeWebBase')
             return tabUrl == $scope.currentTab;
         };
 
-        $scope.clearMarkers = function(){
-            $rootScope.$emit("clearMarkers",['training','score']);
-        };
-
-        $scope.clearShapes = function(){
-            $rootScope.$emit("clearCurrentShapes");
-        };
-
-        $scope.clearResults = function(){
-            $rootScope.$emit("clearResults");
-        };
-
-        $scope.clearAll = function(){
-            $rootScope.$emit("clearAll");
-            $scope.clearResults();
-        };
-
- }]);
+        ///INIT
+        var watchRemoval = $scope.$watch($rootScope.isAppConfigured ,function(newVal,oldVal) {
+            if( newVal ){ // Don't do anything if Undefined.
+                $scope.getJobStatus();
+                watchRemoval();
+            }
+        })
+    }]);
