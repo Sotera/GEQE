@@ -1,4 +1,4 @@
-div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-controller="tabsController")
+div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-controller="jobsTabsController")
 
     nav.navbar.navbar-default.navbar-inverse
         a(ng-click='clearResults()' title='Clear Results' href="#" user-log elementtype='BUTTON' loggroup='control_box' logtags='clear,data').noselect.navbar-button.btn-lg.glyphicon.glyphicon-th-list.navbar-text
@@ -95,17 +95,6 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                                     option(value="") --Select--
                                 button.form-control.btn.btn-default(ng-click="drawTrainingData()" title='Draw training data to the map.' user-log elementtype='BUTTON' loggroup='results_tab' logtags='training files,show') Show Training Data
 
-    table.table.table-striped
-        thead
-            tr
-                th.edge
-                    button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="getJobStatus()" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
-                    | Job Name
-                th.edge Job Status
-        tbody(ng:repeat="job in jobs")
-            tr
-                td.edge {{job.jobname}}
-                td.edge {{job.status}}
 
 
 

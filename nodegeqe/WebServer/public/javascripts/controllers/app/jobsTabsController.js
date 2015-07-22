@@ -1,5 +1,5 @@
 angular.module('NodeWebBase')
-    .controller('tabsController', ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
+    .controller('jobsTabsController', ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
         $scope.tabs = [{
             title: 'Run',
             url: 'one.tpl.html'
@@ -8,24 +8,6 @@ angular.module('NodeWebBase')
             title: 'Results',
             url: 'two.tpl.html'
         }];
-
-
-
-        $scope.getJobStatus = function(){
-            if(!$rootScope.isAppConfigured())
-                return;
-
-            $http({
-                method:"GET",
-                url: "app/controlBox/jobStatus"})
-                .success(function (response) {
-                        $scope.jobs= response;
-                }).error($rootScope.showError);
-        };
-
-        $rootScope.$on('refreshJobsList', function(){
-            $scope.getJobStatus();
-        });
 
         $scope.currentTab = 'two.tpl.html';
 
