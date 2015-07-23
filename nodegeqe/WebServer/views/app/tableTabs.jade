@@ -15,8 +15,8 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                            button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="getJobStatus()" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
                            | Job Name
                         th.edge Job Status
-                  tbody(ng:repeat="job in jobs")
-                     tr
+                  tbody
+                     tr(ng-repeat="job in jobs")
                         td.edge {{job.jobname}}
                         td.edge {{job.status}}
 

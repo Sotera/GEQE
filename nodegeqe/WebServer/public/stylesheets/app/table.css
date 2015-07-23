@@ -98,10 +98,10 @@ thead {
     align-items: stretch;
 }
 
-tbody {
-    overflow-y: scroll;
-    display: inline-block;
-}
+/*tbody {*/
+    /*overflow-y: scroll;*/
+    /*display: inline-block;*/
+/*}*/
 
 thead > tr, tbody > tr, tfoot > tr {
     display: flex;
@@ -120,12 +120,12 @@ thead, tfoot {
     display: inline-block;
 }
 
-.edge {
-    width: 50%; /* this can vary */
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    display: inline-block;
-}
+/*.edge {*/
+    /*width: 50%; *//* this can vary */
+    /*overflow-x: hidden;*/
+    /*text-overflow: ellipsis;*/
+    /*display: inline-block;*/
+/*}*/
 
 tfoot {
     display: inline-block;
