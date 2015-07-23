@@ -28,6 +28,8 @@ html(ng-app="NodeWebBase" ,ng-controller="layoutController", lang='en')
 		script(src='/javascripts/services/app/messages/applyFilterMsg.js')
 		script(src='/javascripts/services/app/messages/itemDetailsLoadedMsg.js')
 
+		script(src="/javascripts/vendor/raf/index.js")
+		script(src="/javascripts/component/app/ui-layout-custom.js")
 		script(src='/javascripts/services/app/userLoggingService.js')
 		script(src='/javascripts/directives/app/userlog.js')
 
@@ -40,6 +42,7 @@ html(ng-app="NodeWebBase" ,ng-controller="layoutController", lang='en')
 
 		//link(rel='stylesheet', href='/javascripts/vendor/bootstrap/dist/css/bootstrap.min.css')
 		//link(rel='stylesheet', href='/javascripts/vendor/bootstrap/dist/css/bootstrap-theme.min.css')
+		link(rel="stylesheet", href="/javascripts/vendor/angular-ui-layout/ui-layout.css")
 		link(rel='stylesheet', href='/javascripts/vendor/ngDialog/css/ngDialog.min.css')
 		link(rel='stylesheet', href='/javascripts/vendor/ngDialog/css/ngDialog-theme-default.min.css')
 		link(rel='stylesheet', href='/stylesheets/style.css')

@@ -99,10 +99,17 @@ angular.module('NodeWebBase')
     .directive('map',function ($rootScope) {
         function link(scope, element, attrs) {
             $(document).ready(function () {
+
+                var remainingHeight = $(window).height()-48;
+                var percent = 0.7;
+                scope.style = {
+                    height: (remainingHeight * percent).toString() + 'px',
+                    width: '100%'
+                };
                 var myLatlng = new google.maps.LatLng(41.495753190958816,-81.70090198516846);
                 var mapOptions = {
                     zoom: 10,
-                    minZoom: 2,
+                    //minZoom: 2,
                     center: myLatlng,
                     scaleControl: true
                 };

@@ -120,12 +120,12 @@ thead, tfoot {
     display: inline-block;
 }
 
-/*.edge {*/
-    /*width: 50%; *//* this can vary */
-    /*overflow-x: hidden;*/
-    /*text-overflow: ellipsis;*/
-    /*display: inline-block;*/
-/*}*/
+.edge {
+    width: 50%;  # this can vary
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+}
 
 tfoot {
     display: inline-block;
