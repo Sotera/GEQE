@@ -8,17 +8,20 @@ div.scrollable.tabs(id="tabs" percent-Height percent='30'  ng-style="style" ng-c
       div.tab-content
          div.tab( id="jobsTab" ng-class="{hidden:!isActiveTab('jobsTab')}")
             div
-               table.table.table-striped.table-hover
+               table.table.table-striped(st-table="displayedCollection" st-safe-src="rowCollection")
                   thead
                      tr
-                        th
-                           button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="getJobStatus()" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
-                           | Job Name
-                        th Job Status
+                        th.mid(style="width:32px")
+                           button.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="getJobStatus()" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
+                        th.mid(st-sort="jobname")
+                           | Name
+                        th.mid(st-sort="status") Status
                   tbody
-                     tr(ng-repeat="job in jobs")
-                        td {{job.jobname}}
-                        td {{job.status}}
+                     tr(st-select-row="row" ng-click="rowClicked(row)" st-select-mode="single" ng-repeat="row in displayedCollection" ng-class="row.isSelected ? 'st-selected':''")
+                        td.mid(style="width:32px")
+                        td.mid {{row.jobname }}
+                        td.mid {{row.status}}
+
 
          div.tab( id="dataTab" ng-class="{hidden:!isActiveTab('dataTab')}")
             div(ng-controller="dataTableController").scrollTable

@@ -235,7 +235,7 @@ angular.module('NodeWebBase')
         me.drawTypeMarkers = function(data,type,zoomTo){
             var locations = [];
 
-            angular.forEach(data, function(item,idx){
+            angular.forEach(data, function(item){
                 var capPScor = item['cap'];
 
                 var lat = parseFloat(item['lat']);
