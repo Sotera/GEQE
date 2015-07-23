@@ -1,50 +1,51 @@
 {
-    "name": "job",
-    "base": "PersistedModel",
-    "strict": false,
-    "idInjection": true,
-    "properties": {
-        "name": {
-            "type": "string",
-            "required": true
-        },
-        "status": {
-            "type":"string",
-            "default":"WAITING"
-
-        },
-        "queryType" :{
-            "type":"string",
-            "required":true
-        },
-        "limit": {
-            "type": "Number"
-        },
-        "customStopWords" : {
-          "type" : "string"
-        },
-        "created" : {
-            "type": "Date",
-            "defaultFn": "now"
-        },
-        "username":{
-            "type":"string",
-            "required":true
-        }
+  "name": "job",
+  "base": "PersistedModel",
+  "strict": false,
+  "idInjection": true,
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
     },
-    "validations": [],
-    "relations": {
-        "sitelist": {
-            "type": "belongsTo",
-            "model": "sitelist",
-            "foreignKey": "sitelistId"
-        },
-        "dataset": {
-            "type": "belongsTo",
-            "model": "dataset",
-            "foreignKey": "datasetId"
-        }
+    "status": {
+      "type": "string",
+      "default": "WAITING"
     },
-    "acls": [],
-    "methods": []
+    "queryType": {
+      "type": "string",
+      "required": true
+    },
+    "limit": {
+      "type": "Number"
+    },
+    "customStopWords": {
+      "type": [
+        "string"
+      ]
+    },
+    "created": {
+      "type": "Date",
+      "defaultFn": "now"
+    },
+    "username": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "sitelist": {
+      "type": "belongsTo",
+      "model": "sitelist",
+      "foreignKey": "sitelistId"
+    },
+    "dataset": {
+      "type": "belongsTo",
+      "model": "dataset",
+      "foreignKey": "datasetId"
+    }
+  },
+  "acls": [],
+  "methods": []
 }

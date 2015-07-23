@@ -133,12 +133,15 @@ angular.module('NodeWebBase')
                 return;
             }
 
+
+            var customStopWords = []
+            if ($scope.run.cStopW && $scope.run.cStopW != "") customStopWords = $scope.run.cStopW.split(",")
             var jobObj = {
                 'name' : $scope.run.sFileName,
                 'username': $rootScope.username,
                 'queryType': (!$scope.run.useTimeSeries || $scope.run.useTimeSeries == 0) ? 'location' : 'event',
                 'limit': ($scope.run.bPercent) ? $scope.run.sTopPercent : $scope.run.sTopN,
-                'customStopWords': $scope.run.cStopW,
+                'customStopWords': customStopWords,
                 'siteListId':  siteListId,
                 'datasetId' :$scope.dataSetSelected.name
             }

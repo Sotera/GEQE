@@ -1,0 +1,39 @@
+{
+  "name": "bin",
+  "base": "PersistedModel",
+  "strict": false,
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "score": {
+      "type": "number",
+      "required": true
+    },
+    "totalCount": {
+      "type": "number",
+      "required": true
+    },
+    "boundingPoly": {
+      "type": [
+        "geopoint"
+      ],
+      "required": true
+    },
+    "centerPoint": {
+      "type": "GeoPoint",
+      "required": true
+    },
+    "significantTerms": {
+      "type": [
+        "string"
+      ],
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": []
+}

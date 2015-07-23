@@ -1,34 +1,38 @@
 {
-    "name": "site",
-    "base": "PersistedModel",
-    "strict": false,
-    "idInjection": false,
-    "properties": {
-        "name": {
-            "type": "string",
-            "required": true
-        },
-        "lats": {
-            "type": "Array",
-            "required": true
-        },
-        "lons": {
-            "type": "Array",
-            "required": true
-        }
+  "name": "site",
+  "base": "PersistedModel",
+  "strict": false,
+  "idInjection": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
     },
-    "validations": [],
-    "relations": {
-        "dateRangeList" :{
-            "type" : "embedsMany",
-            "model": "daterange",
-            "property": "dates",
-            "options": {
-                "validate": true,
-                "forceId": false
-            }
-        }
+    "lats": {
+      "type": [
+        "number"
+      ],
+      "required": true
     },
-    "acls": [],
-    "methods": []
+    "lons": {
+      "type": [
+        "number"
+      ],
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "dateRangeList": {
+      "type": "embedsMany",
+      "model": "daterange",
+      "property": "dates",
+      "options": {
+        "validate": true,
+        "forceId": false
+      }
+    }
+  },
+  "acls": [],
+  "methods": []
 }

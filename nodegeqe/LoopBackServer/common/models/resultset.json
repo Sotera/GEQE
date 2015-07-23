@@ -1,42 +1,45 @@
 {
-    "name": "resultset",
-    "base": "PersistedModel",
-    "strict": false,
-    "idInjection": true,
-    "properties": {
-        "name": {
-            "type": "string"
-        },
-        "username": {
-            "type": "string"
-        },
-        "created" : {
-            "type": "Date",
-            "defaultFn": "now"
-        }
+  "name": "resultset",
+  "base": "PersistedModel",
+  "strict": false,
+  "idInjection": true,
+  "indexes": {},
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
     },
-    "validations": [],
-    "relations": {
-        "sites" :{
-            "type": "embedsMany",
-            "model": "cluster",
-            "property": "clusters",
-            "options": {
-                "validate": true,
-                "forceId": false
-            }
-        }
+    "username": {
+      "type": "string",
+      "required": true
     },
-    "acls": [],
-    "methods": [],
-    "indexes":{
-        "username-sitename":{
-            "keys": {
-                "name":1,
-                "username":1
-            },
-            "options":{ "unique":true}
-        }
+    "type": {
+      "type": "string",
+      "required": true
+    },
+    "bingroups": {
+      "type": [
+        "bingroup"
+      ],
+      "required": true
+    },
+    "created": {
+      "type": "Date",
+      "required": true,
+      "defaultFn": "now"
     }
-
+  },
+  "validations": [],
+  "relations": {
+      "job": {
+          "type": "belongsTo",
+          "model": "job",
+          "foreignKey": "jobId"
+      }
+  },
+  "acls": [],
+  "methods": []
 }

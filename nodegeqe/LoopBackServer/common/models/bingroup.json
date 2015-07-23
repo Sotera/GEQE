@@ -1,24 +1,24 @@
 {
-  "name": "product",
+  "name": "bingroup",
   "base": "PersistedModel",
   "strict": false,
   "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
   "properties": {
-    "name": {
-      "type": "string",
-      "required": true
+    "day": {
+      "type": "Date",
+      "required": false
     },
-    "description": {
-      "type": "string",
-      "required": true
-    },
-    "price": {
+    "count": {
       "type": "number",
       "required": true
     },
-    "category": {
-      "type": "string",
-      "id": false,
+    "bins": {
+      "type": [
+        "bin"
+      ],
       "required": true
     }
   },

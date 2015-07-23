@@ -22,10 +22,13 @@
     "themeName": {
       "type": "string"
     },
-    "userLoggingEnabled":{
+    "userLoggingEnabled": {
       "type": "boolean"
     },
-    "userLoggingUrl":{
+    "userLoggingUrl": {
+      "type": "string"
+    },
+    "propertyName33": {
       "type": "string"
     }
   },
