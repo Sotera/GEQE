@@ -1,14 +1,15 @@
 extends layout
 
 block content
-	div(ng-controller='indexController')
-		.navbar.navbar-inverse
-			a.navbar-brand(href='#') Geo Event Query by Example
-			div.navbar-right
-				logout
-				nb-settings
-
-		div(ng-view)
+	div(ui-layout="{'flow':'row', 'dividerSize':.1}" ng-controller='indexController')
+		div(ui-layout-container, size="34px")
+			.navbar.navbar-inverse
+				a.navbar-brand(href='#') Geo Event Query by Example
+				div.navbar-right
+					logout
+					nb-settings
+		div(ui-layout-container)
+			div(ng-view)
 
 block scripts
 	script(src='/javascripts/controllers/indexController.js')
