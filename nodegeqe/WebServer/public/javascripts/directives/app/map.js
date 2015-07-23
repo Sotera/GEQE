@@ -99,11 +99,8 @@ angular.module('NodeWebBase')
     .directive('map',function ($rootScope) {
         function link(scope, element, attrs) {
             $(document).ready(function () {
-
-                var remainingHeight = $(window).height()-48;
-                var percent = 0.7;
                 scope.style = {
-                    height: (remainingHeight * percent).toString() + 'px',
+                    height: '100%',
                     width: '100%'
                 };
                 var myLatlng = new google.maps.LatLng(41.495753190958816,-81.70090198516846);
@@ -136,19 +133,29 @@ angular.module('NodeWebBase')
                 scope.$watch
                 (
                     function () {
-                        return {
-                            w:element.width(),
-                            h:element.height()
-                        };
+                        return element.width();
                     },
                     function (newValue, oldValue) {
-                        if (newValue.w != oldValue.w || newValue.h != oldValue.h) {
+                        if (newValue != oldValue) {
                             var center = scope.map.getCenter();
                             google.maps.event.trigger(scope.map, "resize");
                             scope.map.setCenter(center);
                         }
+                    }
+                );
+
+                scope.$watch
+                (
+                    function () {
+                        return element.height();
                     },
-                    true
+                    function (newValue, oldValue) {
+                        if (newValue != oldValue) {
+                            var center = scope.map.getCenter();
+                            google.maps.event.trigger(scope.map, "resize");
+                            scope.map.setCenter(center);
+                        }
+                    }
                 );
 
                 scope.drawingManager.setMap(scope.map);
