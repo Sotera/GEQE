@@ -133,6 +133,24 @@ angular.module('NodeWebBase')
                     rectangleOptions:$rootScope.theme.shapeStyles
                 });
 
+                scope.$watch
+                (
+                    function () {
+                        return {
+                            w:element.width(),
+                            h:element.height()
+                        };
+                    },
+                    function (newValue, oldValue) {
+                        if (newValue.w != oldValue.w || newValue.h != oldValue.h) {
+                            var center = scope.map.getCenter();
+                            google.maps.event.trigger(scope.map, "resize");
+                            scope.map.setCenter(center);
+                        }
+                    },
+                    true
+                );
+
                 scope.drawingManager.setMap(scope.map);
 
                 scope.init();
