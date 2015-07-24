@@ -1,11 +1,11 @@
 angular.module('NodeWebBase')
     .controller('jobsTabsController', ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
         $scope.tabs = [{
-            title: 'Run',
+            title: 'Sample',
             url: 'one.tpl.html'
 
         }, {
-            title: 'Results',
+            title: 'Query',
             url: 'two.tpl.html'
         }];
 

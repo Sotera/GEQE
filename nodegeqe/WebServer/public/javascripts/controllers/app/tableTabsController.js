@@ -1,5 +1,5 @@
 angular.module('NodeWebBase')
-    .controller('tableTabsController', ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
+    .controller('tableTabsController', ['$scope','$rootScope','$http','$timeout', function ($scope, $rootScope, $http, $timeout) {
         $scope.tabs = [{
             title: 'Jobs',
             url: 'jobsTab'
@@ -9,6 +9,11 @@ angular.module('NodeWebBase')
             url: 'dataTab'
 
         }];
+
+        $scope.masterCollection = [];
+        $scope.rowCollection = [];
+        $scope.displayedCollection = [];
+
 
         $scope.getJobStatus = function(){
             if(!$rootScope.isAppConfigured())
@@ -21,7 +26,15 @@ angular.module('NodeWebBase')
                     "username": $rootScope.username
                 }})
                 .success(function (response) {
-                    $scope.jobs= response;
+
+                    $timeout(function(){
+                        if(response) {
+                            $scope.masterCollection = response.slice(0);
+                            $scope.rowCollection = response.slice(0);
+                            $scope.displayedCollection = [].concat($scope.rowCollection);
+                        }
+                    });
+
                 }).error($rootScope.showError);
         };
 
