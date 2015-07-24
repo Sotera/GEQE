@@ -270,11 +270,11 @@ angular.module('NodeWebBase')
 
             var locations = [];
             clusters.forEach(function (cluster) {
-                var pts = cluster.poly;
+                var pts = cluster.boundingPoly;
 
                 var latlonList = [];
                 angular.forEach(pts, function (pt) {
-                    var location = new google.maps.LatLng(pt[0], pt[1]);
+                    var location = new google.maps.LatLng(pt.lat, pt.lng);
                     latlonList.push(location);
                     locations.push(location)
                 });

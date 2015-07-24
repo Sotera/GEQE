@@ -26,7 +26,7 @@ angular.module('NodeWebBase')
         $rootScope.$on('loadNavData', function (event, data) {
 
             $rootScope.$emit("clearAll");
-            data.type==="event"?$scope.sortDataByDate(data.dates):$scope.setData(data);
+            $scope.sortDataByDate(data.bingroups);
 
             $scope.currentCatalogIndex = 0;
             $scope.currentCatalogTitle = "";
@@ -47,22 +47,21 @@ angular.module('NodeWebBase')
             $scope.chartModel = [];
             $scope.catalog = [{
                 'title':'All Clusters',
-                'data':data.clusters,
-                'hiScore':data.hiScore,
-                'nClusters':data.nCluster,
+                'data':data.bingroups,
+                'nClusters':data.bingroups.length,
                 'x':0
             }];
 
-            angular.forEach(data.clusters,function(group,idx){
+            angular.forEach(data.bingroups,function(group,idx){
                 var catalogItem = $scope.getCatalogItem(group.date);
-                if(maxScore < group.score)
-                    maxScore = group.score;
+                if(maxScore < group.count)
+                    maxScore = group.count;
                 if(!catalogItem){
                     catalogItem = {
-                        'title':'cluster',
+                        'title':'bin',
                         'x':idx,
-                        'hiScore':group.score,
-                        'nClusters':group.posts.length
+                        'hiScore':group.count,
+                        'nClusters':group.count
                     };
                     $scope.chartModel.push(catalogItem);
                     return;
@@ -136,26 +135,16 @@ angular.module('NodeWebBase')
             var maxPosts = 0;
 
             angular.forEach(data,function(group,idx){
-                var catalogItem = $scope.getCatalogItem(group.date);
-
-                var totalPosts = 0;
-                angular.forEach(group.clusters,function(cluster){
-                    totalPosts += cluster.posts.length;
-                });
-
-                if(totalPosts < minPosts || minPosts == -1)
-                    minPosts = totalPosts;
-
-                if(totalPosts>maxPosts)
-                    maxPosts = totalPosts;
+                if(!group.day)
+                    group.day="";
+                var catalogItem = $scope.getCatalogItem(group.day);
 
                 if(!catalogItem){
                     catalogItem = {
-                        'title':group.date,
+                        'title':group.day,
                         'x':idx,
-                        'data':group.clusters,
-                        'nClusters':group.nClusters,
-                        'totalPosts':totalPosts
+                        'data':group.bins,
+                        'nClusters':group.count
                     };
                     $scope.catalog.push(catalogItem);
                     return;

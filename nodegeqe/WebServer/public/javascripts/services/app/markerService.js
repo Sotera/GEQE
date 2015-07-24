@@ -270,23 +270,24 @@ angular.module('NodeWebBase')
                 center_lat = 0.0;
                 center_lon = 0.0;
 
-                var capPScor = '  Total: ' + item['nTotal'] + '\n'  +
+                /*var capPScor = '  Total: ' + item['nTotal'] + '\n'  +
                     '  |  Score: ' + item['score'] +
                     '--------------------------------------------------------------' + '\n';
                 angular.forEach(item['posts'], function(post,idx){
                     capPScor+= post['cap'] + '\n' +
                     '-------------------------------------' + '\n';
-                });
+                });*/
 
 
-                angular.forEach(item['poly'], function(poly,idx){
+                /*angular.forEach(item['poly'], function(poly,idx){
                     center_lat+=poly[0];
                     center_lon+=poly[1];
                 });
-
-                var markerLocation = new google.maps.LatLng(center_lat / item.poly.length,  center_lon / item.poly.length);
+                new google.maps.LatLng(center_lat / item.poly.length,  center_lon / item.poly.length);
+                */
+                var markerLocation = new google.maps.LatLng(item.centerPoint.lat,  item.centerPoint.lng);
                 locations.push(markerLocation);
-                me.putScoreMarker(markerLocation, capPScor, item, minScore,maxScore,item['score']);
+                me.putScoreMarker(markerLocation, "need to replace with something", item, minScore,maxScore,item['score']);
 
             });
         };

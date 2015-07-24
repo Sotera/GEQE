@@ -27,7 +27,7 @@ angular.module('NodeWebBase')
 
         $scope.training={
             fileName:""
-        }
+        };
 
         $scope.populatePolygonSelect = function() {
             if(!$rootScope.isAppConfigured())
@@ -44,7 +44,7 @@ angular.module('NodeWebBase')
 
 
         $scope.drawPolygonFile = function(){
-            var modelId = $scope.getPolygonId()
+            var modelId = $scope.getPolygonId();
             if (!modelId)  $rootScope.showErrorMessage("Polygon name invalid.",'Polygon must be saved prior to use.');
             else $rootScope.$emit("drawPolygonFile", modelId)
         };
@@ -55,13 +55,13 @@ angular.module('NodeWebBase')
          * Undefined if the model has not been saved
          */
         $scope.getPolygonId = function(){
-            for  (i in $scope.polygonFiles){
+            for  (var i=0; i<$scope.polygonFiles.length; i++){
                 if ($scope.polygonFiles[i].name == $scope.polyFile){
                     return $scope.polygonFiles[i].id;
                 }
             }
             return undefined;
-        }
+        };
 
 
         /**
@@ -76,11 +76,11 @@ angular.module('NodeWebBase')
                         if(!$rootScope.isAppConfigured())
                             return;
                         var pName = $scope.polyFile;
-                        var siteList = JSON.parse(resultsText)
-                        siteList.name = pName
-                        siteList.username = $rootScope.username
+                        var siteList = JSON.parse(resultsText);
+                        siteList.name = pName;
+                        siteList.username = $rootScope.username;
                         var modelId = $scope.getPolygonId();
-                        if (modelId) siteList.id = modelId
+                        if (modelId) siteList.id = modelId;
 
                         $http({
                             method:"POST",
@@ -89,7 +89,7 @@ angular.module('NodeWebBase')
                                 siteList: siteList
                             }}).success(function (response) {
                                 $("#resultsText").text(pName + " written");
-                                $scope.populatePolygonSelect() // refresh the polygon list to get the new id
+                                $scope.populatePolygonSelect(); // refresh the polygon list to get the new id
                             }).error($rootScope.showError)
                     }
                 });
@@ -105,7 +105,7 @@ angular.module('NodeWebBase')
             }).success(function (response) {
                 $scope.dataSets = response;
             }).error($rootScope.showError);
-        }
+        };
 
 
         $scope.applyScores = function() {
@@ -123,7 +123,7 @@ angular.module('NodeWebBase')
                 $rootScope.showErrorMessage("Query Job", "Please select a polygon file name.");
                 return;
             }
-            var siteListId = $scope.getPolygonId()
+            var siteListId = $scope.getPolygonId();
             if (!siteListId){
                 $rootScope.showErrorMessage("Query Job","Save your polygon file prior to running query.");
                 return;
@@ -134,8 +134,8 @@ angular.module('NodeWebBase')
             }
 
 
-            var customStopWords = []
-            if ($scope.run.cStopW && $scope.run.cStopW != "") customStopWords = $scope.run.cStopW.split(",")
+            var customStopWords = [];
+            if ($scope.run.cStopW && $scope.run.cStopW != "") customStopWords = $scope.run.cStopW.split(",");
             var jobObj = {
                 'name' : $scope.run.sFileName,
                 'username': $rootScope.username,
@@ -144,7 +144,7 @@ angular.module('NodeWebBase')
                 'customStopWords': customStopWords,
                 'siteListId':  siteListId,
                 'datasetId' :$scope.dataSetSelected.name
-            }
+            };
 
             $http({
                     method:"POST",
@@ -153,7 +153,7 @@ angular.module('NodeWebBase')
                 }).success(function (response) {
                     $rootScope.$emit("refreshJobsList");
                 }).error($rootScope.showError)
-        }
+        };
 
 
         $scope.applyTraining = function() {
@@ -169,7 +169,7 @@ angular.module('NodeWebBase')
                 $rootScope.showErrorMessage("Query Job", "Please select a polygon file name.");
                 return;
             }
-            var siteListId = $scope.getPolygonId()
+            var siteListId = $scope.getPolygonId();
             if (!siteListId) {
                 $rootScope.showErrorMessage("Query Job", "Save your polygon file prior to running query.");
                 return;
@@ -184,7 +184,7 @@ angular.module('NodeWebBase')
                 'queryType': 'training-data',
                 'siteListId': siteListId,
                 'datasetId': $scope.dataSetSelected.name
-            }
+            };
 
             $http({
                 method: "POST",
@@ -194,7 +194,7 @@ angular.module('NodeWebBase')
                 $rootScope.$emit("refreshJobsList");
             }).error($rootScope.showError)
 
-        }
+        };
 
 
         $scope.modReturn = function() {

@@ -16,11 +16,18 @@ div.scrollable.tabs(id="tabs" percent-Height percent='30'  ng-style="style" ng-c
                         th.mid(st-sort="jobname")
                            | Name
                         th.mid(st-sort="status") Status
+                        th.mid(st-sort="queryType") Type
+                        th.mid(st-sort="created") Submitted
+                        th.mid(st-sort="username") Username
+
                   tbody
                      tr(st-select-row="row" ng-click="rowClicked(row)" st-select-mode="single" ng-repeat="row in displayedCollection" ng-class="row.isSelected ? 'st-selected':''")
                         td.mid(style="width:32px")
                         td.mid {{row.name}}
                         td.mid {{row.status}}
+                        td.mid {{row.queryType}}
+                        td.mid {{row.created}}
+                        td.mid {{row.username}}
 
          div.tab( id="dataTab" ng-class="{hidden:!isActiveTab('dataTab')}")
             div(ng-controller="dataTableController").scrollTable

@@ -38,6 +38,23 @@ angular.module('NodeWebBase')
                 }).error($rootScope.showError);
         };
 
+        $scope.rowClicked = function(row){
+            if (!$rootScope.isAppConfigured())
+                return;
+            if(row.isSelected){
+                $http({
+                    method: "GET",
+                    url: "app/resultsets/" + row.resultsetId
+                }).success(function (response) {
+                    if(!response.bingroups || response.bingroups.length == 0)
+                    {
+                        $rootScope.showErrorMessage("Get Scores","No Scores Returned");
+                    }
+                    $rootScope.$emit("loadNavData", response);
+                }).error($rootScope.showError);
+            }
+        };
+
         $rootScope.$on('refreshJobsList', function(){
             $scope.getJobStatus();
         });
