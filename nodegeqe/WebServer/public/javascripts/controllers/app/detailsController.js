@@ -76,6 +76,7 @@ angular.module('NodeWebBase')
         });
 
         $rootScope.$on("setTermDictionary", function(event,data){
+            $scope.termArray.length = 0;
             angular.forEach(data,function(entry,idx){
                 $scope.termArray.push(entry[0]);
             })

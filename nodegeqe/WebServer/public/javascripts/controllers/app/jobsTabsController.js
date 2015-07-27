@@ -1,15 +1,15 @@
 angular.module('NodeWebBase')
     .controller('jobsTabsController', ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
         $scope.tabs = [{
-            title: 'Sample',
+            title: 'Query',
             url: 'one.tpl.html'
 
         }, {
-            title: 'Query',
+            title: 'Sample',
             url: 'two.tpl.html'
         }];
 
-        $scope.currentTab = 'two.tpl.html';
+        $scope.currentTab = 'one.tpl.html';
 
         $scope.onClickTab = function (tab) {
             $scope.currentTab = tab.url;

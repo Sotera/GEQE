@@ -61,7 +61,6 @@ angular.module('NodeWebBase')
                 }
 
                 $rootScope.$emit("loadNavData", response);
-                $rootScope.$emit("setTermDictionary", response.dic);
 
             }).error($rootScope.showError)
         };
@@ -114,9 +113,9 @@ angular.module('NodeWebBase')
         ///INIT
         var watchRemoval = $scope.$watch($rootScope.isAppConfigured ,function(newVal,oldVal) {
             if( newVal ){ // Don't do anything if Undefined.
-                $scope.popScore();
-                $scope.populatePolygonSelect();
-                $scope.populateTrainingSelect();
+                //$scope.popScore();
+                //$scope.populatePolygonSelect();
+                //$scope.populateTrainingSelect();
                 watchRemoval();
            }
         })

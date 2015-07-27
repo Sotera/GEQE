@@ -14,15 +14,17 @@ angular.module('NodeWebBase')
             $scope.clearResults();
 
             $timeout(function(){
-                if(data.dict) {
-                    var dictData = [];
-                    angular.forEach(data.dict, function(term,idx){
-                        dictData.push({"term":term,"rank":idx});
+                if(data.significantTerms) {
+                    var terms = [];
 
+                    $rootScope.$emit("setTermDictionary", data.significantTerms);
+
+                    angular.forEach(data.significantTerms, function(term,idx){
+                        terms.push({"term":term,"rank":idx});
                     });
 
-                    $scope.masterCollection = dictData.slice(0);
-                    $scope.rowCollection = dictData.slice(0);
+                    $scope.masterCollection = terms.slice(0);
+                    $scope.rowCollection = terms.slice(0);
                     $scope.displayedCollection = [].concat($scope.rowCollection);
                 }
             });
