@@ -34,11 +34,11 @@
   },
   "validations": [],
   "relations": {
-      "job": {
-          "type": "belongsTo",
-          "model": "job",
-          "foreignKey": "jobId"
-      }
+    "job": {
+      "type": "belongsTo",
+      "model": "job",
+      "foreignKey": "jobId"
+    }
   },
   "acls": [],
   "methods": []

@@ -8,7 +8,7 @@ router.get('/', function (req, res) {
 });
 
 router.post('/', function (req, res) {
-	netHelpers.performAjaxRequest('localhost', 5500, '/api/users/login', 'POST', req.body, function (resultObject) {
+    netHelpers.performAjaxRequest('localhost', 5500, '/api/users/login', 'POST', req.body, function (resultObject) {
 		if (resultObject.error) {
 			res.status(resultObject.error.status).send('Unauthorized');
 			return;

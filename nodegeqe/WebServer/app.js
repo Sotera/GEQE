@@ -35,6 +35,7 @@ app.use('/app/datasets',require('./routes/app/datasets'));
 app.use('/app/resultsets',require('./routes/app/resultsets'));
 app.use('/app/jobs',require('./routes/app/jobs'));
 app.use('/app/socialMediaQuery', require('./routes/app/socialMediaQuery'));
+app.use('/app/posts',require('./routes/app/posts'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
