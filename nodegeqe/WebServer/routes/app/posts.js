@@ -3,7 +3,7 @@ var router = express.Router();
 
 var netHelpers = just_include('netHelpers');
 
-var ES_HOST = ''
+var ES_HOST = 'scc.silverdale.dev'
 var ES_PORT = 9200
 
 
@@ -12,6 +12,8 @@ var ES_PORT = 9200
 Get posts based on a bounding box and optinal text query
 
     example:  curl -H "Content-Type: application/json"  -XPOST http://localhost:3000/app/posts/bin -d '{
+         "from": 0,
+         "size": 100,
          "boundingPoly": [
              {"lat": 41.462,"lng": -81.697},
              {"lat": 41.462, "lng": -81.69800000000001},
@@ -25,6 +27,8 @@ Get posts based on a bounding box and optinal text query
 router.post('/bin', function (req, res) {
 
     var query = { "query": {"filtered": {}}}
+    if (req.body.from) query["from"] = req.body.from
+    if (req.body.size) query["size"] = req.body.size
     query["query"]["filtered"]["query"] = getMatchQuery( req.body.query_string )
     query["query"]["filtered"]["filter"] =  getGeoPolygonFilter( req.body.boundingPoly)
 
@@ -48,6 +52,8 @@ router.post('/resultset', function (req, res) {
     var query_string = req.body.query_string
 
     var query = { "query": {"filtered": {}}}
+    if (req.body.from) query["from"] = req.body.from
+    if (req.body.size) query["size"] = req.body.size
     query["query"]["filtered"]["query"] = getMatchQuery( query_string )
 
     // generate a filter for each are in the results
@@ -80,6 +86,8 @@ router.post('/sitelist', function (req, res) {
     var query_string = req.body.query_string
 
     var query = { "query": {"filtered": {}}}
+    if (req.body.from) query["from"] = req.body.from
+    if (req.body.size) query["size"] = req.body.size
     query["query"]["filtered"]["query"] = getMatchQuery( query_string )
 
     // generate a filter for each are in the results
