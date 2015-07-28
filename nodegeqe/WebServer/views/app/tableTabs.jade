@@ -1,4 +1,4 @@
-div.scrollable.tabs(id="tabs" percent-Height percent='30'  ng-style="style" ng-controller="tableTabsController")
+div.scrollable.tabs(id="tabs" ng-style="style" ng-controller="tableTabsController")
 
    ul.nav.nav-tabs
       li(ng-repeat="tab in tabs" ng-class="{active:isActiveTab(tab.url)}" ng-click="onClickTab(tab)" user-log elementtype='TAB' loggroup='control_box' logtags='tab,{tab.title}')
@@ -7,27 +7,32 @@ div.scrollable.tabs(id="tabs" percent-Height percent='30'  ng-style="style" ng-c
    div
       div.tab-content
          div.tab( id="jobsTab" ng-class="{hidden:!isActiveTab('jobsTab')}")
-            div
-               table.table.table-striped(st-table="displayedCollection" st-safe-src="rowCollection")
-                  thead
-                     tr
-                        th.mid(style="width:32px")
-                           button.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="getJobStatus()" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
-                        th.mid(st-sort="jobname")
-                           | Name
-                        th.mid(st-sort="status") Status
-                        th.mid(st-sort="queryType") Type
-                        th.mid(st-sort="created") Submitted
-                        th.mid(st-sort="username") Username
+            .container-fluid
+               div.row-jobs-table
+                  div.column-buttons
+                     button.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="getJobStatus()" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
+                     button.btn.btn-default.btn-xs.glyphicon.glyphicon-eye-open(ng-click="viewJobData()" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
+                     button.btn.btn-default.btn-xs.glyphicon.glyphicon-trash(ng-click="deleteJob()" ng-class="{active:isSelectedRowDeletable()}" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
+                     button.btn.btn-default.btn-xs.glyphicon.glyphicon-download-alt(ng-click="getJobStatus()" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
 
-                  tbody
-                     tr(st-select-row="row" ng-click="rowClicked(row)" st-select-mode="single" ng-repeat="row in displayedCollection" ng-class="row.isSelected ? 'st-selected':''")
-                        td.mid(style="width:32px")
-                        td.mid {{row.name}}
-                        td.mid {{row.status}}
-                        td.mid {{row.queryType}}
-                        td.mid {{row.created}}
-                        td.mid {{row.username}}
+                  div.column-table
+                     table.table.table-striped(st-table="displayedCollection" st-safe-src="rowCollection")
+                        thead
+                        tr
+                           th.mid(st-sort="jobname")
+                              | Name
+                           th.mid(st-sort="status") Status
+                           th.mid(st-sort="queryType") Type
+                           th.mid(st-sort="created") Submitted
+                           th.mid(st-sort="username") Username
+
+                        tbody
+                        tr(st-select-row="row" ng-click="rowClicked(row)" st-select-mode="single" ng-repeat="row in displayedCollection" ng-class="row.isSelected ? 'st-selected':''")
+                           td.mid {{row.name}}
+                           td.mid {{row.status}}
+                           td.mid {{row.queryType}}
+                           td.mid {{row.created}}
+                           td.mid {{row.username}}
 
          div.tab( id="dataTab" ng-class="{hidden:!isActiveTab('dataTab')}")
             div(ng-controller="dataTableController").scrollTable

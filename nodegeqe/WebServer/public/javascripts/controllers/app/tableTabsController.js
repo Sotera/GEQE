@@ -1,5 +1,5 @@
 angular.module('NodeWebBase')
-    .controller('tableTabsController', ['$scope','$rootScope','$http','$timeout', function ($scope, $rootScope, $http, $timeout) {
+    .controller('tableTabsController', ['$scope','$rootScope','$http','$timeout','$cookies', function ($scope, $rootScope, $http, $timeout, $cookies) {
         $scope.tabs = [{
             title: 'Jobs',
             url: 'jobsTab'
@@ -13,7 +13,12 @@ angular.module('NodeWebBase')
         $scope.masterCollection = [];
         $scope.rowCollection = [];
         $scope.displayedCollection = [];
+        $scope.selectedRow = null;
 
+        $scope.isSelectedRowDeletable = function(){
+          return !(!$scope.selectedRow || $scope.selectedRow.status === "RUNNING" ||
+          $scope.selectedRow.username != $cookies.lastUsername);
+        };
 
         $scope.getJobStatus = function(){
             if(!$rootScope.isAppConfigured())
@@ -21,7 +26,7 @@ angular.module('NodeWebBase')
 
             $http({
                 method:"GET",
-                url: "app/jobs/get",
+                url: "app/jobs/",
                 params: {
                     "username": $rootScope.username
                 }})
@@ -38,13 +43,14 @@ angular.module('NodeWebBase')
                 }).error($rootScope.showError);
         };
 
-        $scope.rowClicked = function(row){
+        $scope.viewJobData = function(){
             if (!$rootScope.isAppConfigured())
                 return;
-            if(row.isSelected){
+
+            if($scope.selectedRow && $scope.selectedRow.isSelected){
                 $http({
                     method: "GET",
-                    url: "app/resultsets/" + row.resultsetId
+                    url: "app/resultsets/" + $scope.selectedRow.resultsetId
                 }).success(function (response) {
                     if(!response.bingroups || response.bingroups.length == 0)
                     {
@@ -53,6 +59,32 @@ angular.module('NodeWebBase')
                     $rootScope.$emit("loadNavData", response);
                 }).error($rootScope.showError);
             }
+        };
+
+        $scope.deleteJob = function(){
+            if (!$rootScope.isAppConfigured())
+                return;
+
+            if($scope.selectedRow && $scope.selectedRow.isSelected){
+                $http({
+                    method: "DELETE",
+                    url: "app/jobs/" + $scope.selectedRow.id
+                }).success(function (response) {
+                    $scope.getJobStatus();
+                }).error($rootScope.showError);
+            }
+        };
+
+        $scope.rowClicked = function(row){
+            if (!$rootScope.isAppConfigured())
+                return;
+            if(row.isSelected) {
+                $scope.selectedRow = row;
+                return;
+            }
+
+            $scope.selectRow = null;
+
         };
 
         $rootScope.$on('refreshJobsList', function(){

@@ -170,6 +170,18 @@ div[class^="col-"]{
     display:none;
 }
 
+.row-jobs-table{
+    width: 100%;
+    clear:both;
+}
+.column-buttons{
+    width:28px;
+    float:left;
+}
+
+.column-table{
+    margin-left:28px;
+}
 
 .nav-tabs > li > a {
     padding: 0px 4px;
@@ -180,6 +192,8 @@ span.btn-lg{
     padding-left: 16px;
     padding-right: 16px;
 }
+
+
 
 /*---------------------------------
 ------------debug css--------------

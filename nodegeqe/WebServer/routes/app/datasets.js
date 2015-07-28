@@ -8,7 +8,7 @@ router.get('/', function (req, res) {
 
     netHelpers.performAjaxRequest('localhost', 5500, '/api/datasets', 'GET',null,function (resultObject) {
         if (resultObject.error) {
-            console.error(resultObject.error)
+            console.error(resultObject.error);
             res.status(resultObject.error.status).send(resultObject.error.message);
             return;
         }
