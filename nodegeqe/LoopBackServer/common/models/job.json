@@ -46,9 +46,9 @@
       "foreignKey": "datasetId"
     },
     "resultset": {
-          "type": "belongsTo",
-          "model": "resultset",
-          "foreignKey": "resultsetId"
+      "type": "belongsTo",
+      "model": "resultset",
+      "foreignKey": "resultsetId"
     }
   },
   "acls": [],
