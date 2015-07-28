@@ -16,8 +16,10 @@ angular.module('NodeWebBase')
         $scope.selectedRow = null;
 
         $scope.isSelectedRowDeletable = function(){
-          return !(!$scope.selectedRow || $scope.selectedRow.status === "RUNNING" ||
-          $scope.selectedRow.username != $cookies.lastUsername);
+          if(!$scope.selectedRow || $scope.selectedRow.status === "RUNNING" ||
+          $scope.selectedRow.username != $cookies.lastUsername)
+            return false;
+          return true;
         };
 
         $scope.getJobStatus = function(){
@@ -83,7 +85,7 @@ angular.module('NodeWebBase')
                 return;
             }
 
-            $scope.selectRow = null;
+            $scope.selectedRow = null;
 
         };
 

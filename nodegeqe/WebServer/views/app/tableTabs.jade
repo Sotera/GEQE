@@ -12,7 +12,7 @@ div.scrollable.tabs(id="tabs" ng-style="style" ng-controller="tableTabsControlle
                   div.column-buttons
                      button.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="getJobStatus()" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
                      button.btn.btn-default.btn-xs.glyphicon.glyphicon-eye-open(ng-click="viewJobData()" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
-                     button.btn.btn-default.btn-xs.glyphicon.glyphicon-trash(ng-click="deleteJob()" ng-class="{active:isSelectedRowDeletable()}" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
+                     button.btn.btn-default.btn-xs.glyphicon.glyphicon-trash(ng-click="deleteJob()" ng-class="{disabled:!isSelectedRowDeletable()}" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
                      button.btn.btn-default.btn-xs.glyphicon.glyphicon-download-alt(ng-click="getJobStatus()" title="Refresh Job Status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
 
                   div.column-table
