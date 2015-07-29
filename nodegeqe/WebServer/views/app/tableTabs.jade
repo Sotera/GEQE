@@ -42,15 +42,15 @@ div.scrollable.tabs(id="tabs" ng-style="style" ng-controller="tableTabsControlle
                         th.mid(st-sort="_source.user") User Name
                         th.mid(st-sort="_source.message") Message
                         th.mid(st-sort="_source.post_date") Date
-                        th.mid(st-sort="_source.location.coordinates[0]") lat
-                        th.mid(st-sort="_source.location.coordinates[1]") lon
+                        th.mid(st-sort="_source.location.coordinates[1]") lat
+                        th.mid(st-sort="_source.location.coordinates[0]") lon
                   tbody
                      tr(st-select-row="row" ng-click="rowClicked(row)" st-select-mode="single" ng-repeat="row in displayedCollection" ng-class="row.isSelected ? 'st-selected':''")
                         td.mid {{row._source.user }}
                         td.mid {{row._source.message}}
                         td.mid {{row._source.post_date | date}}
-                        td.mid {{row._source.location.coordinates[0]}}
                         td.mid {{row._source.location.coordinates[1]}}
+                        td.mid {{row._source.location.coordinates[0]}}
 
 
 

@@ -238,8 +238,9 @@ angular.module('NodeWebBase')
             angular.forEach(data.hits, function(item){
                 var source = item._source;
 
-                var lat = parseFloat(source.location.coordinates[0]);
-                var lon = parseFloat(source.location.coordinates[1]);
+                // yes....its stupid
+                var lat = parseFloat(source.location.coordinates[1]);
+                var lon = parseFloat(source.location.coordinates[0]);
 
                 var markerLocation = new google.maps.LatLng(lat, lon);
                 var date = new Date(source.post_date).getHours();
