@@ -69,7 +69,8 @@ angular.module('NodeWebBase')
                         data:{
                             "from": 0,
                             "size": 100,
-                            "boundingPoly": item.boundingPoly
+                            "boundingPoly": item.boundingPoly,
+                            "query_string": item.significantTerms.join(' ')
                         }
                     }).success(function (response) {
                         item.posts = response.hits;
