@@ -16,8 +16,7 @@ angular.module('NodeWebBase')
         $scope.selectedRow = null;
 
         $scope.isSelectedRowDeletable = function(){
-          if(!$scope.selectedRow || $scope.selectedRow.status === "RUNNING" ||
-          $scope.selectedRow.username != $cookies.lastUsername)
+          if(!$scope.selectedRow || $scope.selectedRow.status === "RUNNING")
             return false;
           return true;
         };
@@ -35,6 +34,7 @@ angular.module('NodeWebBase')
                 .success(function (response) {
 
                     $timeout(function(){
+                        $scope.selectedRow = null;
                         if(response) {
                             $scope.masterCollection = response.slice(0);
                             $scope.rowCollection = response.slice(0);
