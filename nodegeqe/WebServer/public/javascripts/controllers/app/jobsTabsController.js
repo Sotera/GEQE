@@ -5,7 +5,7 @@ angular.module('NodeWebBase')
             url: 'one.tpl.html'
 
         }, {
-            title: 'Sample',
+            title: 'Model',
             url: 'two.tpl.html'
         }];
 

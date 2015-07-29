@@ -51,7 +51,7 @@ angular.module('NodeWebBase')
             ngDialog.openConfirm({
                 template: '/views/app/genericError',
                 controller: ['$scope', function ($scope) {
-                    $scope.errorMessage = reason + ' ' + jqxhr.responseText;
+                    $scope.errorMessage = 'status ' + status + ' for ' + config.url;
                     $scope.close = function () {
                         $scope.closeThisDialog(null);
                     }

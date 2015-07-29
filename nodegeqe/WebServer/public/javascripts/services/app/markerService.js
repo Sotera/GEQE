@@ -228,7 +228,7 @@ angular.module('NodeWebBase')
 
             google.maps.event.addListener(marker, 'click', function() {
                 me.selectMarker(marker,type);
-                $rootScope.$emit("loadItemData",marker.markerItem);
+                $rootScope.$emit("loadItemPosts",marker.markerItem);
             });
         };
 

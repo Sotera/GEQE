@@ -39,30 +39,18 @@ div.scrollable.tabs(id="tabs" ng-style="style" ng-controller="tableTabsControlle
                table.table.table-striped(st-table="displayedCollection" st-safe-src="rowCollection")
                   thead
                      tr
-                        th.mid(st-sort="usr") User Name
-                        th.mid(st-sort="cap") Caption
-                        th.mid(st-sort="datetime") Date
-                        th.mid(st-sort="lat") lat
-                        th.mid(st-sort="lon") lon
-                     tr.hidden
-                        th
-                           input(st-search="usr" placeholder="user filter" type="search").input-sm.form-control
-                        th
-                           input(st-search="cap" placeholder="caption filter" type="search").input-sm.form-control
-                        th
-                           input(st-search="date" placeholder="date filter" type="search").input-sm.form-control
-                        th
-                           input(st-search="lat" placeholder="lat filter" type="search").input-sm.form-control
-                        th
-                           input(st-search="lon" placeholder="lon filter" type="search").input-sm.form-control
-
+                        th.mid(st-sort="_source.user") User Name
+                        th.mid(st-sort="_source.message") Message
+                        th.mid(st-sort="_source.post_date") Date
+                        th.mid(st-sort="_source.location.coordinates[0]") lat
+                        th.mid(st-sort="_source.location.coordinates[1]") lon
                   tbody
                      tr(st-select-row="row" ng-click="rowClicked(row)" st-select-mode="single" ng-repeat="row in displayedCollection" ng-class="row.isSelected ? 'st-selected':''")
-                        td.mid {{row.usr }}
-                        td.mid {{row.cap}}
-                        td.mid {{row.datetime | date}}
-                        td.mid {{row.lat }}
-                        td.mid {{row.lon}}
+                        td.mid {{row._source.user }}
+                        td.mid {{row._source.message}}
+                        td.mid {{row._source.post_date | date}}
+                        td.mid {{row._source.location.coordinates[0]}}
+                        td.mid {{row._source.location.coordinates[0]}}
 
 
 

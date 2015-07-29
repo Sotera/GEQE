@@ -3,13 +3,13 @@ var router = express.Router();
 
 var netHelpers = just_include('netHelpers');
 
-var ES_HOST = 'scc.silverdale.dev'
-var ES_PORT = 9200
+var ES_HOST = '172.21.10.140';//'scc.silverdale.dev';
+var ES_PORT = 9200;
 
 
 
 /*
-Get posts based on a bounding box and optinal text query
+Get posts based on a bounding box and optional text query
 
     example:  curl -H "Content-Type: application/json"  -XPOST http://localhost:3000/app/posts/bin -d '{
          "from": 0,
@@ -26,11 +26,11 @@ Get posts based on a bounding box and optinal text query
  */
 router.post('/bin', function (req, res) {
 
-    var query = { "query": {"filtered": {}}}
-    if (req.body.from) query["from"] = req.body.from
-    if (req.body.size) query["size"] = req.body.size
-    query["query"]["filtered"]["query"] = getMatchQuery( req.body.query_string )
-    query["query"]["filtered"]["filter"] =  getGeoPolygonFilter( req.body.boundingPoly)
+    var query = { "query": {"filtered": {}}};
+    if (req.body.from) query["from"] = req.body.from;
+    if (req.body.size) query["size"] = req.body.size;
+    query["query"]["filtered"]["query"] = getMatchQuery( req.body.query_string );
+    query["query"]["filtered"]["filter"] =  getGeoPolygonFilter( req.body.boundingPoly);
 
     netHelpers.performAjaxRequest(ES_HOST, ES_PORT, '/geqe/post/_search', 'POST',query,function (resultObject) {
         if (resultObject.error) {
@@ -48,23 +48,23 @@ router.post('/bin', function (req, res) {
  * post body example: {"query_string": "hello world", "resultset": resultsetObject}
  */
 router.post('/resultset', function (req, res) {
-    var resultset = req.body.resultset
-    var query_string = req.body.query_string
+    var resultset = req.body.resultset;
+    var query_string = req.body.query_string;
 
-    var query = { "query": {"filtered": {}}}
-    if (req.body.from) query["from"] = req.body.from
-    if (req.body.size) query["size"] = req.body.size
-    query["query"]["filtered"]["query"] = getMatchQuery( query_string )
+    var query = { "query": {"filtered": {}}};
+    if (req.body.from) query["from"] = req.body.from;
+    if (req.body.size) query["size"] = req.body.size;
+    query["query"]["filtered"]["query"] = getMatchQuery( query_string );
 
     // generate a filter for each are in the results
-    var filters = []
+    var filters = [];
     for (var i in resultset["bingroups"]){
         for (var j in resultset["bingroups"][i]["bins"]){
-            var bin = resultset["bingroups"][i]["bins"][j]
+            var bin = resultset["bingroups"][i]["bins"][j];
             filters.push(getGeoPolygonFilter(bin.boundingPoly))
         }
     }
-    query["query"]["filtered"]["filter"] =  {"bool": { "should" : filters}}
+    query["query"]["filtered"]["filter"] =  {"bool": { "should" : filters}};
 
     netHelpers.performAjaxRequest(ES_HOST, ES_PORT, '/geqe/post/_search', 'POST',query,function (resultObject) {
         if (resultObject.error) {
@@ -82,22 +82,22 @@ router.post('/resultset', function (req, res) {
  * post body example: {"query_string": "hello world", "sitelist": sitelistObject}
  */
 router.post('/sitelist', function (req, res) {
-    var sitelist = req.body.sitelist
-    var query_string = req.body.query_string
+    var sitelist = req.body.sitelist;
+    var query_string = req.body.query_string;
 
-    var query = { "query": {"filtered": {}}}
-    if (req.body.from) query["from"] = req.body.from
-    if (req.body.size) query["size"] = req.body.size
-    query["query"]["filtered"]["query"] = getMatchQuery( query_string )
+    var query = { "query": {"filtered": {}}};
+    if (req.body.from) query["from"] = req.body.from;
+    if (req.body.size) query["size"] = req.body.size;
+    query["query"]["filtered"]["query"] = getMatchQuery( query_string );
 
     // generate a filter for each are in the results
-    var filters = []
+    var filters = [];
     for (var i in sitelist["sites"]){
-        var site = sitelist["sites"][i]
-        var points = getGeoPoints(site.lats,site.lons)
+        var site = sitelist["sites"][i];
+        var points = getGeoPoints(site.lats,site.lons);
         filters.push(getGeoPolygonFilter(points))
     }
-    query["query"]["filtered"]["filter"] =  {"bool": { "should" : filters}}
+    query["query"]["filtered"]["filter"] =  {"bool": { "should" : filters}};
 
     netHelpers.performAjaxRequest(ES_HOST, ES_PORT, '/geqe/post/_search', 'POST',query,function (resultObject) {
         if (resultObject.error) {
@@ -127,7 +127,7 @@ function getGeoPolygonFilter(points){
         coordinates.push( [ points[i].lng, points[i].lat] )
     }
     // close the polygon
-    coordinates.push( [ points[0].lng, points[0].lat] )
+    coordinates.push( [ points[0].lng, points[0].lat] );
 
     var filter =  {
         "geo_shape": {

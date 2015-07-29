@@ -4,8 +4,8 @@ angular.module('NodeWebBase')
             return (!!input) ? $filter('date')( Date.parse(input), format, timezone) : '';
         };
     })
-    .controller('dataTableController', ['$scope','$rootScope','$timeout','applyFilterMsg','itemDetailsLoadedMsg',
-        function ($scope, $rootScope, $timeout, applyFilterMsg,itemDetailsLoadedMsg) {
+    .controller('dataTableController', ['$scope','$rootScope','$timeout','applyFilterMsg','itemDetailsLoadedMsg','$http',
+        function ($scope, $rootScope, $timeout, applyFilterMsg,itemDetailsLoadedMsg,$http) {
             $scope.scopeName = 'dataTableController';
 
             $scope.masterCollection = [];
@@ -47,8 +47,8 @@ angular.module('NodeWebBase')
 
                 $timeout(function(){
                     if(data.posts) {
-                        $scope.masterCollection = data.posts.slice(0);
-                        $scope.rowCollection = data.posts.slice(0);
+                        $scope.masterCollection = data.posts.hits.slice(0);
+                        $scope.rowCollection = data.posts.hits.slice(0);
                         $scope.displayedCollection = [].concat($scope.rowCollection);
                     }
                     else{
@@ -56,6 +56,29 @@ angular.module('NodeWebBase')
                     }
                 });
 
+            });
+
+            $rootScope.$on('loadItemPosts',function(event,item){
+                if(!item.posts) {
+                    $http({
+                        method: "POST",
+                        url: "app/posts/bin",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        data:{
+                            "from": 0,
+                            "size": 100,
+                            "boundingPoly": item.boundingPoly
+                        }
+                    }).success(function (response) {
+                        item.posts = response.hits;
+                        $rootScope.$emit("loadItemData", item);
+                    }).error($rootScope.showError);
+                    return;
+                }
+
+                $rootScope.$emit("loadItemData",item);
             });
 
             $scope.rowClicked = function(row){

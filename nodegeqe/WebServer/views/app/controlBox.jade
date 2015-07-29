@@ -65,35 +65,47 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                                     label Query by Event
                                       input.form-control-sm( style="margin-left: 5px;" type ="radio" value="1" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,event')
 
-                            button.form-control.btn.btn-default(ng-click="applyScores()" title='Start Query Job' user-log elementtype='BUTTON' loggroup='run_tab' logtags='query_job,start') Start Job
-                        fieldset.scheduler-border
-                            legend.scheduler-border Get Training Data
-                            div.form-group-sm
-                                label(for='tFileName') Job Name:
-                                input.form-control(ng-model="training.FileName" value="training" id="tFileName" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='training_job,name')
-                            button.form-control.btn.btn-default(ng-click="applyTraining()" title='Get Training Data' user-log elementtype='BUTTON' loggroup='run_tab' logtags='training_job,start') Get Data
+                            button.form-control.btn.btn-default(ng-click="applyScores()" title='Start Query Job' user-log elementtype='BUTTON' loggroup='run_tab' logtags='query_job,start') Submit Query Job
+
             div.tab( id="two.tpl.html" ng-class="{hidden:!isActiveTab('two.tpl.html')}")
-                div(ng-controller="resultsTabController")
-                    form
+                div(ng-controller="modelTabController")
+                    div.form
+                        div.form-group-sm
+                            label(for='dataSetSelect') Data Set:
+                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='getDataSets()' title="Refresh file list." user-log elementtype='BUTTON' loggroup='run_tab' logtags='run,refresh,data_set_files')
+                            select.form-control(id="dataSetSelect" ng-options="item.name for item in dataSets | orderBy: item.name" ng-model="dataSetSelected" user-log elementtype='DROPDOWNLIST' loggroup='run_tab' logtags='run,select,data_set_files')
+                                option(value="") --Select--
+                        div.form-group-sm
+                            div.input-group
+                                label(for='pFileName') Polygon:
+                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="populatePolygonSelect()" title="Refresh file list." user-log elementtype='BUTTON' loggroup='run_tab' logtags='refresh,training_file')
+                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-floppy-disk(ng-click="saveList()" title= "Save Polygon File" user-log elementtype='BUTTON' loggroup='run_tab' logtags='save,training_file')
+                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="drawPolygonFile()" title="Draw polygons to the map." user-log elementtype='BUTTON' loggroup='run_tab' logtags='draw,training_file')
+                                div(style="display:inline-table; width:100%")
+                                    div.input-group-btn
+                                        button.btn.btn-sm.btn-default.dropdown-toggle(type="button", id="pFileDropButton", data-toggle="dropdown", aria-expanded="false" user-log elementtype='COMBOBOX' loggroup='run_tab' logtags='select,training_file')
+                                            span.caret
+                                        ul.scrollable-menu.dropdown-menu(role="menu", style="overflow:scroll")
+                                            li(ng-repeat="item in polygonFiles | orderBy: item" ng-click="polyFileSelected(item)" value="{{item}}")
+                                                a(href='#') {{item.name}}
+                                    input.form-control(type="text" ng-model="polyFile" name="polyFile")
                         fieldset.scheduler-border
-                            legend.scheduler-border Query Results
+                            legend.scheduler-border Run Modeling Job
                             div.form-group-sm
-                                label(for="scoreSelect") Job Name:
-                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="popScore()" user-log elementtype='BUTTON' loggroup='results_tab' logtags='results,score files,refresh'  title="Refresh file list.")
-                                select.form-control( name="scoreSelect" id="scoreSelect" ng-options="item for item in scoreFiles | orderBy: item"  ng-model="getScoresModel.fileAppOut" user-log elementtype='DROPDOWNLIST' loggroup='results' logtags='score,select'  )
-                                    option( value="") --Select--
+                                label(for='sFileName') Job Name:
+                                input.form-control(ng-model="run.sFileName" id="sFileName" value="my-scores" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,name')
                             div.form-group-sm
-                                label(for="sMaxEntries")  Max Points:
-                                input.form-control(type="number" id="sMaxEntries" ng-model="getScoresModel.maxOut" user-log elementtype='TEXTBOX' loggroup='results_tab' logtags='results,max entries' step="any" novalidate)
-                            button.form-control.btn.btn-default(ng-click="getScores()" user-log elementtype='BUTTON' loggroup='results_tab' logtags='results,score files,show' title='Draw Scores to the map') Show Scores
-                        fieldset.scheduler-border
-                            legend.scheduler-border Training Results
-                            div.form-group-sm
-                                label(for="trainingSelect") Job Name:
-                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='populateTrainingSelect()' title="Refresh file list." user-log elementtype='BUTTON' loggroup='results_tab' logtags='results,training files,refresh' )
-                                select.form-control(name="trainingSelect" ng-options="item for item in trainingFiles | orderBy: item" ng-model="trainingDataModel.fileAppOut" id="trainingSelect" user-log elementtype='DROPDOWNLIST' loggroup='results_tab' logtags='training,select')
-                                    option(value="") --Select--
-                                button.form-control.btn.btn-default(ng-click="drawTrainingData()" title='Draw training data to the map.' user-log elementtype='BUTTON' loggroup='results_tab' logtags='training files,show') Show Training Data
+                                label(for="cStopW") Custom Stop Words
+                                input.form-control( type="text" ng-model="run.cStopW" id="cStopW" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,custom_stop_words')
+                            div( id="hr3" )
+                                div.form-group-sm
+                                    label Query by Location
+                                        input.form-control-sm( style="margin-left: 5px;" type ="radio" value="0" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,location')
+                                    br
+                                    label Query by Event
+                                        input.form-control-sm( style="margin-left: 5px;" type ="radio" value="1" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,event')
+
+                            button.form-control.btn.btn-default(ng-click="applyScores()" title='Start Query Job' user-log elementtype='BUTTON' loggroup='run_tab' logtags='query_job,start') Submit Modeling Job
 
 
 

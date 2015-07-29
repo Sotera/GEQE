@@ -2,7 +2,7 @@
  * Created by jlueders on 4/13/15.
  */
 angular.module('NodeWebBase')
-    .controller('resultsTabController', ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
+    .controller('modelTabController', ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
         $scope.scoreFiles = [];
         $scope.polygonFiles = [];
         $scope.trainingFiles = [];
