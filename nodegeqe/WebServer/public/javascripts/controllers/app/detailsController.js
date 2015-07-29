@@ -60,6 +60,9 @@ angular.module('NodeWebBase')
         });
 
         $rootScope.$on('loadItemData', function (event, data) {
+            //RETURN UNTIL I GET IT FIXED
+            return;
+
             $timeout(function(){
                 $scope.data = data;
                 if(data.posts) {

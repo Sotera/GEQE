@@ -220,7 +220,7 @@ angular.module('NodeWebBase')
             google.maps.event.addListener(marker, 'dblclick', function() {
                 me.selectMarker(marker,type);
 
-                if(!marker.markerItem.nTotal || marker.markerItem.nTotal <= 0)
+                if(!marker.markerItem.posts || marker.markerItem.posts.total <= 0)
                     return;
                 me.clearMarkers(['item']);
                 me.drawTypeMarkers(marker.markerItem.posts,'item',false);
@@ -235,17 +235,17 @@ angular.module('NodeWebBase')
         me.drawTypeMarkers = function(data,type,zoomTo){
             var locations = [];
 
-            angular.forEach(data, function(item){
-                var capPScor = item['cap'];
+            angular.forEach(data.hits, function(item){
+                var source = item._source;
 
-                var lat = parseFloat(item['lat']);
-                var lon = parseFloat(item['lon']);
+                var lat = parseFloat(source.location.coordinates[0]);
+                var lon = parseFloat(source.location.coordinates[1]);
 
                 var markerLocation = new google.maps.LatLng(lat, lon);
-                var date = new Date(item.datetime).getHours();
+                var date = new Date(source.post_date).getHours();
                 locations.push(markerLocation);
 
-                me.putTypeMarker(markerLocation, capPScor, item,type,date,23);
+                me.putTypeMarker(markerLocation, source.message, item,type,date,23);
 
             });
 
