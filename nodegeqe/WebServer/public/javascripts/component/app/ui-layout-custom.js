@@ -40,7 +40,6 @@ angular.module('ui.layout', [])
     ctrl.opts = opts;
 
     $scope.updateDisplay = function() {
-      console.log(ctrl.containers);
       ctrl.updateDisplay();
     };
 
@@ -493,21 +492,9 @@ angular.module('ui.layout', [])
 
         var prevChevronClass = ctrl.isUsingColumnFlow ? chevronLeft : chevronUp;
         var afterChevronClass = ctrl.isUsingColumnFlow ? chevronRight : chevronDown;
-        var previousSplitbar = ctrl.getPreviousSplitbarContainer(scope.splitbar);
-        console.log("HERE!");
+
         prevChevron.addClass(prevChevronClass);
         afterChevron.addClass(afterChevronClass);
-      //prevChevron.addClass(prevChevronClass);
-      //afterChevron.addClass(afterChevronClass);
-          if(previousSplitbar){
-              console.log("LEFT MOST", element);
-              prevButton.css('display', 'none');
-              afterButton.css('display','inline');
-          }else{
-              console.log("RIGHTMOST", element);
-              prevButton.css('display', 'inline');
-              afterButton.css('display', 'none');
-          }
 
         prevButton.on('click', function() {
           var prevSplitbarBeforeButton, prevSplitbarAfterButton;
@@ -531,7 +518,7 @@ angular.module('ui.layout', [])
                 prevSplitbarAfterButton.css('display', 'none');
               }
             } else {
-              afterButton.css('display', 'none');
+              afterButton.css('display', 'inline');
               prevChevron.removeClass(chevronRight);
               prevChevron.addClass(chevronLeft);
 
@@ -575,7 +562,7 @@ angular.module('ui.layout', [])
             nextSplitbarBeforeButton = angular.element(nextSplitbar.element.children()[0]);
             nextSplitbarAfterButton = angular.element(nextSplitbar.element.children()[1]);
           }
-            //afterButton.css('display', 'none');
+
           if(ctrl.isUsingColumnFlow) {
             if(result) {
               prevButton.css('display', 'none');
@@ -588,7 +575,7 @@ angular.module('ui.layout', [])
                 nextSplitbarAfterButton.css('display', 'none');
               }
             } else {
-              prevButton.css('display', 'none');
+              prevButton.css('display', 'inline');
               afterChevron.removeClass(chevronLeft);
               afterChevron.addClass(chevronRight);
 
