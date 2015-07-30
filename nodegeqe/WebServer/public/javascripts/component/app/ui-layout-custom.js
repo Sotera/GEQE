@@ -492,6 +492,13 @@ angular.module('ui.layout', [])
 
         var prevChevronClass = ctrl.isUsingColumnFlow ? chevronLeft : chevronUp;
         var afterChevronClass = ctrl.isUsingColumnFlow ? chevronRight : chevronDown;
+        var currentSplitbarIndex = ctrl.containers.length;
+
+        if(currentSplitbarIndex == 1 && ctrl.isUsingColumnFlow){
+            afterButton.css('display', 'none');
+        }else if(ctrl.isUsingColumnFlow){
+            prevButton.css('display', 'none');
+        }
 
         prevChevron.addClass(prevChevronClass);
         afterChevron.addClass(afterChevronClass);
@@ -526,6 +533,8 @@ angular.module('ui.layout', [])
               if(previousSplitbar !== null) {
                 prevSplitbarBeforeButton.css('display', 'inline');
                 prevSplitbarAfterButton.css('display', 'inline');
+              }else{
+                  afterButton.css("display","none")
               }
             }
           } else {
@@ -583,6 +592,8 @@ angular.module('ui.layout', [])
               if(nextSplitbar !== null) {
                 nextSplitbarBeforeButton.css('display', 'inline');
                 nextSplitbarAfterButton.css('display', 'inline');
+              }else{
+                  prevButton.css("display","none")
               }
             }
           } else {
