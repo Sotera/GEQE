@@ -100,8 +100,7 @@ angular.module('NodeWebBase')
         function link(scope, element, attrs) {
             $(document).ready(function () {
                 scope.style = {
-                    height: '100%',
-                    width: '100%'
+                    height: '100%'
                 };
                 var myLatlng = new google.maps.LatLng(41.495753190958816,-81.70090198516846);
                 var mapOptions = {
@@ -137,9 +136,9 @@ angular.module('NodeWebBase')
                     },
                     function (newValue, oldValue) {
                         if (newValue != oldValue) {
-                            var center = scope.map.getCenter();
-                            google.maps.event.trigger(scope.map, "resize");
-                            scope.map.setCenter(center);
+                            //var center = scope.map.getCenter();
+                            //google.maps.event.trigger(scope.map, "resize");
+                            //scope.map.setCenter(center);
                         }
                     }
                 );

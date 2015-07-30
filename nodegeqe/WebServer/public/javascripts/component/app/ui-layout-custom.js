@@ -3,6 +3,7 @@
 /**
  * UI.Layout
  */
+function OnResize(){}
 angular.module('ui.layout', [])
   .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', 'LayoutContainer', function uiLayoutCtrl($scope, $attrs, $element, LayoutContainer) {
     var ctrl = this;
