@@ -23,7 +23,6 @@ angular.module('NodeWebBase')
         };
 
         $scope.getJobStatus = function(){
-            console.log("getJobStatus");
             if(!$rootScope.isAppConfigured())
                 return;
 
