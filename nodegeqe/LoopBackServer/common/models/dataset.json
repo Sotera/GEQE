@@ -12,6 +12,10 @@
       "type": "string",
       "required": true
     },
+    "dictionaryPath": {
+      "type": "string",
+      "required": true
+    },
     "type": {
       "type": "string",
       "required": true

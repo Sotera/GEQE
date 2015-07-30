@@ -68,5 +68,11 @@
     "public": true,
     "$promise": {},
     "$resolved": true
+  },
+  "clusterStatus":{
+      "dataSource": "testMongoDB",
+      "public": true,
+      "$promise": {},
+      "$resolved": true
   }
 }

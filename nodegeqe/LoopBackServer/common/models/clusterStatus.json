@@ -1,0 +1,24 @@
+{
+    "name": "clusterStatus",
+    "base": "PersistedModel",
+    "strict": false,
+    "idInjection": true,
+    "properties": {
+        "host": {
+            "type": "string",
+            "required": true
+        },
+        "status": {
+            "type": "string",
+            "required": true
+        },
+        "lastModified": {
+            "type": "Date",
+            "defaultFn": "now"
+        }
+    },
+    "validations": [],
+    "relations": {},
+    "acls": [],
+    "methods": []
+}
