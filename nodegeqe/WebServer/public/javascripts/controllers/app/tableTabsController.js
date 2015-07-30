@@ -35,11 +35,10 @@ angular.module('NodeWebBase')
                 .success(function (response) {
 
                     $timeout(function(){
-                        $scope.selectedRow = null;
                         if(response) {
-                            $scope.masterCollection = response.slice(0);
-                            $scope.rowCollection = response.slice(0);
-                            $scope.displayedCollection = [].concat($scope.rowCollection);
+                            $.extend(true,$scope.masterCollection,response);
+                            $.extend(true,$scope.rowCollection,response);
+                            $.extend(true,$scope.displayedCollection,response);
                         }
                     });
 
