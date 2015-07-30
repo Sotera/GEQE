@@ -14,13 +14,15 @@ angular.module('NodeWebBase')
         $scope.displayCaptionHtml = "None";
         $scope.termArray = [];
         $scope.filterText = "";
-        $scope.defaultItem = {  "img":"/images/blank.png",
-                                "usr":"None Selected",
-                                "cap":"",
-                                "sco":"",
-                                "nTotal":0,
-                                "date":""};
-        $scope.socialMediaUrl = $scope.defaultItem.img;
+        $scope.defaultItem = {
+                                _source:
+                                {  "imageUrl":"/images/blank.png",
+                                    "user":"None Selected",
+                                    "message":"",
+                                    "score":"",
+                                    "post_date":""}
+                             };
+        $scope.socialMediaUrl = $scope.defaultItem._source.imageUrl;
         $scope.currentItem = $scope.defaultItem;
 
         applyFilterMsg.listen(function(event,filter){
@@ -30,7 +32,7 @@ angular.module('NodeWebBase')
             $scope.posts.length = 0;
             angular.forEach($scope.data.posts,function(post){
                 if(filter != '') {
-                    var cap = post.cap.toLowerCase();
+                    var cap = post._source.message.toLowerCase();
                     if (cap.indexOf(filter.toLowerCase()) < 0) {
                         return;
                     }
@@ -52,7 +54,7 @@ angular.module('NodeWebBase')
                 $scope.currentItemIndex = 0;
                 $scope.displayIndex = 1;
                 $scope.currentItem = $scope.posts ? $scope.posts[0] : $scope.data;
-                $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
+                $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem._source.message);
                 $("#caption").html($scope.displayCaptionHtml);
                 $scope.getAccount();
             });
@@ -60,18 +62,16 @@ angular.module('NodeWebBase')
         });
 
         $rootScope.$on('loadItemData', function (event, data) {
-            //RETURN UNTIL I GET IT FIXED
-            return;
 
             $timeout(function(){
                 $scope.data = data;
                 if(data.posts) {
-                    $scope.posts = data.posts.slice(0);
+                    $scope.posts = data.posts.hits.slice(0);
                 }
                 $scope.currentItemIndex = 0;
                 $scope.displayIndex = 1;
-                $scope.currentItem = $scope.data.posts?$scope.data.posts[0]:$scope.data;
-                $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
+                $scope.currentItem = $scope.data.posts?$scope.data.posts.hits[0]:$scope.data;
+                $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem._source.message);
                 $("#caption").html($scope.displayCaptionHtml);
                 $scope.getAccount();
             });
@@ -119,7 +119,7 @@ angular.module('NodeWebBase')
 
         $scope.loadSocialPage = function(url){
                 if(url.responseText === ""){
-                    $scope.socialMediaUrl = $scope.currentItem.img;
+                    $scope.socialMediaUrl = $scope.currentItem._source.imageUrl;
                     return;
                 }
 
@@ -130,31 +130,24 @@ angular.module('NodeWebBase')
             if($scope.currentItem == $scope.defaultItem)
                 return;
 
-            if(!$scope.currentItem['socialMediaType'])
-            {
-                if($scope.currentItem.img && $scope.currentItem.img != "None"){
-                    $scope.currentItem['socialMediaType'] = 'instagram';
-                }
-                else{
-                    $scope.currentItem.img = "/images/blank.png";
-                    $scope.currentItem['socialMediaType'] = 'twitter';
-                }
+            var source = $scope.currentItem._source.source.toLowerCase();
 
-            }
+            if(!$scope.currentItem._source.imageUrl)
+                $scope.currentItem._source.imageUrl = "/images/blank.png";
 
-            if($scope.currentItem['socialMediaType'] === 'instagram'){
-                $scope.socialMediaUrl = "https://instagram.com/" + $scope.currentItem.usr;
+            if(source === 'instagram'){
+                $scope.socialMediaUrl = "https://instagram.com/" + $scope.currentItem._source.user;
                 return;
             }
 
-            $scope.socialMediaUrl = "https://twitter.com/" + $scope.currentItem.usr;
+            $scope.socialMediaUrl = "https://twitter.com/" + $scope.currentItem._source.user;
 
-            $scope.findSocialMediaLink($scope.currentItem.usr,"twitter", function(data){
+            $scope.findSocialMediaLink($scope.currentItem._source.user,source, function(data){
                 if($scope.currentItem == $scope.defaultItem)
                     return;
 
                 if(data && $scope.currentItem) {
-                        $scope.currentItem.img = data.profile_image_url.replace('_normal','');
+                        $scope.currentItem._source.imageUrl = data.profile_image_url.replace('_normal','');
 
                 }
             });
@@ -201,7 +194,7 @@ angular.module('NodeWebBase')
         $scope.loadCurrentItemDetails = function(){
             $scope.displayIndex = $scope.currentItemIndex+1;
             $scope.currentItem = $scope.posts[$scope.currentItemIndex];
-            $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem.cap);
+            $scope.displayCaptionHtml = $scope.highlightText($scope.currentItem._source.message);
             $("#caption").html($scope.displayCaptionHtml);
             $scope.getAccount();
 

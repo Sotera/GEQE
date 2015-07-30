@@ -40,11 +40,11 @@ div( ng-controller='detailsController')
             div.container-fluid
                 div.row
                     div.col-sm-4
-                        img.thumbnail.detailsImg(ng-click="showImage(currentItem.img)" ng-src="{{currentItem.img}}" user-log elementtype='ICON' loggroup='details' logtags='social,image')
+                        img.thumbnail.detailsImg(ng-click="showImage(currentItem._source.imageUrl)" ng-src="{{currentItem._source.imageUrl}}" user-log elementtype='ICON' loggroup='details' logtags='social,image')
                     div.col-sm-8
                         p User:
-                            a(href='{{socialMediaUrl}}' target="_blank" user-log elementtype='LINK' loggroup='details' logtags='navigate,social,user') {{currentItem.usr}}
-                        p Date: {{currentItem.datetime | dateParse:'dd/MM/yyyy - hh:mm a'}}
+                            a(href='{{socialMediaUrl}}' target="_blank" user-log elementtype='LINK' loggroup='details' logtags='navigate,social,user') {{currentItem._source.user}}
+                        p Date: {{currentItem._source.post_date | dateParse:'dd/MM/yyyy - hh:mm a'}}
         div
             div.caption
             p(id="caption")
