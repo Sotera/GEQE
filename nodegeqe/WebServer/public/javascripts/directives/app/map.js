@@ -136,9 +136,9 @@ angular.module('NodeWebBase')
                     },
                     function (newValue, oldValue) {
                         if (newValue != oldValue) {
-                            //var center = scope.map.getCenter();
-                            //google.maps.event.trigger(scope.map, "resize");
-                            //scope.map.setCenter(center);
+                            var center = scope.map.getCenter();
+                            google.maps.event.trigger(scope.map, "resize");
+                            scope.map.setCenter(center);
                         }
                     }
                 );
