@@ -67,7 +67,12 @@ angular.module('NodeWebBase')
                 $scope.data = data;
                 if(data.posts) {
                     $scope.posts = data.posts.hits.slice(0);
+                    $scope.termArray.length = 0;
+                    angular.forEach(data.significantTerms,function(entry,idx){
+                        $scope.termArray.push(entry);
+                    })
                 }
+
                 $scope.currentItemIndex = 0;
                 $scope.displayIndex = 1;
                 $scope.currentItem = $scope.data.posts?$scope.data.posts.hits[0]:$scope.data;
@@ -76,13 +81,6 @@ angular.module('NodeWebBase')
                 $scope.getAccount();
             });
 
-        });
-
-        $rootScope.$on("setTermDictionary", function(event,data){
-            $scope.termArray.length = 0;
-            angular.forEach(data,function(entry,idx){
-                $scope.termArray.push(entry[0]);
-            })
         });
 
         $rootScope.$on('clearResults', function (event) {
@@ -174,18 +172,19 @@ angular.module('NodeWebBase')
             var words = text.split(" "),
                 termList=$scope.termArray.join("|"),
                 alpha={};
-                termList = termList.replace(/[\[\]\(\)]/g,'')
-                angular.forEach(words,function(word,idx){
+                termList = termList.replace(/[\[\]\(\)]/g,'');
 
-                    if(alpha = word.replace(/[^a-zA-Z0-9]/,"").match(new RegExp(termList,"i"))){
-                        // alpha = ["runners", index: 0, input: "runners"]
-                        // we get the matched word [0] and the searched word (['input'])
-                        if(alpha[0].length == alpha['input'].length){
-                            // Prevents matching keyword 'an' with 'another'
-                            words[idx] = '<span class="highlight">' + word + "</span>";
-                        }
+            angular.forEach(words,function(word,idx){
+
+                if(alpha = word.replace(/[^a-zA-Z0-9]/,"").match(new RegExp(termList,"i"))){
+                    // alpha = ["runners", index: 0, input: "runners"]
+                    // we get the matched word [0] and the searched word (['input'])
+                    if(alpha[0].length == alpha['input'].length){
+                        // Prevents matching keyword 'an' with 'another'
+                        words[idx] = '<span class="highlight">' + word + "</span>";
                     }
-                });
+                }
+            });
 
             var highlights = words.join(' ');
             return $scope.replaceURLWithHTMLLinks(highlights);

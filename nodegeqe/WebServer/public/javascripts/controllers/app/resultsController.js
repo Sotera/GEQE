@@ -17,8 +17,6 @@ angular.module('NodeWebBase')
                 if(data.significantTerms) {
                     var terms = [];
 
-                    $rootScope.$emit("setTermDictionary", data.significantTerms);
-
                     angular.forEach(data.significantTerms, function(term,idx){
                         terms.push({"term":term,"rank":idx});
                     });
