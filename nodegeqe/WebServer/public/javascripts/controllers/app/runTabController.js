@@ -8,8 +8,8 @@ angular.module('NodeWebBase')
         $scope.dataSets= [];
         $scope.polygonFiles = [];
 
-        $scope.dataSetSelected="--Select--";
-        $scope.polyFile = "--Select--";
+        $scope.dataSetSelected="";
+        $scope.polyFile = "";
 
         $scope.polyFileSelected = function(item){
             $scope.polyFile = item.name;
