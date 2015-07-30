@@ -17,9 +17,7 @@ angular.module('NodeWebBase')
         $scope.polling = {}; // Keep it here so we can kill manually!
 
         $scope.isSelectedRowDeletable = function(){
-          if(!$scope.selectedRow || $scope.selectedRow.status === "RUNNING")
-            return false;
-          return true;
+          return ( $scope.selectedRow &&  $scope.selectedRow.status !== "RUNNING")
         };
 
         $scope.getJobStatus = function(){
@@ -36,9 +34,16 @@ angular.module('NodeWebBase')
 
                     $timeout(function(){
                         if(response) {
-                            $.extend(true,$scope.masterCollection,response);
-                            $.extend(true,$scope.rowCollection,response);
-                            $.extend(true,$scope.displayedCollection,response);
+                            // Cycle throught and remove extra elements
+                            while($scope.masterCollection.length > response.length){
+                                $scope.masterCollection.pop();
+                                $scope.rowCollection.pop();
+                                $scope.displayCollection.pop();
+                            }
+
+                            $.extend(true, $scope.masterCollection, response);
+                            $.extend(true, $scope.rowCollection, response);
+                            $.extend(true, $scope.displayedCollection, response);
                         }
                     });
 
