@@ -2,7 +2,7 @@ div.scrollable.tabs(id="tabs" ng-style="style" ng-controller="tableTabsControlle
 
    ul.nav.nav-tabs
       li(ng-repeat="tab in tabs" ng-class="{active:isActiveTab(tab.url)}" ng-click="onClickTab(tab)" user-log elementtype='TAB' loggroup='control_box' logtags='tab,{tab.title}')
-         a {{tab.title}}
+         a(href="") {{tab.title}}
 
    div
       div.tab-content

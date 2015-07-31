@@ -1,29 +1,30 @@
 extends layout
 
 block content
-	div(ui-layout="{'flow':'row', 'dividerSize':.1}" ng-controller='indexController')
-		div(ui-layout-container, size="34px")
-			.navbar.navbar-inverse
-				a.navbar-brand(href='#') Geo Event Query by Example
-				div.navbar-right
-					logout
-					nb-settings
-		div(ui-layout-container)
-			div(ng-view)
+    div(ui-layout="{'flow':'row', 'dividerSize':.1}" ng-controller='indexController')
+        div(ui-layout-container, size="34px")
+            .navbar.navbar-inverse
+                a.navbar-brand(href='#') Geo Event Query by Example
+                div.navbar-right
+                    logout
+                    nb-settings
+        div(ui-layout-container)
+            div(ng-view)
 
 block scripts
-	script(src='/javascripts/controllers/indexController.js')
-	script(src='/javascripts/services/app/shapeService.js')
-	script(src='/javascripts/services/app/markerService.js')
-	script(src='/javascripts/directives/app/map.js')
-	script(src="/javascripts/component/app/geoxml3.js")
-	script(src='/javascripts/controllers/app/mainController.js')
-	script(src='/javascripts/controllers/app/dataTableController.js')
-	script(src='/javascripts/controllers/app/jobsTabsController.js')
-	script(src='/javascripts/controllers/app/tableTabsController.js')
-	script(src='/javascripts/controllers/app/modelTabController.js')
-	script(src='/javascripts/controllers/app/dataNavController.js')
-	script(src='/javascripts/controllers/app/resultsController.js')
-	script(src='/javascripts/controllers/app/runTabController.js')
-	script(src='/javascripts/controllers/app/detailsController.js')
+    script(src='/javascripts/controllers/indexController.js')
+    script(src='/javascripts/services/app/shapeService.js')
+    script(src='/javascripts/services/app/markerService.js')
+    script(src='/javascripts/directives/app/map.js')
+    script(src="/javascripts/component/app/geoxml3.js")
+    script(src='/javascripts/controllers/app/mainController.js')
+    script(src='/javascripts/controllers/app/dataSetController.js')
+    script(src='/javascripts/controllers/app/dataTableController.js')
+    script(src='/javascripts/controllers/app/jobsTabsController.js')
+    script(src='/javascripts/controllers/app/tableTabsController.js')
+    script(src='/javascripts/controllers/app/modelTabController.js')
+    script(src='/javascripts/controllers/app/dataNavController.js')
+    script(src='/javascripts/controllers/app/resultsController.js')
+    script(src='/javascripts/controllers/app/runTabController.js')
+    script(src='/javascripts/controllers/app/detailsController.js')
 

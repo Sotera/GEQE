@@ -135,13 +135,15 @@ div[class^="col-"]{
     width:100%;
 }
 .tab-links{
-    margin-bottom: 0px;
+    margin-bottom: 0;
 }
+
 .tab-links:after {
     display:block;
     clear:both;
     content:'';
 }
+
 .navbar-button{
     margin: auto;
 }
@@ -168,6 +170,7 @@ div[class^="col-"]{
 .tab-content {
     border-radius:3px;
 }
+
 .invis {
     display:none;
 }
@@ -185,10 +188,10 @@ div[class^="col-"]{
     margin-left:28px;
 }
 
-.nav-tabs > li > a {
-    padding: 0px 4px;
-    border-radius: 0;
-}
+/*.nav-tabs > li > a {*/
+    /*padding: 0px 4px;*/
+    /*border-radius: 0;*/
+/*}*/
 
 span.btn-lg{
     padding-left: 16px;
