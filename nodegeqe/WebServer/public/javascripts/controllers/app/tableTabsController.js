@@ -17,7 +17,7 @@ angular.module('NodeWebBase')
         $scope.polling = {}; // Keep it here so we can kill manually!
 
         $scope.isSelectedRowDeletable = function(){
-          return ( $scope.selectedRow &&  $scope.selectedRow.status !== "RUNNING")
+          return true;//( $scope.selectedRow &&  $scope.selectedRow.status !== "RUNNING")
         };
 
         $scope.getJobStatus = function(){

@@ -58,15 +58,14 @@ angular.module('NodeWebBase')
             }];
 
             angular.forEach(data[0].bins,function(group,idx){
-                var catalogItem = $scope.getCatalogItem(group.date);
+                var catalogItem = $scope.getCatalogItem("All");
                 if(maxScore < group.score)
                     maxScore = group.score;
                 if(!catalogItem){
                     catalogItem = {
                         'title':'bin',
                         'x':idx,
-                        'hiScore':group.score,
-                        'postCount':group.totalCount
+                        'hiScore':group.score
                     };
                     $scope.chartModel.push(catalogItem);
                     return;
@@ -89,11 +88,6 @@ angular.module('NodeWebBase')
                     y:{min:0}
                 },
                 series: [
-                    {
-                        y: "postCount",
-                        type: "column",
-                        color: "#ff7f0e"
-                    },
                     {
                         y: "hiScore",
                         axis:"y2",
@@ -140,9 +134,9 @@ angular.module('NodeWebBase')
             var maxPosts = 0;
 
             angular.forEach(data,function(group,idx){
-                if(!group.date)
-                    group.date="None";
-                var catalogItem = $scope.getCatalogItem(group.date);
+                if(!group.day)
+                    group.day="None";
+                var catalogItem = $scope.getCatalogItem(group.day);
 
                 if(!catalogItem){
                     var totalPosts = 0;
@@ -150,7 +144,7 @@ angular.module('NodeWebBase')
                        totalPosts+=  bin.totalCount;
                     });
                     catalogItem = {
-                        'title':group.date,
+                        'title':group.day,
                         'x':idx,
                         'data':group.bins,
                         'nClusters':group.count,
