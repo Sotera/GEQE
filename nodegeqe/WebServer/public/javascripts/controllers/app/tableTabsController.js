@@ -43,7 +43,7 @@ angular.module('NodeWebBase')
 
                             $.extend(true, $scope.masterCollection, response);
                             $.extend(true, $scope.rowCollection, response);
-                            $.extend(true, $scope.displayedCollection, response);
+                            $scope.displayedCollection = [].concat($scope.rowCollection);
                         }
                     });
 
