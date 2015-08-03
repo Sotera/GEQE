@@ -84,13 +84,12 @@ angular.module('NodeWebBase')
                 },
                 axes: {
                     x: {key: 'x'},
-                    y2: {min:0,max:maxScore * 1.1},
-                    y:{min:0}
+                    y: {min:0,max:maxScore * 1.1}
                 },
                 series: [
                     {
                         y: "hiScore",
-                        axis:"y2",
+                        axis:"y",
                         thickness:"2px",
                         color: "#1f77b4"
                     }
