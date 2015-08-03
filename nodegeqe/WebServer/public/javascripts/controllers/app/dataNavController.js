@@ -150,6 +150,10 @@ angular.module('NodeWebBase')
                         'nClusters':group.count,
                         'totalPosts':totalPosts
                     };
+                    if(minPosts === -1 || minPosts > totalPosts)
+                        minPosts = totalPosts;
+                    if(maxPosts< totalPosts)
+                        maxPosts = totalPosts;
                     $scope.catalog.push(catalogItem);
                     return;
                 }
