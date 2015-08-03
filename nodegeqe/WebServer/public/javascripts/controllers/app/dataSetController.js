@@ -8,8 +8,11 @@ angular.module('NodeWebBase')
         $scope.dataSets= [];
         $scope.polygonFiles = [];
 
-        $scope.dataSetSelected="";
+        $scope.dataSetSelected;
         $scope.polyFile = "";
+        $scope.polygonSetSelected=null;
+        $scope.newPolySetIsCollapsed = false;
+        $scope.newPolySetName = "";
 
         $scope.polyFileSelected = function(item){
             $scope.polyFile = item.name;
@@ -38,7 +41,10 @@ angular.module('NodeWebBase')
                 url: "app/sitelists/list/"+$rootScope.username,
                 params: {}
             }).success(function (response) {
-               $scope.polygonFiles = response
+                while($scope.polygonFiles.length > response.length)
+                    $scope.polygonFiles.pop();
+
+                $.extend($scope.polygonFiles, response)
             }).error($rootScope.showError);
         };
 
@@ -54,15 +60,42 @@ angular.module('NodeWebBase')
          * Get the id for the current polyFile from the polygonList
          * Undefined if the model has not been saved
          */
-        $scope.getPolygonId = function(){
-            for  (var i=0; i<$scope.polygonFiles.length; i++){
-                if ($scope.polygonFiles[i].name == $scope.polyFile){
-                    return $scope.polygonFiles[i].id;
-                }
-            }
-            return undefined;
+        $scope.getPolygonId = function getPolygonId(){
+            console.log($scope.polygonSetSelected);
+            return $scope.polygonSetSelected.id;
         };
 
+
+        $scope.saveItem = function saveItem(item) {
+            console.log("saving item", item);
+            $rootScope.$emit("getShapesText",
+                {
+                    "scope":this,
+                    "callback":function(resultsText){
+                        if(!$rootScope.isAppConfigured())
+                            return;
+                        var pName = $scope.newPolySetName;
+                        var siteList = JSON.parse(resultsText);
+                        siteList.name = pName;
+                        siteList.username = $rootScope.username;
+                        var modelId = $scope.getPolygonId();
+                        if (modelId) siteList.id = modelId;
+
+                        $http({
+                            method:"POST",
+                            url: "app/sitelists/save",
+                            params: {
+                                siteList: siteList
+                            }}).success(function (response) {
+                        //RESET
+                            $scope.newPolySetIsCollapsed="";
+                            $("#newPolySet").toggleClass("in");
+                            $("#resultsText").text(pName + " written");
+                            $scope.populatePolygonSelect(); // refresh the polygon list to get the new id
+                        }).error($rootScope.showError)
+                    }
+                });
+        }
 
         /**
          * Save the site list (polygon)
@@ -75,9 +108,10 @@ angular.module('NodeWebBase')
                     "callback":function(resultsText){
                         if(!$rootScope.isAppConfigured())
                             return;
+                        //console.log($scope.polygonSetSelected);
                         var pName = $scope.polyFile;
                         var siteList = JSON.parse(resultsText);
-                        siteList.name = pName;
+                        siteList.name = $scope.polygonSetSelected.name;
                         siteList.username = $rootScope.username;
                         var modelId = $scope.getPolygonId();
                         if (modelId) siteList.id = modelId;

@@ -1,6 +1,8 @@
+
 function saveList() {
     var pPath = $("#pSavePath").val();
     var pName = $("#pFileName").val();
+    var sName
     var fString = getShapesText();
 
     $.ajax({

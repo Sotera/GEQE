@@ -6,7 +6,7 @@ angular.module('logout', ['ngCookies'])
 	})
 	.directive('logout', ['$rootScope', 'setFullNameMsg' ,function ($rootScope,setFullNameMsg) {
 		return{
-			restrict: 'E',
+			restrict: 'AE',
 			templateUrl: '/views/partials/logout',
 			controller: ['$scope',function($scope){
 				setFullNameMsg.listen( function(){

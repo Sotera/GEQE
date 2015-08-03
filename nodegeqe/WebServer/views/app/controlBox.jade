@@ -1,9 +1,15 @@
 div.scrollable(ng-style="style" ng-controller="jobsTabsController")
   nav.navbar.navbar-default.navbar-inverse
-    a(ng-click='clearResults()' title='Clear Results' href="#" user-log elementtype='BUTTON' loggroup='control_box' logtags='clear,data').noselect.navbar-button.btn-lg.glyphicon.glyphicon-th-list.navbar-text
-    a(ng-click='clearShapes()' title='Clear Shapes' href="#" user-log elementtype='BUTTON' loggroup='control_box' logtags='clear,shapes').noselect.navbar-button.btn-lg.glyphicon.glyphicon-unchecked.navbar-text
-    a(ng-click='clearMarkers()' title='Clear Markers' href="#" user-log elementtype='BUTTON' loggroup='control_box' logtags='clear,markers').noselect.navbar-button.btn-lg.glyphicon.glyphicon-map-marker.navbar-text
-    a(ng-click='clearAll()' title='Clear All' href="#" user-log elementtype='BUTTON' loggroup='control_box' logtags='clear,all').noselect.navbar-button.btn-lg.glyphicon.glyphicon-asterisk.navbar-text
+     div.container-fluid
+         ul.nav.navbar-nav
+            li
+              a(ng-click='clearResults()' title='Clear Results' href="#" user-log elementtype='BUTTON' loggroup='control_box' logtags='clear,data').navbar-button.btn-lg.glyphicon.glyphicon-th-list
+            li
+                a(ng-click='clearShapes()' title='Clear Shapes' href="#" user-log elementtype='BUTTON' loggroup='control_box' logtags='clear,shapes').navbar-button.btn-lg.glyphicon.glyphicon-unchecked
+            li
+                a(ng-click='clearMarkers()' title='Clear Markers' href="#" user-log elementtype='BUTTON' loggroup='control_box' logtags='clear,markers').navbar-button.btn-lg.glyphicon.glyphicon-map-marker
+            li
+                a(ng-click='clearAll()' title='Clear All' href="#" user-log elementtype='BUTTON' loggroup='control_box' logtags='clear,all').navbar-button.btn-lg.glyphicon.glyphicon-asterisk
 
   div.container-fluid
     div.row
@@ -19,17 +25,24 @@ div.scrollable(ng-style="style" ng-controller="jobsTabsController")
         div.pull-right
             button.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="populatePolygonSelect()" title="Refresh file list." user-log elementtype='BUTTON' loggroup='run_tab' logtags='refresh,training_file')
             button.btn.btn-default.btn-xs.glyphicon.glyphicon-floppy-disk(ng-click="saveList()" title= "Save Polygon File" user-log elementtype='BUTTON' loggroup='run_tab' logtags='save,training_file')
-            button.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="drawPolygonFile()" title="Draw polygons to the map." user-log elementtype='BUTTON' loggroup='run_tab' logtags='draw,training_file')
-        div.form-group-sm
+            button.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="drawPolygonFile()" ng-class="{'disabled': !polygonSetSelected}" title="Draw polygons to the map." user-log elementtype='BUTTON' loggroup='run_tab' logtags='draw,training_file')
+
+        div.form-group
             label(for='pFileName') Polygon Set
-            div.input-group
-                span.input-group-btn
-                    button.btn.btn-sm.btn-default.dropdown-toggle(type="button", id="pFileDropButton", data-toggle="dropdown", aria-expanded="false" user-log elementtype='COMBOBOX' loggroup='run_tab' logtags='select,training_file')
-                        span.caret
-                    ul.scrollable-menu.dropdown-menu(role="menu", style="overflow:scroll")
-                        li(ng-repeat="item in polygonFiles | orderBy: item" ng-click="polyFileSelected(item)" value="{{item}}")
-                            a(href='#') {{item.name}}
-                input.form-control(type="text" ng-model="polyFile" name="polyFile" placeholder="-Select-")
+            div.input-group-sm
+                select.form-control( ng-options="item.name for item in polygonFiles | orderBy: item" ng-model="polygonSetSelected")
+                    option(value="") --Select--
+            a(href="", data-toggle="collapse", data-target="#newPolySet")
+                    | new polyset
+                div.collapse(id="newPolySet")
+                    div.input-group
+                        input.form-control(placeholder="name", ng-model="newPolySetName")
+                        span.input-group-btn
+                            button.btn.btn-default(ng-click="saveItem()" id="savePolygon" title="Save." user-log elementtype='BUTTON' loggroup='run_tab' logtags='refresh,training_file')
+                             | Save
+
+
+    //option( ng-click="polyFileSelected(item)" value="{{item}}") {{item}}
         br
     div.row
       div.col-sm-12(role="navigation")

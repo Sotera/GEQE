@@ -6,7 +6,7 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
     })
     .directive('nbSettings', ['userUrl','changeThemeMsg','setFullNameMsg',function (userUrl,changeThemeMsg,setFullNameMsg) {
         return{
-            restrict: 'E',
+            restrict: 'AE',
             templateUrl: '/views/app/settingsLink',
             controller: function($scope, ngDialog, $http, $cookies,$rootScope){
 

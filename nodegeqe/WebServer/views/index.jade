@@ -1,13 +1,14 @@
 extends layout
 
 block content
-    div(ui-layout="{'flow':'row', 'dividerSize':.1}" ng-controller='indexController')
+    div(ui-layout="{'flow':'row', 'dividerSize':.05}" ng-controller='indexController')
         div(ui-layout-container, size="34px")
-            .navbar.navbar-inverse
-                a.navbar-brand(href='#') Geo Event Query by Example
-                div.navbar-right
-                    logout
-                    nb-settings
+            nav.navbar.navbar-inverse
+              div.container-fluid
+                 a.navbar-brand(href='#') Geo Event Query by Example
+                 ul.nav.navbar-nav.navbar-right
+                    li(logout)
+                    li(nb-settings)
         div(ui-layout-container)
             div(ng-view)
 
