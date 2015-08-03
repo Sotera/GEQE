@@ -26,7 +26,7 @@ angular.module('NodeWebBase')
                 var items = [];
                 angular.forEach($scope.masterCollection,function(item){
                     if(filterText != '') {
-                        var cap = item.cap.toLowerCase();
+                        var cap = item._source.message.toLowerCase();
                         if (cap.indexOf(filterText.toLowerCase()) < 0) {
                             return;
                         }
