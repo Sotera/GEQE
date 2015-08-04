@@ -3,11 +3,11 @@ angular.module('NodeWebBase')
     .controller('mainController', ['$scope', '$rootScope', '$http', '$cookies', 'ngDialog','changeThemeMsg','setFullNameMsg',
         function ($scope, $rootScope, $http, $cookies, ngDialog,changeThemeMsg, setFullNameMsg) {
         $scope.scopeName = "mainController";
+
+
         $rootScope.editing = false;
-        $rootScope.$on("toggleDrawing", function(event, val){
-            console.log("Setting rootscope to ", val);
-            console.log(arguments);
-            $rootScope.editing = val;
+        $rootScope.$on("toggleEditing", function(event, truthValue){
+            $rootScope.editing = truthValue;
         });
 
         // Close pop up windows with Esc key. For some reason it's not functioning by default.

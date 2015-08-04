@@ -128,7 +128,7 @@ angular.module('NodeWebBase')
                     polygonOptions:$rootScope.theme.shapeStyles,
                     rectangleOptions:$rootScope.theme.shapeStyles
                 });
-                $rootScope.$on("toggleDrawing", function(){
+                $rootScope.$on("toggleEditing", function(){
                     scope.drawingManager.setOptions({
                         drawingControl: !scope.drawingManager.drawingControl,
                         drawingMode:null

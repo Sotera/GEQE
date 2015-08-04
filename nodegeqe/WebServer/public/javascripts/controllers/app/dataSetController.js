@@ -53,7 +53,7 @@ angular.module('NodeWebBase')
         };
 
         $scope.$watch("editing", function(newval,oldval){
-            $rootScope.$emit("toggleDrawing", $scope.editing);
+            $rootScope.$emit("toggleEditing", $scope.editing);
             if($("#canvas-map").hasClass("mapHighlight")){
                 $scope.saveList();
             }
@@ -74,7 +74,7 @@ angular.module('NodeWebBase')
         };
 
         $scope.showEditingTools = function showEditingTools(){
-            console.log("Emitting toggleDrawing!! ");
+            console.log("Emitting toggleEditing!! ");
             $scope.editing = !$scope.editing;
         };
 

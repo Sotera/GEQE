@@ -18,8 +18,8 @@ angular.module('NodeWebBase')
                 me.drawPolygonFile(data);
             });
 
-            $rootScope.$on('toggleDrawing', function (event, data) {
-                me.toggleDrawing(data);
+            $rootScope.$on('toggleEditing', function (event, data) {
+                me.toggleEditing(data);
             });
 
             $rootScope.$on('clearCurrentShapes', function () {
@@ -157,7 +157,7 @@ angular.module('NodeWebBase')
             return site;
         };
 
-        me.toggleDrawing = function (val) {
+        me.toggleEditing = function (val) {
             console.log("Trying to make editable", val);
             angular.forEach(me.shapes, function (shape, idx) {
                 shape.editable=val;
