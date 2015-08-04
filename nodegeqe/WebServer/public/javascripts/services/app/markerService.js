@@ -234,7 +234,8 @@ angular.module('NodeWebBase')
 
         me.drawTypeMarkers = function(data,type,zoomTo){
             var locations = [];
-
+            if(!data.hits || data.hits.length === 0)
+                return;
             angular.forEach(data.hits, function(item){
                 var source = item._source;
 

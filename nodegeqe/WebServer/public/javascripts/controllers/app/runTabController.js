@@ -106,7 +106,9 @@ angular.module('NodeWebBase')
                     "Content-Type": "application/json"
                 },
                 data:{
-                    "sites": [item]
+                    "sites": [item],
+                    "from":0,
+                    "size":100
                 }
             }).success(function (response) {
                 $rootScope.$emit("clearMarkers",['training']);
