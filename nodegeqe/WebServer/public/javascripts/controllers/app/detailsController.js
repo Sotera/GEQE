@@ -30,7 +30,7 @@ angular.module('NodeWebBase')
                 return;
 
             $scope.posts.length = 0;
-            angular.forEach($scope.data.posts,function(post){
+            angular.forEach($scope.data.posts.hits,function(post){
                 if(filter != '') {
                     var cap = post._source.message.toLowerCase();
                     if (cap.indexOf(filter.toLowerCase()) < 0) {

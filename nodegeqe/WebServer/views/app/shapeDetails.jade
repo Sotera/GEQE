@@ -19,6 +19,8 @@
 
 div.modal-footer
     div(ng-if="editing")
+        button.btn(ng-click="sample()")
+            | Sample
         button.btn(ng-click="delete()")
             | Delete
         button.btn(ng-click="cancel()")
@@ -28,3 +30,5 @@ div.modal-footer
     div(ng-if="!editing")
         button.btn.btn-primary(ng-click="cancel()")
             | Ok
+        button.btn(ng-click="sample()")
+            | Sample

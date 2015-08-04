@@ -69,7 +69,7 @@ angular.module('NodeWebBase')
             me.filterText = filterText;
             angular.forEach(me.markers['item'],function(item){
                 if(filterText != '') {
-                    var cap = item.markerItem.cap.toLowerCase();
+                    var cap = item.markerItem._source.message.toLowerCase();
                     if (cap.indexOf(filterText.toLowerCase()) < 0) {
                         item.setMap(null);
                         return;
@@ -234,7 +234,8 @@ angular.module('NodeWebBase')
 
         me.drawTypeMarkers = function(data,type,zoomTo){
             var locations = [];
-
+            if(!data.hits || data.hits.length === 0)
+                return;
             angular.forEach(data.hits, function(item){
                 var source = item._source;
 

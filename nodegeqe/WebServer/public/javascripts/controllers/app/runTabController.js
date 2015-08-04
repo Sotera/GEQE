@@ -29,15 +29,35 @@ angular.module('NodeWebBase')
                 $scope.dataSetSelected=vals.data;
             console.log(vals);
         });
+        
+        $rootScope.$on('sampleShape',function(event,item){
+
+            if(!item)
+                return;
+            $http({
+                method: "POST",
+                url: "app/posts/sitelist",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data:{
+                    "sites": [item],
+                    "from":0,
+                    "size":100
+                }
+            }).success(function (response) {
+                $rootScope.$emit("clearMarkers",['training']);
+                $rootScope.$emit("drawMapMarkers",response.hits, "training");
+            }).error($rootScope.showError);
+        });
 
 
-          $scope.applyScores = function() {
+        $scope.applyScores = function() {
 
             if(!$rootScope.isAppConfigured())
                 return;
 
             // verify inputs
-
             if(!$scope.dataSetSelected || $scope.dataSetSelected.name === "--Select--") {
                 $rootScope.showErrorMessage("Query Job", "Please select a data set.");
                 return;

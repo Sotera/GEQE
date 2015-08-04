@@ -8,7 +8,11 @@
       "id": true,
       "required": true
     },
-    "path": {
+    "event_path": {
+      "type": "string",
+      "required": true
+    },
+    "location_path": {
       "type": "string",
       "required": true
     },
@@ -27,10 +31,32 @@
     "description": {
       "type": "string",
       "required": false
+    },
+    "count": {
+      "type": "number",
+      "required": false
+    },
+    "sources": {
+      "type": ["string"],
+      "required": false
+    },
+    "boundingPoly": {
+      "type": ["geopoint"],
+      "required": false
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "dateRangeList": {
+      "type": "embedsOne",
+      "model": "daterange",
+      "property": "dateRange",
+      "options": {
+        "validate": true,
+        "forceId": false
+      }
+    }
+  },
   "acls": [],
   "methods": []
 }

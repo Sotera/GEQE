@@ -26,7 +26,12 @@ angular.module('NodeWebBase')
         $rootScope.$on('loadNavData', function (event, data) {
 
             $rootScope.$emit("clearAll");
-            $scope.sortDataByDate(data.bingroups);
+            if(data.type === 'place'){
+                $scope.setData(data.bingroups);
+            }
+            else{
+                $scope.sortDataByDate(data.bingroups);
+            }
 
             $scope.currentCatalogIndex = 0;
             $scope.currentCatalogTitle = "";
@@ -47,21 +52,20 @@ angular.module('NodeWebBase')
             $scope.chartModel = [];
             $scope.catalog = [{
                 'title':'All Clusters',
-                'data':data.bingroups,
-                'nClusters':data.bingroups.length,
+                'data':data[0].bins,
+                'nClusters':data[0].bins.length,
                 'x':0
             }];
 
-            angular.forEach(data.bingroups,function(group,idx){
-                var catalogItem = $scope.getCatalogItem(group.date);
-                if(maxScore < group.count)
-                    maxScore = group.count;
+            angular.forEach(data[0].bins,function(group,idx){
+                var catalogItem = $scope.getCatalogItem("All");
+                if(maxScore < group.score)
+                    maxScore = group.score;
                 if(!catalogItem){
                     catalogItem = {
                         'title':'bin',
                         'x':idx,
-                        'hiScore':group.count,
-                        'nClusters':group.count
+                        'hiScore':group.score
                     };
                     $scope.chartModel.push(catalogItem);
                     return;
@@ -80,18 +84,12 @@ angular.module('NodeWebBase')
                 },
                 axes: {
                     x: {key: 'x'},
-                    y2: {min:0,max:maxScore * 1.1},
-                    y:{min:0}
+                    y: {min:0,max:maxScore * 1.1}
                 },
                 series: [
                     {
-                        y: "nClusters",
-                        type: "column",
-                        color: "#ff7f0e"
-                    },
-                    {
                         y: "hiScore",
-                        axis:"y2",
+                        axis:"y",
                         thickness:"2px",
                         color: "#1f77b4"
                     }
@@ -99,7 +97,7 @@ angular.module('NodeWebBase')
                 tooltip: {
                     mode: "scrubber",
                     formatter: function (x, y, series) {
-                        if(series.y === "nClusters"){
+                        if(series.y === "postCount"){
                             return "P  " + y;
                         }
                         return "S  " + y;
@@ -136,22 +134,28 @@ angular.module('NodeWebBase')
 
             angular.forEach(data,function(group,idx){
                 if(!group.day)
-                    group.day="";
+                    group.day="None";
                 var catalogItem = $scope.getCatalogItem(group.day);
 
                 if(!catalogItem){
+                    var totalPosts = 0;
+                    angular.forEach(group.bins, function(bin){
+                       totalPosts+=  bin.totalCount;
+                    });
                     catalogItem = {
                         'title':group.day,
                         'x':idx,
                         'data':group.bins,
-                        'nClusters':group.count
+                        'nClusters':group.count,
+                        'totalPosts':totalPosts
                     };
+                    if(minPosts === -1 || minPosts > totalPosts)
+                        minPosts = totalPosts;
+                    if(maxPosts< totalPosts)
+                        maxPosts = totalPosts;
                     $scope.catalog.push(catalogItem);
                     return;
                 }
-
-
-
                 console.log("Duplicate Date in Time Series");
             });
 
