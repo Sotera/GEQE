@@ -43,7 +43,7 @@ angular.module('NodeWebBase')
             angular.forEach(data.posts.hits, function(post,idx){
                 var words = post._source.message.toLowerCase().split(" ");
                 angular.forEach(words,function(word,idx) {
-                    if(word.length < 3)
+                    if(word.length <= 3)
                         return;
                     var wordObj = wordObjs[word];
                     if (!wordObj) {
