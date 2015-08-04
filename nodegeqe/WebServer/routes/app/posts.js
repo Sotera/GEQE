@@ -45,7 +45,7 @@ router.post('/bin', function (req, res) {
 
     netHelpers.performAjaxRequest(ES_HOST, ES_PORT, '/geqe/post/_search', 'POST',query,function (resultObject) {
         if (resultObject.error) {
-            res.status(resultObject.error.status).send(resultObject.error.message);
+            res.status(resultObject.status).send(resultObject.error);
             return;
         }
         res.status(200).send(resultObject);
@@ -94,7 +94,7 @@ router.post('/resultset', function (req, res) {
 
     netHelpers.performAjaxRequest(ES_HOST, ES_PORT, '/geqe/post/_search', 'POST',query,function (resultObject) {
         if (resultObject.error) {
-            res.status(resultObject.error.status).send(resultObject.error.message);
+            res.status(resultObject.status).send(resultObject.error);
             return;
         }
         res.status(200).send(resultObject);
@@ -136,7 +136,8 @@ router.post('/sitelist', function (req, res) {
 
     netHelpers.performAjaxRequest(ES_HOST, ES_PORT, '/geqe/post/_search', 'POST',query,function (resultObject) {
         if (resultObject.error) {
-            res.status(resultObject.error.status).send(resultObject.error.message);
+            console.error(resultObject)
+            res.status(resultObject.status).send(resultObject.error);
             return;
         }
         res.status(200).send(resultObject);
