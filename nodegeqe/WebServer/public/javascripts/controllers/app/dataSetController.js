@@ -2,7 +2,7 @@
  * Created by jlueders on 4/13/15.
  */
 angular.module('NodeWebBase')
-    .controller('dataSetController', ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
+    .controller('dataSetController', ['$scope','$rootScope','$http','toggleEditMsg','setSelectionMsg', function ($scope, $rootScope, $http, toggleEditMsg,setSelectionMsg) {
 
         $scope.jobs = [];
         $scope.dataSets= [];
@@ -28,14 +28,28 @@ angular.module('NodeWebBase')
             fileName:""
         };
 
+        $scope.$watch("dataSetSelected", function(newval, oldval){
+            if(newval && newval!=oldval)
+                    setSelectionMsg.broadcast({type: 'dataSetSelected', data: newval})
+        });
+
         $scope.$watch("polygonSetSelected", function(newval,oldval){
-            console.log(newval);
+            if(newval && newval!=oldval)
+                     setSelectionMsg.broadcast({type: 'polygonSetSelected', data: newval})
+        });
+
+        $scope.$watch("polygonSetSelected", function(newval,oldval){
             if(newval && newval!=oldval){
                 $scope.drawPolygonFile();
-                $scope.editing=false;
+                toggleEditMsg.broadcast(false);
             }
         });
 
+        $scope.getPolygonSets = function(){
+            $scope.populatePolygonSelect();
+        };
+
+        //TODO: Needs to be depracated and replaced with getPolygonSets
         $scope.populatePolygonSelect = function() {
             if(!$rootScope.isAppConfigured())
                 return;
@@ -53,11 +67,17 @@ angular.module('NodeWebBase')
         };
 
         $scope.$watch("editing", function(newval,oldval){
-            $rootScope.$emit("toggleEditing", $scope.editing);
-            if($("#canvas-map").hasClass("mapHighlight")){
-                $scope.saveList();
+            console.log("datasetcontroller editing: " , newval);
+
+            if(newval!=oldval){
+                toggleEditMsg.broadcast(newval);
+
+                if($("#canvas-map").hasClass("mapHighlight")){
+                    $scope.saveList();
+                }
             }
         });
+
         $scope.drawPolygonFile = function(){
             var modelId = $scope.getPolygonId();
             if (!modelId)  $rootScope.showErrorMessage("Polygon name invalid.",'Polygon must be saved prior to use.');
@@ -73,13 +93,13 @@ angular.module('NodeWebBase')
             return (typeof $scope.polygonSetSelected.id!="undefined")? $scope.polygonSetSelected.id : 0;
         };
 
+
         $scope.showEditingTools = function showEditingTools(){
-            console.log("Emitting toggleEditing!! ");
             $scope.editing = !$scope.editing;
         };
 
+
         $scope.saveItem = function saveItem(item) {
-            console.log("saving item", item);
             $rootScope.$emit("getShapesText",
                 {
                     "scope":this,
@@ -112,14 +132,13 @@ angular.module('NodeWebBase')
          * Save the site list (polygon)
          */
         $scope.saveList = function(){
-
             $rootScope.$emit("getShapesText",
                 {
                     scope:this,
                     callback:function(resultsText){
                         if(!$rootScope.isAppConfigured())
                             return;
-                        //console.log($scope.polygonSetSelected);
+
                         var pName = $scope.polyFile;
                         var siteList = JSON.parse(resultsText);
                         siteList.name = $scope.polygonSetSelected.name;
@@ -138,6 +157,12 @@ angular.module('NodeWebBase')
                             }).error($rootScope.showError)
                     }
                 });
+        };
+
+        //TODO: refreshAll shouldn't reset selections? Or maybe it should?
+        $scope.refreshAll = function refreshAll() {
+            $scope.getDataSets();
+            $scope.getPolygonSets();
         };
 
         $scope.getDataSets = function() {

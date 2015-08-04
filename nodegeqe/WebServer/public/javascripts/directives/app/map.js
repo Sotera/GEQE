@@ -1,6 +1,6 @@
 angular.module('NodeWebBase')
-    .controller('mapController',['$scope','$rootScope','shapeService','markerService','themeChangedMsg',
-        function($scope, $rootScope, shapeService, markerService,themeChangedMsg){
+    .controller('mapController',['$scope','$rootScope','shapeService','markerService','themeChangedMsg','toggleEditMsg',
+        function($scope, $rootScope, shapeService, markerService,themeChangedMsg,toggleEditMsg){
         themeChangedMsg.listen(function (event) {
             if($rootScope.theme.mapStyles){
                 $scope.map.setOptions({styles: $rootScope.theme.mapStyles});
@@ -95,6 +95,13 @@ angular.module('NodeWebBase')
             markerService.init($scope.map);
         }
 
+        toggleEditMsg.listen(function(event, val){
+            $scope.drawingManager.setOptions({
+                drawingControl: val,
+                drawingMode:null
+            });
+            $("#map-canvas").toggleClass("mapHighlight", val);
+        })
     }])
     .directive('map',function ($rootScope) {
         function link(scope, element, attrs) {
@@ -128,13 +135,7 @@ angular.module('NodeWebBase')
                     polygonOptions:$rootScope.theme.shapeStyles,
                     rectangleOptions:$rootScope.theme.shapeStyles
                 });
-                $rootScope.$on("toggleEditing", function(){
-                    scope.drawingManager.setOptions({
-                        drawingControl: !scope.drawingManager.drawingControl,
-                        drawingMode:null
-                    });
-                    $("#map-canvas").toggleClass("mapHighlight");
-                })
+
 
                 scope.$watch
                 (

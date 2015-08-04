@@ -1,11 +1,12 @@
 
 angular.module('NodeWebBase')
-    .service('shapeService', ['$rootScope', '$http','ngDialog','themeChangedMsg',function ($rootScope, $http, ngDialog,themeChangedMsg) {
+    .service('shapeService', ['$rootScope', '$http','ngDialog','themeChangedMsg','toggleEditMsg',function ($rootScope, $http, ngDialog,themeChangedMsg,toggleEditMsg) {
         var me = this;
         me.shapes = [];
         me.scoreShapes = [];
         me.map = null;
         me.drawingManager = null;
+        me.editing = false;
 
         me.init = function(map, drawingManager){
             me.map = map;
@@ -18,8 +19,9 @@ angular.module('NodeWebBase')
                 me.drawPolygonFile(data);
             });
 
-            $rootScope.$on('toggleEditing', function (event, data) {
-                me.toggleEditing(data);
+            toggleEditMsg.listen( function (event, data){
+                    console.log("shapeService " , data);
+                    me.toggleEditing(data);
             });
 
             $rootScope.$on('clearCurrentShapes', function () {
@@ -159,6 +161,7 @@ angular.module('NodeWebBase')
 
         me.toggleEditing = function (val) {
             console.log("Trying to make editable", val);
+            me.editing = val;
             angular.forEach(me.shapes, function (shape, idx) {
                 shape.editable=val;
                 shape.editable_changed();
@@ -245,7 +248,7 @@ angular.module('NodeWebBase')
                         $scope.minDt = new Date(1996, 1, 1);
                         $scope.maxDt = new Date(2999,12,31);
                         $scope.name = shape.geqeData.name;
-
+                        $scope.editing = me.editing;
                         $scope.cancel = function(){
                             $scope.closeThisDialog(null);
                         };

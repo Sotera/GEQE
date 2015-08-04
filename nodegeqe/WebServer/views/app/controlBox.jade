@@ -17,7 +17,7 @@ div.scrollable(ng-style="style" ng-controller="jobsTabsController")
         div.form-group-sm
             label(for='dataSetSelect') Data Set
             span.pull-right
-                button.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='getDataSets()' title="Refresh file list." user-log elementtype='BUTTON' loggroup='run_tab' logtags='run,refresh,data_set_files')
+                button.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='refreshAll()' title="Refresh file list." user-log elementtype='BUTTON' loggroup='run_tab' logtags='run,refresh,data_set_files')
             select.form-control(id="dataSetSelect" ng-options="item.name for item in dataSets | orderBy: item.name" ng-model="dataSetSelected" user-log elementtype='DROPDOWNLIST' loggroup='run_tab' logtags='run,select,data_set_files')
                 option(value="") --Select--
 
@@ -30,7 +30,7 @@ div.scrollable(ng-style="style" ng-controller="jobsTabsController")
             a.text-left(href="", data-toggle="collapse", data-target="#newPolySet")
                     | new polyset
             span.pull-right
-                button.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="showEditingTools()" ng-class="{'disabled': !polygonSetSelected, 'active': editing}" title="Draw polygons to the map." user-log elementtype='BUTTON' loggroup='run_tab' logtags='draw,training_file')
+                button.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="showEditingTools()" ng-class="{'disabled': !polygonSetSelected, 'btn-info': editing }" title="Draw polygons to the map." user-log elementtype='BUTTON' loggroup='run_tab' logtags='draw,training_file')
 
         div.form-group.collapse(id="newPolySet")
             div.input-group

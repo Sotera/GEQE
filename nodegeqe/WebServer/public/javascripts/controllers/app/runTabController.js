@@ -2,18 +2,11 @@
  * Created by jlueders on 4/13/15.
  */
 angular.module('NodeWebBase')
-    .controller('runTabController', ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
+    .controller('runTabController', ['$scope','$rootScope','$http','setSelectionMsg', function ($scope, $rootScope, $http,setSelectionMsg) {
 
         $scope.jobs = [];
-        $scope.dataSets= [];
-        $scope.polygonFiles = [];
-
-        $scope.dataSetSelected="";
-        $scope.polyFile = "";
-
-        $scope.polyFileSelected = function(item){
-            $scope.polyFile = item.name;
-        };
+        $scope.polygonSetSelected = [];
+        $scope.dataSetSelected=[];
 
         $scope.run={
                 sTopN:"300",
@@ -29,101 +22,31 @@ angular.module('NodeWebBase')
             fileName:""
         };
 
-        $scope.populatePolygonSelect = function() {
-            if(!$rootScope.isAppConfigured())
-                return;
-
-            $http({
-                method:"GET",
-                url: "app/sitelists/list/"+$rootScope.username,
-                params: {}
-            }).success(function (response) {
-               $scope.polygonFiles = response
-            }).error($rootScope.showError);
-        };
+        setSelectionMsg.listen(function(evt,vals){
+            if(vals.type="polygonSetSelected")
+                $scope.polygonSetSelected=vals.data;
+            if(vals.type="dataSetSelected")
+                $scope.dataSetSelected=vals.data;
+            console.log(vals);
+        });
 
 
-        $scope.drawPolygonFile = function(){
-            var modelId = $scope.getPolygonId();
-            if (!modelId)  $rootScope.showErrorMessage("Polygon name invalid.",'Polygon must be saved prior to use.');
-            else $rootScope.$emit("drawPolygonFile", modelId)
-        };
-
-
-        /**
-         * Get the id for the current polyFile from the polygonList
-         * Undefined if the model has not been saved
-         */
-        $scope.getPolygonId = function(){
-            for  (var i=0; i<$scope.polygonFiles.length; i++){
-                if ($scope.polygonFiles[i].name == $scope.polyFile){
-                    return $scope.polygonFiles[i].id;
-                }
-            }
-            return undefined;
-        };
-
-
-        /**
-         * Save the site list (polygon)
-         */
-        $scope.saveList = function(){
-
-            $rootScope.$emit("getShapesText",
-                {
-                    "scope":this,
-                    "callback":function(resultsText){
-                        if(!$rootScope.isAppConfigured())
-                            return;
-                        var pName = $scope.polyFile;
-                        var siteList = JSON.parse(resultsText);
-                        siteList.name = pName;
-                        siteList.username = $rootScope.username;
-                        var modelId = $scope.getPolygonId();
-                        if (modelId) siteList.id = modelId;
-
-                        $http({
-                            method:"POST",
-                            url: "app/sitelists/save",
-                            params: {
-                                siteList: siteList
-                            }}).success(function (response) {
-                                $("#resultsText").text(pName + " written");
-                                $scope.populatePolygonSelect(); // refresh the polygon list to get the new id
-                            }).error($rootScope.showError)
-                    }
-                });
-        };
-
-        $scope.getDataSets = function() {
-            if (!$rootScope.isAppConfigured())
-                return;
-
-            $http({
-                method: "GET",
-                url: "app/datasets"
-            }).success(function (response) {
-                $scope.dataSets = response;
-            }).error($rootScope.showError);
-        };
-
-
-        $scope.applyScores = function() {
+          $scope.applyScores = function() {
 
             if(!$rootScope.isAppConfigured())
                 return;
 
             // verify inputs
 
-            if(!$scope.dataSetSelected || $scope.dataSetSelected === "--Select--") {
+            if(!$scope.dataSetSelected || $scope.dataSetSelected.name === "--Select--") {
                 $rootScope.showErrorMessage("Query Job", "Please select a data set.");
                 return;
             }
-            if(!$scope.polyFile || $scope.polyFile === "--Select--"){
+            if(!$scope.polygonSetSelected || $scope.polygonSetSelected.name === "--Select--"){
                 $rootScope.showErrorMessage("Query Job", "Please select a polygon file name.");
                 return;
             }
-            var siteListId = $scope.getPolygonId();
+            var siteListId = $scope.polygonSetSelected.id;
             if (!siteListId){
                 $rootScope.showErrorMessage("Query Job","Save your polygon file prior to running query.");
                 return;
@@ -158,15 +81,14 @@ angular.module('NodeWebBase')
 
         $scope.applyTraining = function() {
             if (!$rootScope.isAppConfigured())
-                return;
-            // verify inputs
+                return;            // verify inputs
 
-            if (!$scope.dataSetSelected || $scope.dataSetSelected === "--Select--") {
+            if (!$scope.dataSetSelected || $scope.dataSetSelected.name === "--Select--") {
                 $rootScope.showErrorMessage("Query Job", "Please select a data set.");
                 return;
             }
-            if (!$scope.polyFile || $scope.polyFile === "--Select--") {
-                $rootScope.showErrorMessage("Query Job", "Please select a polygon file name.");
+            if (!$scope.polygonSetSelected || $scope.polygonSetSelected.name === "--Select--") {
+                $rootScope.showErrorMessage("Query Job", "Please select a polygon set.");
                 return;
             }
             var siteListId = $scope.getPolygonId();
@@ -209,16 +131,4 @@ angular.module('NodeWebBase')
                 f2.addClass("invis");
             }
         };
-
-
-
-        //go ahead and get the data sets from the server
-        //INIT
-        var watchRemoval = $scope.$watch($rootScope.isAppConfigured ,function(newVal,oldVal) {
-            if(newVal) {  // Don't do anything if Undefined.
-                $scope.getDataSets();
-                $scope.populatePolygonSelect();
-                watchRemoval();
-            }
-        })
     }]);

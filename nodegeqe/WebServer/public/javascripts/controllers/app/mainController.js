@@ -5,11 +5,6 @@ angular.module('NodeWebBase')
         $scope.scopeName = "mainController";
 
 
-        $rootScope.editing = false;
-        $rootScope.$on("toggleEditing", function(event, truthValue){
-            $rootScope.editing = truthValue;
-        });
-
         // Close pop up windows with Esc key. For some reason it's not functioning by default.
         //http://stackoverflow.com/questions/1481626/how-to-handle-esc-keydown-on-javascript-popup-window
         $(document).keydown(function(e) {

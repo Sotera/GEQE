@@ -2,7 +2,7 @@
  * Created by jlueders on 4/13/15.
  */
 angular.module('NodeWebBase')
-    .controller('modelTabController', ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
+    .controller('modelTabController', ['$scope','$rootScope','$http','setSelectionMsg', function ($scope, $rootScope, $http,setSelectionMsg) {
         $scope.scoreFiles = [];
         $scope.polygonFiles = [];
         $scope.trainingFiles = [];
@@ -35,6 +35,17 @@ angular.module('NodeWebBase')
                     $scope.polygonFiles = response.lFiles;
                 }).error($rootScope.showError)
         };
+
+
+        setSelectionMsg.listen(function(evt,vals){
+            if(vals.type="polygonSetSelected")
+                $scope.polygonSetSelected=vals.data;
+            if(vals.type="dataSetSelected")
+                $scope.dataSetSelected=vals.data;
+            console.log(vals);
+        });
+
+
 
         $scope.getScoresModel = {
             user: "",
@@ -108,16 +119,5 @@ angular.module('NodeWebBase')
                 })
                 .error($rootScope.showError)
         };
-
-
-        ///INIT
-        var watchRemoval = $scope.$watch($rootScope.isAppConfigured ,function(newVal,oldVal) {
-            if( newVal ){ // Don't do anything if Undefined.
-                //$scope.popScore();
-                //$scope.populatePolygonSelect();
-                //$scope.populateTrainingSelect();
-                watchRemoval();
-           }
-        })
    }]);
 

@@ -18,13 +18,13 @@
                         li(ng-repeat="range in dateRanges" ) "{{range.min}} - {{range.max}}"
 
 div.modal-footer
-    div(ng-if="$root.editing")
+    div(ng-if="editing")
         button.btn(ng-click="delete()")
             | Delete
         button.btn(ng-click="cancel()")
             | Cancel
         button.btn.btn-primary(ng-click="save()")
             | Save
-    div(ng-if="!$root.editing")
+    div(ng-if="!editing")
         button.btn.btn-primary(ng-click="cancel()")
             | Ok
