@@ -23,7 +23,7 @@ angular.module('NodeWebBase')
         $scope.buildControl = function(text){
             var controlDiv = document.createElement('div');
             controlDiv.index = 1;
-            $scope.map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(controlDiv);
+            $scope.map.controls[google.maps.ControlPosition.LEFT_CENTER].push(controlDiv);
 
             // Set CSS for the control border
             var controlUI = document.createElement('div');
@@ -117,7 +117,7 @@ angular.module('NodeWebBase')
                 scope.map = new google.maps.Map(element[0], mapOptions);
 
                 scope.drawingManager = new google.maps.drawing.DrawingManager({
-                    drawingControl: true,
+                    drawingControl: false,
                     drawingControlOptions: {
                         position: google.maps.ControlPosition.TOP_CENTER,
                         drawingModes: [
@@ -128,6 +128,13 @@ angular.module('NodeWebBase')
                     polygonOptions:$rootScope.theme.shapeStyles,
                     rectangleOptions:$rootScope.theme.shapeStyles
                 });
+                $rootScope.$on("toggleDrawing", function(){
+                    scope.drawingManager.setOptions({
+                        drawingControl: !scope.drawingManager.drawingControl,
+                        drawingMode:null
+                    });
+                    $("#map-canvas").toggleClass("mapHighlight");
+                })
 
                 scope.$watch
                 (

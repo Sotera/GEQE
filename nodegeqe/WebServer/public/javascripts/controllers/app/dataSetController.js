@@ -8,15 +8,10 @@ angular.module('NodeWebBase')
         $scope.dataSets= [];
         $scope.polygonFiles = [];
 
-        $scope.dataSetSelected;
-        $scope.polyFile = "";
+        $scope.dataSetSelected=null;
+        $scope.polyFile="";
         $scope.polygonSetSelected=null;
-        $scope.newPolySetIsCollapsed = false;
         $scope.newPolySetName = "";
-
-        $scope.polyFileSelected = function(item){
-            $scope.polyFile = item.name;
-        };
 
         $scope.run={
                 sTopN:"300",
@@ -27,10 +22,19 @@ angular.module('NodeWebBase')
                 sTopPercent:"0.0001",
                 nFeat:""
             };
+        $scope.editing = false;
 
         $scope.training={
             fileName:""
         };
+
+        $scope.$watch("polygonSetSelected", function(newval,oldval){
+            console.log(newval);
+            if(newval && newval!=oldval){
+                $scope.drawPolygonFile();
+                $scope.editing=false;
+            }
+        });
 
         $scope.populatePolygonSelect = function() {
             if(!$rootScope.isAppConfigured())
@@ -48,7 +52,12 @@ angular.module('NodeWebBase')
             }).error($rootScope.showError);
         };
 
-
+        $scope.$watch("editing", function(newval,oldval){
+            $rootScope.$emit("toggleDrawing", $scope.editing);
+            if($("#canvas-map").hasClass("mapHighlight")){
+                $scope.saveList();
+            }
+        });
         $scope.drawPolygonFile = function(){
             var modelId = $scope.getPolygonId();
             if (!modelId)  $rootScope.showErrorMessage("Polygon name invalid.",'Polygon must be saved prior to use.');
@@ -61,10 +70,13 @@ angular.module('NodeWebBase')
          * Undefined if the model has not been saved
          */
         $scope.getPolygonId = function getPolygonId(){
-            console.log($scope.polygonSetSelected);
-            return $scope.polygonSetSelected.id;
+            return (typeof $scope.polygonSetSelected.id!="undefined")? $scope.polygonSetSelected.id : 0;
         };
 
+        $scope.showEditingTools = function showEditingTools(){
+            console.log("Emitting toggleDrawing!! ");
+            $scope.editing = !$scope.editing;
+        };
 
         $scope.saveItem = function saveItem(item) {
             console.log("saving item", item);
@@ -87,9 +99,8 @@ angular.module('NodeWebBase')
                             params: {
                                 siteList: siteList
                             }}).success(function (response) {
-                        //RESET
-                            $scope.newPolySetIsCollapsed="";
-                            $("#newPolySet").toggleClass("in");
+                            //RESET
+                            $("#newPolySet").toggleClass("in").text("");
                             $("#resultsText").text(pName + " written");
                             $scope.populatePolygonSelect(); // refresh the polygon list to get the new id
                         }).error($rootScope.showError)
@@ -104,8 +115,8 @@ angular.module('NodeWebBase')
 
             $rootScope.$emit("getShapesText",
                 {
-                    "scope":this,
-                    "callback":function(resultsText){
+                    scope:this,
+                    callback:function(resultsText){
                         if(!$rootScope.isAppConfigured())
                             return;
                         //console.log($scope.polygonSetSelected);

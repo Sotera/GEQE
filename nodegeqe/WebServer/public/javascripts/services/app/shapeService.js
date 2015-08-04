@@ -18,6 +18,10 @@ angular.module('NodeWebBase')
                 me.drawPolygonFile(data);
             });
 
+            $rootScope.$on('toggleDrawing', function (event, data) {
+                me.toggleDrawing(data);
+            });
+
             $rootScope.$on('clearCurrentShapes', function () {
                 me.clearCurrentShapes();
             });
@@ -153,6 +157,19 @@ angular.module('NodeWebBase')
             return site;
         };
 
+        me.toggleDrawing = function (val) {
+            console.log("Trying to make editable", val);
+            angular.forEach(me.shapes, function (shape, idx) {
+                shape.editable=val;
+                shape.editable_changed();
+            });
+
+            angular.forEach(me.scoreShapes, function (shape, idx) {
+                shape.editable=val;
+                shape.editable_changed();
+            });
+        }
+
         me.drawPolygonFile = function (modelId) {
             $http({
                 method:"GET",
@@ -181,7 +198,7 @@ angular.module('NodeWebBase')
                             return;
                         var polygon = new google.maps.Polygon({
                             paths: points,
-                            editable: true
+                            editable: false
                         });
 
                         if ($rootScope.theme && $rootScope.theme.shapeStyles)

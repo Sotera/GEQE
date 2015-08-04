@@ -154,3 +154,6 @@ body {
 button i {
     padding-left: 8px;
 }
+.mapHighlight{
+    border:5px solid yellow;
+}
