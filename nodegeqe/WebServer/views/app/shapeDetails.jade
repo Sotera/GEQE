@@ -18,6 +18,8 @@
                         li(ng-repeat="range in dateRanges" ) "{{range.min}} - {{range.max}}"
 
 div.modal-footer
+    button.btn(ng-click="sample()")
+        | Sample
     button.btn(ng-click="delete()")
         | Delete
     button.btn(ng-click="cancel()")

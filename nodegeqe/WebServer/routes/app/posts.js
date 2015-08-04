@@ -108,7 +108,7 @@ router.post('/resultset', function (req, res) {
  * post body example: {"query_string": "hello world", "sitelist": sitelistObject}
  */
 router.post('/sitelist', function (req, res) {
-    var sitelist = req.body.sitelist;
+    var sitelist = req.body;
     var query_string = req.body.query_string;
 
     var query = { "query": {"filtered": {}}};

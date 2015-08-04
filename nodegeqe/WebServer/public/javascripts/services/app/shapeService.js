@@ -97,20 +97,20 @@ angular.module('NodeWebBase')
             var sites = {
                 "sites": []
             };
-            angular.forEach(me.shapes, function (shape, index) {
-                sites.sites.push(me.getSiteFromShape(index, shape));
+            angular.forEach(me.shapes, function (shape) {
+                sites.sites.push(me.getSiteFromShape(shape));
             });
             var retval = angular.toJson(sites);
             return retval;
         };
 
-        me.getSiteFromShape = function (index, shape) {
+        me.getSiteFromShape = function (shape) {
             if (shape.getBounds != null)
-                return me.getSiteFromRectangle(index, shape);
-            return me.getSiteFromPolygon(index, shape);
+                return me.getSiteFromRectangle(shape);
+            return me.getSiteFromPolygon(shape);
         };
 
-        me.getSiteFromPolygon = function (index, shape) {
+        me.getSiteFromPolygon = function (shape) {
             var vertices = shape.getPath();
             var site = {
                 "name": shape.geqeData.name,
@@ -127,7 +127,7 @@ angular.module('NodeWebBase')
             return site;
         };
 
-        me.getSiteFromRectangle = function (index, shape) {
+        me.getSiteFromRectangle = function (shape) {
             var vertices = [];
             var bounds = shape.getBounds();
             var NE = bounds.getNorthEast();
@@ -252,6 +252,14 @@ angular.module('NodeWebBase')
 
                             shape.geqeData.dates = $scope.dateRanges;
                             shape.geqeData.name = $scope.name;
+                            $scope.closeThisDialog(null);
+                        };
+
+                        $scope.sample = function(){
+
+                            shape.geqeData.dates = $scope.dateRanges;
+                            shape.geqeData.name = $scope.name;
+                            $rootScope.$emit("sampleShape",me.getSiteFromShape(shape));
                             $scope.closeThisDialog(null);
                         };
 

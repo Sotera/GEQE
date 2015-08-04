@@ -95,6 +95,25 @@ angular.module('NodeWebBase')
                 });
         };
 
+        $rootScope.$on('sampleShape',function(event,item){
+
+            if(!item)
+                return;
+            $http({
+                method: "POST",
+                url: "app/posts/sitelist",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data:{
+                    "sites": [item]
+                }
+            }).success(function (response) {
+                $rootScope.$emit("clearMarkers",['training']);
+                $rootScope.$emit("drawMapMarkers",response.hits, "training");
+            }).error($rootScope.showError);
+        });
+
         $scope.getDataSets = function() {
             if (!$rootScope.isAppConfigured())
                 return;

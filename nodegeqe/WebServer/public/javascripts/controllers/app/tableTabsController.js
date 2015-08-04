@@ -38,7 +38,6 @@ angular.module('NodeWebBase')
                             while($scope.masterCollection.length > response.length){
                                 $scope.masterCollection.pop();
                                 $scope.rowCollection.pop();
-                                $scope.displayedCollection.pop();
                             }
 
                             $.extend(true, $scope.masterCollection, response);
