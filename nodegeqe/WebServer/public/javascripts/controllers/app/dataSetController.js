@@ -30,16 +30,12 @@ angular.module('NodeWebBase')
 
         $scope.$watch("dataSetSelected", function(newval, oldval){
             if(newval && newval!=oldval)
-                    setSelectionMsg.broadcast({type: 'dataSetSelected', data: newval})
+                    setSelectionMsg.broadcast('dataSetSelected', newval)
         });
 
         $scope.$watch("polygonSetSelected", function(newval,oldval){
-            if(newval && newval!=oldval)
-                     setSelectionMsg.broadcast({type: 'polygonSetSelected', data: newval})
-        });
-
-        $scope.$watch("polygonSetSelected", function(newval,oldval){
-            if(newval && newval!=oldval){
+            if(newval && newval!=oldval) {
+                setSelectionMsg.broadcast('polygonSetSelected',newval)
                 $scope.drawPolygonFile();
                 toggleEditMsg.broadcast(false);
             }

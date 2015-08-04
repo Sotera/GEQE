@@ -22,12 +22,13 @@ angular.module('NodeWebBase')
             fileName:""
         };
 
-        setSelectionMsg.listen(function(evt,vals){
-            if(vals.type="polygonSetSelected")
-                $scope.polygonSetSelected=vals.data;
-            if(vals.type="dataSetSelected")
-                $scope.dataSetSelected=vals.data;
-            console.log(vals);
+        setSelectionMsg.listen(function(evt,type,val){
+            if(type=="polygonSetSelected")
+                $scope.polygonSetSelected=val;
+            if(type=="dataSetSelected")
+
+                $scope.dataSetSelected=val;
+            console.log(arguments);
         });
         
         $rootScope.$on('sampleShape',function(event,item){
