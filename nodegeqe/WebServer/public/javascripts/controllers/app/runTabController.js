@@ -8,7 +8,7 @@ angular.module('NodeWebBase')
         $scope.dataSets= [];
         $scope.polygonFiles = [];
 
-        $scope.dataSetSelected="";
+        $scope.selectedDataSet="";
         $scope.polyFile = "";
 
         $scope.polyFileSelected = function(item){
@@ -125,9 +125,9 @@ angular.module('NodeWebBase')
                 url: "app/datasets"
             }).success(function (response) {
                 $scope.dataSets = response;
+                $rootScope.$emit("drawShapes",response,'dataset');
             }).error($rootScope.showError);
         };
-
 
         $scope.applyScores = function() {
 
@@ -136,7 +136,7 @@ angular.module('NodeWebBase')
 
             // verify inputs
 
-            if(!$scope.dataSetSelected || $scope.dataSetSelected === "--Select--") {
+            if(!$scope.selectedDataSet || $scope.selectedDataSet === "--Select--") {
                 $rootScope.showErrorMessage("Query Job", "Please select a data set.");
                 return;
             }
@@ -164,7 +164,7 @@ angular.module('NodeWebBase')
                 'limit': ($scope.run.bPercent) ? $scope.run.sTopPercent : $scope.run.sTopN,
                 'customStopWords': customStopWords,
                 'siteListId':  siteListId,
-                'datasetId' :$scope.dataSetSelected.name
+                'datasetId' :$scope.selectedDataSet.name
             };
 
             $http({
@@ -182,7 +182,7 @@ angular.module('NodeWebBase')
                 return;
             // verify inputs
 
-            if (!$scope.dataSetSelected || $scope.dataSetSelected === "--Select--") {
+            if (!$scope.selectedDataSet || $scope.selectedDataSet === "--Select--") {
                 $rootScope.showErrorMessage("Query Job", "Please select a data set.");
                 return;
             }
@@ -204,7 +204,7 @@ angular.module('NodeWebBase')
                 'username': $rootScope.username,
                 'queryType': 'training-data',
                 'siteListId': siteListId,
-                'datasetId': $scope.dataSetSelected.name
+                'datasetId': $scope.selectedDataSet.name
             };
 
             $http({

@@ -48,6 +48,9 @@ angular.module('NodeWebBase')
                     case "score":
                         me.drawScoreShapes(data);
                         break;
+                    case "dataset":
+                        me.drawDataSetShapes(data);
+                        break;
                 }
             });
 
@@ -58,7 +61,7 @@ angular.module('NodeWebBase')
                         rectangleOptions: $rootScope.theme.shapeStyles
                     });
 
-                    var shapeTypes = ["score","dataset","polyset"]
+                    var shapeTypes = ["score","polyset"];
                     angular.forEach(shapeTypes, function (shapeType) {
                         angular.forEach(me.shapes[shapeType], function (shape) {
                             shape.setOptions($rootScope.theme.shapeStyles);
@@ -206,7 +209,7 @@ angular.module('NodeWebBase')
         };
 
         me.clearAll = function () {
-            me.clearCurrentShapes(["score","polyset","dataset"]);
+            me.clearCurrentShapes(["score","polyset"]);
         };
 
         me.clearCurrentShapes = function (shapeTypes) {
@@ -301,4 +304,39 @@ angular.module('NodeWebBase')
             $rootScope.$emit("drawMapMarkers",clusters,'cluster');
 
         };
+
+        me.drawDataSetShapes = function (data) {
+            var locations = [];
+
+            data.forEach(function (dataset) {
+                var pts = dataset.boundingPoly;
+
+                var latlonList = [];
+                angular.forEach(pts, function (pt) {
+                    var location = new google.maps.LatLng(pt.lat, pt.lng);
+                    latlonList.push(location);
+                    locations.push(location)
+                });
+
+                var polygon = new google.maps.Polygon({
+                    paths: latlonList
+                });
+
+                if ($rootScope.theme && $rootScope.theme.shapeStyles)
+                    polygon.setOptions($rootScope.theme.shapeStyles);
+
+                polygon.setOptions({
+                    "strokeColor":"lightblue",
+                    "fillOpacity": 0,
+                    "clickable":false
+                });
+
+                polygon.setMap(me.map);
+                me.shapes['dataset'].push(polygon);
+            });
+
+            me.calculateBounds(locations);
+
+        };
+
     }]);
