@@ -241,7 +241,7 @@ angular.module('NodeWebBase')
             $scope.currentCatalogTitle = $scope.catalog[$scope.currentCatalogIndex].title;
 
             $rootScope.$emit("clearMarkers",['score','training','item']);
-            $rootScope.$emit("clearCurrentShapes");
+            $rootScope.$emit("clearCurrentShapes",['score']);
             $rootScope.$emit("drawShapes",$scope.catalog[$scope.currentCatalogIndex].data ,"score");
         }
 
