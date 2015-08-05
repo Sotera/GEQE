@@ -74,10 +74,10 @@ angular.module('NodeWebBase')
             $rootScope.$on('selectDatasetShape', function (event, dataset) {
                 angular.forEach(me.shapes['dataset'], function (shape) {
                     if(shape.name === dataset.name){
-                        shape.setOptions({'strokeColor':'green'});
+                        shape.setOptions({strokeColor:'green',strokeWeight: 3});
                         return;
                     }
-                    shape.setOptions({'strokeColor':'lightblue'});
+                    shape.setOptions({strokeColor:'lightblue',strokeWeight: 2});
                 });
             });
 
