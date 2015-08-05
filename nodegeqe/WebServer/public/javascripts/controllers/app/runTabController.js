@@ -129,6 +129,13 @@ angular.module('NodeWebBase')
             }).error($rootScope.showError);
         };
 
+        $scope.dataSetSelected = function() {
+            if (!$scope.selectedDataSet)
+                return;
+
+            $rootScope.$emit("selectDatasetShape",$scope.selectedDataSet);
+        };
+
         $scope.applyScores = function() {
 
             if(!$rootScope.isAppConfigured())

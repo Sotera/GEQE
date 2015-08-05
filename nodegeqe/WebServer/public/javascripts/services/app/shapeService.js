@@ -71,6 +71,16 @@ angular.module('NodeWebBase')
                 }
             });
 
+            $rootScope.$on('selectDatasetShape', function (event, dataset) {
+                angular.forEach(me.shapes['dataset'], function (shape) {
+                    if(shape.name === dataset.name){
+                        shape.setOptions({'strokeColor':'green'});
+                        return;
+                    }
+                    shape.setOptions({'strokeColor':'lightblue'});
+                });
+            });
+
             $rootScope.$on('getShapesText', function (event, callbackInfo) {
                 var params = [];
                 params.push(me.getSitesJson());
@@ -332,6 +342,7 @@ angular.module('NodeWebBase')
                 });
 
                 polygon.setMap(me.map);
+                polygon.name = dataset.name;
                 me.shapes['dataset'].push(polygon);
             });
 
