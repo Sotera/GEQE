@@ -36,12 +36,13 @@ angular.module('NodeWebBase')
             angular.forEach(data.posts.hits, function(post,idx){
                 var words = post._source.message.toLowerCase().split(" ");
                 angular.forEach(words,function(word,idx) {
-                    if(word.length <= 3)
+                    var cleanTerm = word.replace(/[@.,-\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+                    if(cleanTerm.length <= 3)
                         return;
-                    var wordObj = wordObjs[word];
+                    var wordObj = wordObjs[cleanTerm];
                     if (!wordObj) {
-                        wordObj = {"text": word, "weight": 1};
-                        wordObjs[word] = wordObj;
+                        wordObj = {"text": cleanTerm, "weight": 1};
+                        wordObjs[cleanTerm] = wordObj;
                         $scope.words.push(wordObj);
                         return;
                     }
