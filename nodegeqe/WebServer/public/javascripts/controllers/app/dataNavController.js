@@ -142,8 +142,9 @@ angular.module('NodeWebBase')
                     angular.forEach(group.bins, function(bin){
                        totalPosts+=  bin.totalCount;
                     });
+                    var day = new Date(group.day);
                     catalogItem = {
-                        'title':group.day,
+                        'title': day.getMonth()+1 + "/" + day.getDate() + "/" + day.getFullYear(),
                         'x':idx,
                         'data':group.bins,
                         'nClusters':group.count,
