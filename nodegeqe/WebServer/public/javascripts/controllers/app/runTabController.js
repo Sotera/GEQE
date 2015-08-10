@@ -242,6 +242,7 @@ angular.module('NodeWebBase')
             if(newVal) {  // Don't do anything if Undefined.
                 $scope.getDataSets();
                 $scope.populatePolygonSelect();
+                $scope.populateModelSelect();
                 watchRemoval();
             }
         })
