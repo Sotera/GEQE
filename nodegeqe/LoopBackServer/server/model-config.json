@@ -75,7 +75,7 @@
       "$promise": {},
       "$resolved": true
   },
-  "model":{
+  "geqeModel":{
     "dataSource":"testMongoDB",
     "public":true,
     "$promise": {},
