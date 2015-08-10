@@ -53,6 +53,11 @@
       "type": "belongsTo",
       "model": "resultset",
       "foreignKey": "resultsetId"
+    },
+    "geqeModel": {
+      "type": "belongsTo",
+      "model": "geqeModel",
+      "foreignKey": "geqeModelId"
     }
   },
   "acls": [],

@@ -31,9 +31,29 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                                         button.btn.btn-sm.btn-default.dropdown-toggle(type="button", id="pFileDropButton", data-toggle="dropdown", aria-expanded="false" user-log elementtype='COMBOBOX' loggroup='run_tab' logtags='select,training_file')
                                             span.caret
                                         ul.scrollable-menu.dropdown-menu(role="menu", style="overflow:scroll")
-                                            li(ng-repeat="item in polygonFiles | orderBy: item" ng-click="polyFileSelected(item)" value="{{item}}")
+                                            li(ng-repeat="item in polygonFiles" ng-click="polyFileSelected(item)" value="{{item}}")
                                                a(href='#') {{item.name}}
                                     input.form-control(type="text" ng-model="polyFile" name="polyFile" placeholder="-Select-")
+
+
+                        div
+                            label -- OR --
+
+                        div.form-group-sm
+                            div.input-group
+                                label(for='modelName') Saved Model:
+                                button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="populateModelSelect()" title="Refresh model list." user-log elementtype='BUTTON' loggroup='run_tab' logtags='refresh,query_model')
+                                div(style="display:inline-table; width:100%")
+                                    div.input-group-btn
+                                        button.btn.btn-sm.btn-default.dropdown-toggle(type="button", id="pModelDropButton", data-toggle="dropdown", aria-expanded="false" user-log elementtype='COMBOBOX' loggroup='run_tab' logtags='select,query_model')
+                                            span.caret
+                                        ul.scrollable-menu.dropdown-menu(role="menu", style="overflow:scroll")
+                                            li(ng-repeat="item in geqeModels" ng-click="modelSelected(item)" value="{{item}}")
+                                                a(href='#') {{item.name}}
+                                    input.form-control(type="text" ng-model="geqeModel.name" name="queryModel" placeholder="-Select-")
+
+
+
                         fieldset.scheduler-border
                             legend.scheduler-border Run Query Job
                             div.form-group-sm

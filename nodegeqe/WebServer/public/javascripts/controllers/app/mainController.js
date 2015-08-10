@@ -31,9 +31,7 @@ angular.module('NodeWebBase')
         };
 
         $rootScope.isAppConfigured = function(){
-          return $rootScope.fullname &&
-            $rootScope.serviceHostName &&
-            $rootScope.servicePort;
+          return $rootScope.fullname
         };
 
         $rootScope.showErrorMessage = function(source, reason){
