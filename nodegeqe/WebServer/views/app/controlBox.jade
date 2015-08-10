@@ -53,9 +53,10 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                                     label(for='bPercent') Limit Return by Percent
                                     input.form-control-sm(type="checkbox" ng-model="run.bPercent" id="bPercent" ng-click="modReturn()" user-log elementtype='CHECKBOX' loggroup='run_tab' logtags='query_job,limit_return_by_percent')
 
-                            div.form-group-sm
-                                label(for="cStopW") Custom Stop Words
-                                input.form-control( type="text" ng-model="run.cStopW" id="cStopW" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,custom_stop_words')
+                            //  custom stop worlds currently not sued
+                                div.form-group-sm
+                                    label(for="cStopW") Custom Stop Words
+                                    input.form-control( type="text" ng-model="run.cStopW" id="cStopW" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,custom_stop_words')
 
                             div( id="hr3" )
                                 div.form-group-sm
@@ -73,7 +74,7 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                         div.form-group-sm
                             label(for='dataSetSelect') Data Set:
                                 button.inputItem.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='getDataSets()' title="Refresh file list." user-log elementtype='BUTTON' loggroup='run_tab' logtags='run,refresh,data_set_files')
-                            select.form-control(id="dataSetSelect" ng-options="item.name for item in dataSets | orderBy: item.name" ng-model="selectedDataSet" user-log elementtype='DROPDOWNLIST' loggroup='run_tab' logtags='run,select,data_set_files')
+                            select.form-control(id="dataSetSelect" ng-options="item.name for item in dataSets | orderBy: item.name" ng-model="selectedDataSet" ng-change='dataSetSelected()' user-log elementtype='DROPDOWNLIST' loggroup='run_tab' logtags='run,select,data_set_files')
                                 option(value="") --Select--
                         div.form-group-sm
                             div.input-group
@@ -88,24 +89,22 @@ div.scrollable.tabs(id="tabs" percent-Height percent='100'  ng-style="style" ng-
                                         ul.scrollable-menu.dropdown-menu(role="menu", style="overflow:scroll")
                                             li(ng-repeat="item in polygonFiles | orderBy: item" ng-click="polyFileSelected(item)" value="{{item}}")
                                                 a(href='#') {{item.name}}
-                                    input.form-control(type="text" ng-model="polyFile" name="polyFile")
+                                    input.form-control(type="text" ng-model="polyFile" name="polyFile" placeholder="-Select-")
+
                         fieldset.scheduler-border
                             legend.scheduler-border Run Modeling Job
                             div.form-group-sm
-                                label(for='sFileName') Job Name:
+                                label(for='sFileName') Model Name:
                                 input.form-control(ng-model="run.sFileName" id="sFileName" value="my-scores" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,name')
-                            div.form-group-sm
-                                label(for="cStopW") Custom Stop Words
-                                input.form-control( type="text" ng-model="run.cStopW" id="cStopW" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,custom_stop_words')
                             div( id="hr3" )
                                 div.form-group-sm
-                                    label Query by Location
+                                    label Build Location Model
                                         input.form-control-sm( style="margin-left: 5px;" type ="radio" value="0" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,location')
                                     br
-                                    label Query by Event
+                                    label Build Event Model
                                         input.form-control-sm( style="margin-left: 5px;" type ="radio" value="1" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,event')
 
-                            button.form-control.btn.btn-default(ng-click="applyScores()" title='Start Query Job' user-log elementtype='BUTTON' loggroup='run_tab' logtags='query_job,start') Submit Modeling Job
+                            button.form-control.btn.btn-default(ng-click="submitModelJob()" title='Start Query Job' user-log elementtype='BUTTON' loggroup='run_tab' logtags='query_job,start') Submit Modeling Job
 
 
 

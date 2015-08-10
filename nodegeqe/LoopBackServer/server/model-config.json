@@ -74,5 +74,11 @@
       "public": true,
       "$promise": {},
       "$resolved": true
+  },
+  "model":{
+    "dataSource":"testMongoDB",
+    "public":true,
+    "$promise": {},
+    "$resolved": true
   }
 }
