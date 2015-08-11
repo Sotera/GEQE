@@ -1,6 +1,6 @@
 
 angular.module('NodeWebBase')
-    .service('shapeService', ['$rootScope', '$http','ngDialog','themeChangedMsg','toggleEditMsg',function ($rootScope, $http, ngDialog,themeChangedMsg,toggleEditMsg) {
+    .service('shapeService', ['$rootScope', '$http','ngDialog','themeChangedMsg','toggleEditMsg','setSelectionMsg',function ($rootScope, $http, ngDialog,themeChangedMsg,toggleEditMsg,setSelectionMsg) {
         var me = this;
         me.shapes = {
             "score":[],
@@ -77,7 +77,9 @@ angular.module('NodeWebBase')
                 }
             });
 
-            $rootScope.$on('selectDatasetShape', function (event, dataset) {
+            setSelectionMsg.listen(function (event,type, dataset) {
+                console.log("setSelectionMsg")
+                if(type=="dataSetSelected")
                 angular.forEach(me.shapes['dataset'], function (shape) {
                     if(shape.name === dataset.name){
                         shape.setOptions({strokeColor:'green',strokeWeight: 3});
@@ -148,6 +150,20 @@ angular.module('NodeWebBase')
 
             return site;
         };
+
+
+        $rootScope.$on('selectDatasetShape', function (event, dataset) {
+            angular.forEach(me.shapes['dataset'], function (shape) {
+                if(shape.name === dataset.name){
+                    shape.setOptions({strokeColor:'green',strokeWeight: 3});
+                    return;
+                }
+                shape.setOptions({strokeColor:'lightblue',strokeWeight: 2});
+            });
+        });
+
+
+
 
         me.getSiteFromRectangle = function (shape) {
             var vertices = [];

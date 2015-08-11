@@ -170,6 +170,7 @@ angular.module('NodeWebBase')
                 url: "app/datasets"
             }).success(function (response) {
                 $scope.dataSets = response;
+                $rootScope.$emit("drawShapes",response,'dataset');
             }).error($rootScope.showError);
         };
 
