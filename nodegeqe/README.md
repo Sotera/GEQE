@@ -17,14 +17,7 @@ $> mongod
 $> git clone https://github.com/Sotera/GEQE  
 $> cd GEQE  
 ```
-##Tangelo
-```
-$> cd backend-tangelo-server  
-$> sudo apt-get python-pip  
-$> pip install tangelo  
-$> addgroup nobody  
-$> tangelo  
-```
+
 ##Loopback server
 ```
 $> cd nodegeqe/LoopBackServer  
