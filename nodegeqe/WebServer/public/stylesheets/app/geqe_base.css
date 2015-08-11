@@ -1,3 +1,6 @@
+
+@import url("table.css");
+
 html{
     height:100%;
 }
@@ -21,8 +24,11 @@ body{
 }
 
 #map-canvas {
+    position:absolute;
     width: 100%;
     height:100%;
+    min-width:250px;
+    left:0px;
 }
 #boldLogo {
     position:absolute;
@@ -43,7 +49,7 @@ body{
 .detailsImg{
     display:block;
     margin:auto;
-    max-height: 256px;
+    max-height: 64px;
 }
 legend.scheduler-border {
     font-size: 1.2em !important;
@@ -88,9 +94,10 @@ div[class^="col-"]{
 }
 
 .navbar-nav > li > a, .navbar-brand, .navbar-text {
-    padding-top:5px !important; padding-bottom:0 !important;
+    padding-top:5px !important;
+    padding-bottom:0 !important;
     margin:0;
-    height:auto; !important;
+    height:auto; /*  !important; Doesn't do anything. */
 }
 .navbar-button{
     padding-top:0 !important;
@@ -112,8 +119,15 @@ div[class^="col-"]{
 }
 
 #resultsBox {
+    font-family: Roboto, Arial;
+    font-size: 13px;
     overflow:auto;
-    margin: 26px 0 0 0;
+    width:100%;
+    height:100%;
+}
+
+.scrollTable {
+    overflow:auto;
     font-family: Roboto, Arial;
     font-size: 13px;
 }
@@ -139,6 +153,11 @@ div[class^="col-"]{
 .navbar-button{
     margin: auto;
 }
+
+.navbar-right{
+    margin-right: 0;
+}
+
 .noselect {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -149,17 +168,29 @@ div[class^="col-"]{
 }
 .my-navbar-brand
 {
+    padding:0;
     position: absolute;
     width: 100%;
-    left: 0;
     text-align: center;
-    margin: auto;
 }
 .tab-content {
     border-radius:3px;
 }
 .invis {
     display:none;
+}
+
+.row-jobs-table{
+    width: 100%;
+    clear:both;
+}
+.column-buttons{
+    width:28px;
+    float:left;
+}
+
+.column-table{
+    margin-left:28px;
 }
 
 .nav-tabs > li > a {
@@ -172,6 +203,21 @@ span.btn-lg{
     padding-right: 16px;
 }
 
+.ui-layout-column > .ui-splitbar > a,
+.ui-layout-row > .ui-splitbar > a {
+    color: #000;
+    cursor: pointer;
+    font-size: 9px;
+}
+
+
+.ui-splitbar {
+    background-color: #D3D3D3;
+}
+
+#cloud { width: 100%; height: 100% }
+.cloud {width:100%;height:200px}
+
 /*---------------------------------
 ------------debug css--------------
 -----------------------------------
@@ -181,4 +227,5 @@ div[class^="col-"]{
 
 .row{
     border: 1px dotted red;
-}*/
+}
+*/

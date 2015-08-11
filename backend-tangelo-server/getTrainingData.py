@@ -30,7 +30,7 @@ def get(user='demo', fileAppOut='', maxOut = "500"):
     with open(ssName,'r') as f:
         for line in f:
             try:
-                (lat,lon,user,date,text) = line.strip().split('\t')
+                (lat,lon,user,date,text,datetime) = line.strip().split('\t')
             except:
                 tangelo.log("Parser error for file: "+ssName+" line: "+line)
                 continue
@@ -39,7 +39,8 @@ def get(user='demo', fileAppOut='', maxOut = "500"):
                 'lon':lon,
                 'posts': [{'cap':text,
                            'usr':user,
-                           'date':date
+                           'date':date,
+                           'datetime':datetime
                           }]
 
             }

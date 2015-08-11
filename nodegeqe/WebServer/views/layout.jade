@@ -5,6 +5,7 @@ html(ng-app="NodeWebBase" ,ng-controller="layoutController", lang='en')
 		base(href='/')
 		meta(charset='uft-8')
 		meta(name='viewport' content='width=device-width, initial-scale=1')
+
 		script(src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=drawing")
 		script(src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js")
 		script(src='/javascripts/vendor/bootstrap/dist/js/bootstrap.min.js')
@@ -16,6 +17,8 @@ html(ng-app="NodeWebBase" ,ng-controller="layoutController", lang='en')
 		script(src='/javascripts/vendor/ngDialog/js/ngDialog.min.js')
 		script(src='/javascripts/vendor/d3/d3.min.js')
 		script(src='/javascripts/vendor/n3-line-chart/build/line-chart.min.js')
+		script(src='/javascripts/vendor/angular-smart-table/dist/smart-table.js')
+		script(src="/javascripts/vendor/jqcloud2/dist/jqcloud.min.js")
 
 		script(src='/javascripts/controllers/layoutController.js')
 
@@ -23,13 +26,26 @@ html(ng-app="NodeWebBase" ,ng-controller="layoutController", lang='en')
 		script(src='/javascripts/services/messages/themeChangedMsg.js')
 		script(src='/javascripts/services/messages/setFullNameMsg.js')
 
+		script(src='/javascripts/services/app/messages/applyFilterMsg.js')
+		script(src='/javascripts/services/app/messages/itemDetailsLoadedMsg.js')
+
+		script(src="/javascripts/vendor/raf/index.js")
+		script(src="/javascripts/component/app/ui-layout-custom.js")
+		script(src='/javascripts/services/app/userLoggingService.js')
+		script(src='/javascripts/directives/app/userlog.js')
+		script(src='/javascripts/directives/app/angular-jqcloud.js')
+
 		script(src='/javascripts/component/logout/logout.js')
 		script(src='/javascripts/component/app/nbSettings.js')
+
+		script(src='/javascripts/userale/userale.js')
 
 		link(rel="stylesheet" ng-href="/{{theme.bootstrapCss}}/bootstrap.min.css")
 
 		//link(rel='stylesheet', href='/javascripts/vendor/bootstrap/dist/css/bootstrap.min.css')
 		//link(rel='stylesheet', href='/javascripts/vendor/bootstrap/dist/css/bootstrap-theme.min.css')
+		link(rel="stylesheet", href="/javascripts/vendor/angular-ui-layout/ui-layout.css")
+		link(rel="stylesheet", href="/javascripts/vendor/jqcloud2/dist/jqcloud.min.css")
 		link(rel='stylesheet', href='/javascripts/vendor/ngDialog/css/ngDialog.min.css')
 		link(rel='stylesheet', href='/javascripts/vendor/ngDialog/css/ngDialog-theme-default.min.css')
 		link(rel='stylesheet', href='/stylesheets/style.css')

@@ -1,14 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
-var netHelpers = require('netHelpers');
+var netHelpers = just_include('netHelpers');
 
 router.get('/', function (req, res) {
 	res.render('login', { title: 'Login'});
 });
 
 router.post('/', function (req, res) {
-	netHelpers.performAjaxRequest('localhost', 5500, '/api/users/login', 'POST', req.body, function (resultObject) {
+    netHelpers.performAjaxRequest('localhost', 5500, '/api/users/login', 'POST', req.body, function (resultObject) {
 		if (resultObject.error) {
 			res.status(resultObject.error.status).send('Unauthorized');
 			return;

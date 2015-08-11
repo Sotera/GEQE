@@ -30,5 +30,55 @@
   "user": {
     "dataSource": "testMongoDB",
     "public": true
+  },
+  "daterange": {
+    "dataSource": "testMongoDB",
+    "public": false
+  },
+  "site": {
+    "dataSource": "testMongoDB",
+    "public": false
+  },
+  "sitelist": {
+    "dataSource": "testMongoDB",
+    "public": true
+  },
+  "dataset": {
+    "dataSource": "testMongoDB",
+    "public": true
+  },
+  "job": {
+    "dataSource": "testMongoDB",
+    "public": true
+  },
+  "bin": {
+    "dataSource": "testMongoDB",
+    "public": false,
+    "$promise": {},
+    "$resolved": true
+  },
+  "bingroup": {
+    "dataSource": "testMongoDB",
+    "public": false,
+    "$promise": {},
+    "$resolved": true
+  },
+  "resultset": {
+    "dataSource": "testMongoDB",
+    "public": true,
+    "$promise": {},
+    "$resolved": true
+  },
+  "clusterStatus":{
+      "dataSource": "testMongoDB",
+      "public": true,
+      "$promise": {},
+      "$resolved": true
+  },
+  "geqeModel":{
+    "dataSource":"testMongoDB",
+    "public":true,
+    "$promise": {},
+    "$resolved": true
   }
 }

@@ -1,0 +1,38 @@
+{
+  "name": "site",
+  "base": "PersistedModel",
+  "strict": false,
+  "idInjection": false,
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "lats": {
+      "type": [
+        "number"
+      ],
+      "required": true
+    },
+    "lons": {
+      "type": [
+        "number"
+      ],
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "dateRangeList": {
+      "type": "embedsMany",
+      "model": "daterange",
+      "property": "dates",
+      "options": {
+        "validate": true,
+        "forceId": false
+      }
+    }
+  },
+  "acls": [],
+  "methods": []
+}

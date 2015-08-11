@@ -1,0 +1,29 @@
+{
+  "name": "bingroup",
+  "base": "PersistedModel",
+  "strict": false,
+  "idInjection": false,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "day": {
+      "type": "Date",
+      "required": false
+    },
+    "count": {
+      "type": "number",
+      "required": true
+    },
+    "bins": {
+      "type": [
+        "bin"
+      ],
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": []
+}

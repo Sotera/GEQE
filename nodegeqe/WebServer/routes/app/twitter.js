@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var netHelpers = require('netHelpers');
+var netHelpers = just_include('netHelpers');
 
 router.get('/user', function (req, res) {
     netHelpers.performAjaxRequest('api.twitter.com', 8080, '/1.1/users/lookup.json', 'GET', req.query, function (resultObject) {

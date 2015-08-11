@@ -1,0 +1,28 @@
+{
+    "spark": {
+        "SPARK_SUBMIT_PATH" : "/home/hadoop/spark/bin/",
+        "SPARK_OPTIONS" : [
+            "--master" , "yarn-client",
+            "--py-files" , "lib/clustering.py,lib/to_parquet.py,lib/shapeReader.py,lib/pointClass.py,lib/fspLib.py",
+            "--executor-memory" , "16g",
+            "--driver-memory" ,  "8g",
+            "--num-executors", "1000",
+            "--executor-cores", "8"
+        ]
+    },
+
+    "datasets": {
+        "NYC" : { "path": "s3://geqedata/nyc_xdata", "type":0, "partitions": 5},
+        "Syria-Instagram" : { "path": "s3://geqedata/syria_instagram.parquet", "type": 0, "partitions": 10},
+        "Syria-twitter" : { "path": "s3://instagramtwitter/syria/twitter", "type": 5, "partitions": 600},
+        "Cleveland" : { "path": "s3://geqedata/Cleveland.parquet", "type": 0, "partitions": 400},
+        "Texas" : { "path": "s3://geqedata/Texas.parquet", "type":0, "partitions": 800},
+        "StLouis" : { "path": "s3://geqedata/stlouis.parquet", "type":0, "partitions": 200},
+        "Baltimore" : {"path": "s3://geqedata/baltimore.parquet", "type":0, "partitions":200}
+    },
+    "root_data_path" : "/Users/ekimbrel/data/geqe_data/",
+    "deploy-mode" : "aws-emr",
+    "s3-bucket" : "geqe2"
+
+}
+

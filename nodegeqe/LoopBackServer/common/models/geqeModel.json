@@ -1,0 +1,43 @@
+{
+  "name": "geqeModel",
+  "base": "PersistedModel",
+  "strict": false,
+  "idInjection": true,
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "queryType": {
+      "type": "string",
+      "required": true
+    },
+    "created": {
+      "type": "Date",
+      "defaultFn": "now"
+    },
+    "username": {
+      "type": "string",
+      "required": true
+    },
+    "modelSavePath":{
+      "type": "string",
+      "required":false
+    }
+  },
+  "validations": [],
+  "relations": {
+    "sitelist": {
+      "type": "belongsTo",
+      "model": "sitelist",
+      "foreignKey": "sitelistId"
+    },
+    "dataset": {
+      "type": "belongsTo",
+      "model": "dataset",
+      "foreignKey": "datasetId"
+    }
+  },
+  "acls": [],
+  "methods": []
+}

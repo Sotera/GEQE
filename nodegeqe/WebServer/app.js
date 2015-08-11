@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
+just_include=require('just_include')(__dirname);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -29,7 +30,13 @@ app.use('/views/partials', require('./routes/partials'));
 app.use('/views/app', require('./routes/app/app'));
 app.use('/app/controlBox', require('./routes/app/controlBox'));
 app.use('/app/users', require('./routes/app/users'));
+app.use('/app/sitelists',require('./routes/app/sitelists'));
+app.use('/app/geqeModels',require('./routes/app/geqeModels'));
+app.use('/app/datasets',require('./routes/app/datasets'));
+app.use('/app/resultsets',require('./routes/app/resultsets'));
+app.use('/app/jobs',require('./routes/app/jobs'));
 app.use('/app/socialMediaQuery', require('./routes/app/socialMediaQuery'));
+app.use('/app/posts',require('./routes/app/posts'));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

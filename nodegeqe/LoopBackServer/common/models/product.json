@@ -12,12 +12,13 @@
       "type": "string",
       "required": true
     },
-    "category": {
-      "type": "string",
-      "required": true
-    },
     "price": {
       "type": "number",
+      "required": true
+    },
+    "category": {
+      "type": "string",
+      "id": false,
       "required": true
     }
   },

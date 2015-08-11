@@ -1,4 +1,16 @@
-div(id="resultsBox" percent-Height percent='30'  ng-style="style" ng-controller="resultsController")
-   b Results
-   br
-   div(id="resultsText" )
+div.scrollTable(id="resultsBox" ng-controller="resultsController")
+   div.cloud
+      jqcloud(id="cloud", words="words", auto-resize="true", steps="7")
+   div
+      b Results
+      table.table.table-striped(st-table="displayedCollection" st-safe-src="rowCollection")
+         thead
+            tr
+               th.mid(st-sort="term") Term
+               th.mid(st-sort="rank") Rank
+         tbody
+            tr(st-select-row="row" ng-click="rowClicked(row)" st-select-mode="single" ng-repeat="row in displayedCollection" )
+               td.mid {{row.term }}
+               td.mid {{row.rank}}
+
+

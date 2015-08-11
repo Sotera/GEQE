@@ -5,19 +5,15 @@
   "initial": {
     "compression": {}
   },
-  "session": {
-  },
-  "auth": {
-  },
-  "parse": {
-  },
+  "session": {},
+  "auth": {},
+  "parse": {},
   "routes": {
     "loopback#status": {
       "paths": "/"
     }
   },
-  "files": {
-  },
+  "files": {},
   "final": {
     "loopback#urlNotFound": {}
   },

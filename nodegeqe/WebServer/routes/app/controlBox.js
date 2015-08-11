@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var netHelpers = require('netHelpers');
+var netHelpers = just_include('netHelpers');
 
 var makeServiceCall = function(req,res,routeName, serviceHostName, servicePort){
 
@@ -61,7 +61,7 @@ var applyRoute = function(routeName,req,res){
         console.log(error.message);
         res.status(500).send(error.message);
     })
-}
+};
 
 
 router.get('/populate/:vp', function (req, res) {

@@ -26,7 +26,12 @@ angular.module('NodeWebBase')
         $rootScope.$on('loadNavData', function (event, data) {
 
             $rootScope.$emit("clearAll");
-            data.type==="event"?$scope.sortDataByDate(data.dates):$scope.setData(data);
+            if(data.type === 'place'){
+                $scope.setData(data.bingroups);
+            }
+            else{
+                $scope.sortDataByDate(data.bingroups);
+            }
 
             $scope.currentCatalogIndex = 0;
             $scope.currentCatalogTitle = "";
@@ -47,22 +52,20 @@ angular.module('NodeWebBase')
             $scope.chartModel = [];
             $scope.catalog = [{
                 'title':'All Clusters',
-                'data':data.clusters,
-                'hiScore':data.hiScore,
-                'nClusters':data.nCluster,
+                'data':data[0].bins,
+                'nClusters':data[0].bins.length,
                 'x':0
             }];
 
-            angular.forEach(data.clusters,function(group,idx){
-                var catalogItem = $scope.getCatalogItem(group.date);
+            angular.forEach(data[0].bins,function(group,idx){
+                var catalogItem = $scope.getCatalogItem("All");
                 if(maxScore < group.score)
                     maxScore = group.score;
                 if(!catalogItem){
                     catalogItem = {
-                        'title':'cluster',
+                        'title':'bin',
                         'x':idx,
-                        'hiScore':group.score,
-                        'nClusters':group.posts.length
+                        'hiScore':group.score
                     };
                     $scope.chartModel.push(catalogItem);
                     return;
@@ -81,18 +84,12 @@ angular.module('NodeWebBase')
                 },
                 axes: {
                     x: {key: 'x'},
-                    y2: {min:0,max:maxScore * 1.1},
-                    y:{min:0}
+                    y: {min:0,max:maxScore * 1.1}
                 },
                 series: [
                     {
-                        y: "nClusters",
-                        type: "column",
-                        color: "#ff7f0e"
-                    },
-                    {
                         y: "hiScore",
-                        axis:"y2",
+                        axis:"y",
                         thickness:"2px",
                         color: "#1f77b4"
                     }
@@ -100,7 +97,7 @@ angular.module('NodeWebBase')
                 tooltip: {
                     mode: "scrubber",
                     formatter: function (x, y, series) {
-                        if(series.y === "nClusters"){
+                        if(series.y === "postCount"){
                             return "P  " + y;
                         }
                         return "S  " + y;
@@ -132,25 +129,34 @@ angular.module('NodeWebBase')
 
         $scope.sortDataByDate = function(data){
             $scope.catalog = [];
-            var maxScore = 0;
+            var minPosts = -1;
+            var maxPosts = 0;
+
             angular.forEach(data,function(group,idx){
-                var catalogItem = $scope.getCatalogItem(group.date);
+                if(!group.day)
+                    group.day="None";
+                var catalogItem = $scope.getCatalogItem(group.day);
+
                 if(!catalogItem){
+                    var totalPosts = 0;
+                    angular.forEach(group.bins, function(bin){
+                       totalPosts+=  bin.totalCount;
+                    });
+                    var day = new Date(group.day);
                     catalogItem = {
-                        'title':group.date,
+                        'title': day.getMonth()+1 + "/" + day.getDate() + "/" + day.getFullYear(),
                         'x':idx,
-                        'data':group.clusters,
-                        'hiScore':group.hiScore,
-                        'nClusters':group.nClusters
+                        'data':group.bins,
+                        'nClusters':group.count,
+                        'totalPosts':totalPosts
                     };
+                    if(minPosts === -1 || minPosts > totalPosts)
+                        minPosts = totalPosts;
+                    if(maxPosts< totalPosts)
+                        maxPosts = totalPosts;
                     $scope.catalog.push(catalogItem);
-                    if(maxScore < group.hiScore)
-                        maxScore = group.hiScore;
                     return;
                 }
-
-
-
                 console.log("Duplicate Date in Time Series");
             });
 
@@ -167,7 +173,7 @@ angular.module('NodeWebBase')
                 },
                 axes: {
                     x: {key: 'x'},
-                    y2: {min:0,max:maxScore * 1.1},
+                    y2: {min:minPosts,max:maxPosts * 1.1},
                     y:{min:0}
                 },
                 series: [
@@ -177,7 +183,7 @@ angular.module('NodeWebBase')
                         color: "#ff7f0e"
                     },
                     {
-                        y: "hiScore",
+                        y: "totalPosts",
                         axis:"y2",
                         thickness:"2px",
                         color: "#1f77b4"
@@ -189,7 +195,7 @@ angular.module('NodeWebBase')
                         if(series.y === "nClusters"){
                             return "C  " + y;
                         }
-                        return "S  " + y;
+                        return "P  " + y;
                     }
                 }
             };
@@ -236,7 +242,7 @@ angular.module('NodeWebBase')
             $scope.currentCatalogTitle = $scope.catalog[$scope.currentCatalogIndex].title;
 
             $rootScope.$emit("clearMarkers",['score','training','item']);
-            $rootScope.$emit("clearCurrentShapes");
+            $rootScope.$emit("clearCurrentShapes",['score']);
             $rootScope.$emit("drawShapes",$scope.catalog[$scope.currentCatalogIndex].data ,"score");
         }
 

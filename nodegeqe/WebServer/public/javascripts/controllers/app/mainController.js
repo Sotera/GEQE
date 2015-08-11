@@ -4,21 +4,34 @@ angular.module('NodeWebBase')
         function ($scope, $rootScope, $http, $cookies, ngDialog,changeThemeMsg, setFullNameMsg) {
         $scope.scopeName = "mainController";
 
+
+        // Close pop up windows with Esc key. For some reason it's not functioning by default.
+        //http://stackoverflow.com/questions/1481626/how-to-handle-esc-keydown-on-javascript-popup-window
+        $(document).keydown(function(e) {
+             // ESCAPE key pressed
+             if (e.keyCode == 27) {
+                  ngDialog.closeAll();
+              }
+         });
+
+
         $scope.initWithSettings = function(res){
 
             $rootScope.username = res.username;
             $rootScope.fullname = res.fullname;
             $rootScope.serviceHostName = res.serviceHostName;
             $rootScope.servicePort = res.servicePort;
+            $rootScope.userLoggingEnabled = res.userLoggingEnabled;
+            $rootScope.userLoggingUrl = res.userLoggingUrl;
+            $rootScope.modelSavePath = res.modelSavePath
+
 
             setFullNameMsg.broadcast();
             changeThemeMsg.broadcast(res.themeName);
         };
 
         $rootScope.isAppConfigured = function(){
-          return $rootScope.fullname &&
-            $rootScope.serviceHostName &&
-            $rootScope.servicePort;
+          return $rootScope.fullname
         };
 
         $rootScope.showErrorMessage = function(source, reason){
@@ -33,11 +46,11 @@ angular.module('NodeWebBase')
             });
         };
 
-        $rootScope.showError = function(jqxhr, testStatus, reason){
+        $rootScope.showError = function(data, status, headers, config){
             ngDialog.openConfirm({
                 template: '/views/app/genericError',
                 controller: ['$scope', function ($scope) {
-                    $scope.errorMessage = reason + ' ' + jqxhr.responseText;
+                    $scope.errorMessage = 'status ' + status + ' for ' + config.url;
                     $scope.close = function () {
                         $scope.closeThisDialog(null);
                     }

@@ -1,11 +1,11 @@
 
 angular.module('NodeWebBase')
-    .service('markerService', ['$rootScope',function ($rootScope) {
+    .service('markerService', ['$rootScope','applyFilterMsg','itemDetailsLoadedMsg',function ($rootScope,applyFilterMsg,itemDetailsLoadedMsg) {
         var me = this;
         me.map = null;
         me.drawingManager = null;
         me.markers = {};
-        me.itemMarkers = [];
+        me.filterText = '';
 
         me.init = function(map){
             me.map = map;
@@ -45,6 +45,38 @@ angular.module('NodeWebBase')
                 }
             });
 
+            $rootScope.$on("loadItemData",me.findSelectMarker);
+
+            itemDetailsLoadedMsg.listen(me.findSelectMarker);
+
+            applyFilterMsg.listen(me.applyFilter)
+
+        };
+
+        me.findSelectMarker = function(event,item){
+            var types = ['cluster','score','training','item'];
+            angular.forEach(types,function(type){
+                var markers = me.markers[type];
+                angular.forEach(markers,function(marker){
+                    if(marker.markerItem === item) {
+                        me.selectMarker(marker,type);
+                    }
+                });
+            });
+        };
+
+        me.applyFilter = function(event,filterText){
+            me.filterText = filterText;
+            angular.forEach(me.markers['item'],function(item){
+                if(filterText != '') {
+                    var cap = item.markerItem._source.message.toLowerCase();
+                    if (cap.indexOf(filterText.toLowerCase()) < 0) {
+                        item.setMap(null);
+                        return;
+                    }
+                }
+                item.setMap(me.map);
+            });
         };
 
         me.calculateBounds = function(locations){
@@ -93,15 +125,13 @@ angular.module('NodeWebBase')
             return c1 - delta;
         };
 
-        me.interpolateColor = function(min,max,val)
+        me.interpolateColor = function(min,max,val,minColorRGB,maxColorRGB)
         {
             if(val < min)
                 return me.rgbToHex(0,0,0);
             if(val > max)
                 return me.rgbToHex(255,255,255);
             var percent = val/max-min;
-            var minColorRGB = [220,210,210];
-            var maxColorRGB = [255,98,0];
 
             return me.rgbToHex(me.interpolateComponent(minColorRGB[0],maxColorRGB[0],percent),
                 me.interpolateComponent(minColorRGB[1],maxColorRGB[1],percent),
@@ -109,52 +139,73 @@ angular.module('NodeWebBase')
             )
         };
 
-        me.getIcon = function (color) {
+        me.getIcon = function (color,type, scale) {
+            if(type === "cluster" || type == "score")
+                return {
+                    path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z M -2,-30 a 2,2 0 1,1 4,0 2,2 0 1,1 -4,0',
+                    fillColor: color,
+                    fillOpacity: 1,
+                    strokeColor: '#000',
+                    strokeWeight: 2,
+                    scale: scale
+                };
+
             return {
-                path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z M -2,-30 a 2,2 0 1,1 4,0 2,2 0 1,1 -4,0',
+                path: 'm 0,0 -8,-8 0,-12 16,0 0,12 -8,8 z',
                 fillColor: color,
                 fillOpacity: 1,
                 strokeColor: '#000',
                 strokeWeight: 2,
-                scale: 1
+                scale: scale
             };
+
         };
 
-        me.putTypeMarker = function(location,caption,item,type){
+        me.putTypeMarker = function(location,caption,item,type,index,maxIndex){
             if(!me.markers[type])
                 me.markers[type] = [];
 
-            var icon = me.getIcon("#3C85E6");
+            var minColorRGB = [176,196,222];
+            var maxColorRGB = [65,105,225];
+
+            var icon = me.getIcon(me.interpolateColor(0,maxIndex,index,minColorRGB,maxColorRGB),type,1);
             var marker = new google.maps.Marker({
                 position: location,
                 map: me.map,
                 icon: icon,
                 title:caption,
+                markerItem:item,
                 originalIcon : icon
             });
 
             me.markers[type].push(marker);
 
             google.maps.event.addListener(marker, 'click', function() {
-                me.selectMarker(marker,me.getIcon("#3C85E6"));
+                me.selectMarker(marker,me.getIcon(me.interpolateColor(0,maxIndex,index,minColorRGB,maxColorRGB),type,1),type);
                 $rootScope.$emit("loadItemData",item);
             });
         };
 
-        me.selectMarker=function(marker){
+        me.selectMarker=function(marker,type){
             if(me.selectedMarker){
 
                 me.selectedMarker.setIcon(me.selectedMarker.originalIcon);
             }
-            marker.setIcon(me.getIcon("#00FF00"));
+            marker.setIcon(me.getIcon("#00FF00",type,1.2));
             me.selectedMarker = marker;
         };
 
         me.putScoreMarker = function(location, caption, item, minScore, maxScore, score) {
+            var type = 'score';
 
-            if(!me.markers['score'])
-                me.markers['score'] = [];
-            var icon = me.getIcon(me.interpolateColor(0,maxScore,score));
+            if(!me.markers[type])
+                me.markers[type] = [];
+
+            var minColorRGB = [220,210,210];
+            var maxColorRGB = [255,98,0];
+
+
+            var icon = me.getIcon(me.interpolateColor(0,maxScore,score,minColorRGB,maxColorRGB),type,1);
             var marker = new google.maps.Marker({
                 position: location,
                 map: me.map,
@@ -164,35 +215,39 @@ angular.module('NodeWebBase')
                 originalIcon:icon
             });
 
-            me.markers['score'].push(marker);
+            me.markers[type].push(marker);
 
             google.maps.event.addListener(marker, 'dblclick', function() {
-                me.selectMarker(marker);
+                me.selectMarker(marker,type);
 
-                if(!marker.markerItem.nTotal || marker.markerItem.nTotal <= 0)
+                if(!marker.markerItem.posts || marker.markerItem.posts.total <= 0)
                     return;
                 me.clearMarkers(['item']);
                 me.drawTypeMarkers(marker.markerItem.posts,'item',false);
             });
 
             google.maps.event.addListener(marker, 'click', function() {
-                me.selectMarker(marker);
-                $rootScope.$emit("loadItemData",marker.markerItem);
+                me.selectMarker(marker,type);
+                $rootScope.$emit("loadItemPosts",marker.markerItem);
             });
         };
 
         me.drawTypeMarkers = function(data,type,zoomTo){
             var locations = [];
+            if(!data.hits || data.hits.length === 0)
+                return;
+            angular.forEach(data.hits, function(item){
+                var source = item._source;
 
-            angular.forEach(data, function(item){
-                var capPScor = item['cap'];
-
-                var lat = parseFloat(item['lat']);
-                var lon = parseFloat(item['lon']);
+                // yes....its stupid
+                var lat = parseFloat(source.location.coordinates[1]);
+                var lon = parseFloat(source.location.coordinates[0]);
 
                 var markerLocation = new google.maps.LatLng(lat, lon);
+                var date = new Date(source.post_date).getHours();
                 locations.push(markerLocation);
-                me.putTypeMarker(markerLocation, capPScor, item,type);
+
+                me.putTypeMarker(markerLocation, source.message, item,type,date,23);
 
             });
 
@@ -217,23 +272,24 @@ angular.module('NodeWebBase')
                 center_lat = 0.0;
                 center_lon = 0.0;
 
-                var capPScor = '  Total: ' + item['nTotal'] + '\n'  +
+                /*var capPScor = '  Total: ' + item['nTotal'] + '\n'  +
                     '  |  Score: ' + item['score'] +
                     '--------------------------------------------------------------' + '\n';
                 angular.forEach(item['posts'], function(post,idx){
                     capPScor+= post['cap'] + '\n' +
                     '-------------------------------------' + '\n';
-                });
+                });*/
 
 
-                angular.forEach(item['poly'], function(poly,idx){
+                /*angular.forEach(item['poly'], function(poly,idx){
                     center_lat+=poly[0];
                     center_lon+=poly[1];
                 });
-
-                var markerLocation = new google.maps.LatLng(center_lat / item.poly.length,  center_lon / item.poly.length);
+                new google.maps.LatLng(center_lat / item.poly.length,  center_lon / item.poly.length);
+                */
+                var markerLocation = new google.maps.LatLng(item.centerPoint.lat,  item.centerPoint.lng);
                 locations.push(markerLocation);
-                me.putScoreMarker(markerLocation, capPScor, item, minScore,maxScore,item['score']);
+                me.putScoreMarker(markerLocation, "need to replace with something", item, minScore,maxScore,item['score']);
 
             });
         };

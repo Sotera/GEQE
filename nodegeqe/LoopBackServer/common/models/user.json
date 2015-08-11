@@ -10,6 +10,9 @@
     "savePath": {
       "type": "string"
     },
+    "modelSavePath": {
+      "type": "string"
+    },
     "inputSubDir": {
       "type": "string"
     },
@@ -21,8 +24,16 @@
     },
     "themeName": {
       "type": "string"
+    },
+    "userLoggingEnabled": {
+      "type": "boolean"
+    },
+    "userLoggingUrl": {
+      "type": "string"
+    },
+    "propertyName33": {
+      "type": "string"
     }
-
   },
   "validations": [],
   "relations": {},

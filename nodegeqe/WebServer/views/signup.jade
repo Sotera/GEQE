@@ -8,9 +8,9 @@ block content
 			hr
 			fieldset
 				.control-group
-					label.control-label(for='nameTextBox') Name
+					label.control-label(for='nameTextBox', required) Name
 					.controls
-						input#nameTextBox.input-xlarge(type='text', ng-model='data.fullname')
+						input#nameTextBox.input-xlarge(type='text', ng-model='data.fullname', required)
 				.control-group
 					label.control-label(for='emailTextBox') Email
 					.controls
@@ -20,11 +20,11 @@ block content
 				.control-group
 					label.control-label(for='usernameTextBox') Username
 					.controls
-						input#usernameTextBox.input-xlarge.disabled(type='text', ng-model='data.username')
+						input#usernameTextBox.input-xlarge.disabled(type='text', ng-model='data.username', required)
 				.control-group
 					label.control-label(for='passwordTextBox') Password
 					.controls
-						input#passwordTextBox.input-xlarge(type='password', ng-model='data.password')
+						input#passwordTextBox.input-xlarge(type='password', ng-model='data.password', required)
 				.control-group
 					button.btn.btn-primary(ng-click='createAccount()')
 						| Create

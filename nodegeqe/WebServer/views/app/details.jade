@@ -1,37 +1,49 @@
-div( ng-controller='detailsController')
-    div( id='details' percent-Height percent='65' ng-style="style")
-        div
-            div(ng-controller='dataNavController')
-                div(style="height:80px" ng-click = 'onChartClick()')
-                    linechart(data='chartModel' options='options' on-focus="onChartFocus")
-                div
-                    nav.navbar.navbar-default.navbar-inverse
-                        li.dropdown.navbar-brand.my-navbar-brand.list-unstyled
-                            a.dropdown-toggle(data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false") {{currentCatalogTitle}}
-                                span.caret
-                            ul.dropdown-menu
-                                li(ng-repeat="item in catalog" ng-click="catalogItemSelected(item)") {{item.title}}
+div( id='details' ng-controller='detailsController')
+    div
+        div(ng-controller='dataNavController')
+            div(style="height:80px" ng-click = 'onChartClick()')
+                linechart(data='chartModel', options='options', on-focus="onChartFocus")
+            div
+                nav.navbar.navbar-default.navbar-inverse
+                    div.container-fluid
+                        div.row
+                            div.col-sm-4
+                                ul.nav.navbar-nav.navbar-left
+                                    li.noselect(ng-class="(singleItem) ? 'hidden' : ''")
+                                        a.noselect.glyphicon.glyphicon-backward(href="#",ng-click='previous()',title='Previous' user-log elementtype='BUTTON' loggroup='nav_bar' logtags='navigate,previous')
+                            div.col-sm-4
+                                ul.list-unstyled(style="padding:0")
+                                    li.dropdown
+                                        a.nav.navbar-nav.navbar-brand.dropdown-toggle.navbar-text.my-navbar-brand(href="#", data-toggle="dropdown", role="button", aria-haspopup="true", aria-expanded="false", style="margin-left:0px" user-log elementtype='DROPDOWNLIST' loggroup='nav_bar' logtags='select,day') {{currentCatalogTitle}}
+                                          span.caret
+                                        ul.scrollable-menu.dropdown-menu(role="menu")
+                                          li(ng-repeat="item in catalog", ng-click="catalogItemSelected(item)")
+                                            a(href="#") {{item.title}}*/
+                            div.col-sm-4
+                                ul.nav.navbar-nav.navbar-right
+                                    li.noselect(ng-class="(singleItem) ? 'hidden' : ''")
+                                        a.noselect.glyphicon.glyphicon-forward(href="#",ng-click='next()', title='Next' user-log elementtype='BUTTON' loggroup='nav_bar' logtags='navigate,previous')
 
-                        span(ng-class="(singleItem) ? 'hidden' : ''").noselect.navbar-left.navbar-text
-                            |{{currentCatalogTitleStart}}
-                        span(ng-class="(singleItem) ? 'hidden' : ''").noselect.navbar-right.navbar-text
-                            |{{currentCatalogTitleFinish}}
-
-                        span(ng-class="(singleItem) ? 'hidden' : ''" ng-click='previous()' title='Previous').noselect.navbar-button.btn-lg.glyphicon.glyphicon-backward.navbar-left.navbar-text
-                        span(ng-class="(singleItem) ? 'hidden' : ''" ng-click='next()' title='Next').noselect.navbar-button.btn-lg.glyphicon.glyphicon-forward.navbar-right.navbar-text
-            div.container-fluid
-                div.row
-                    div.col-lg-2
-                        span(ng-click='previous()' title='Previous').noselect.navbar-button.btn-lg.glyphicon.glyphicon-arrow-left.navbar-left.navbar-text
-                    div.col-lg-8
-                        h4.navbar-brand.my-navbar-brand {{displayIndex}} of {{data.nTotal}} Items
-                    div.col-lg-2
-                        span(ng-click='next()' title='Next').noselect.navbar-button.btn-lg.glyphicon.glyphicon-arrow-right.navbar-right.navbar-text
-            img.img-thumbnail.detailsImg(ng-click="showImage(currentItem.img)" ng-src="{{currentItem.img}}")
-            h3.text-center
-                a(href='{{socialMediaUrl}}' target="_blank") {{currentItem.usr}}
-        div
-            p score: {{currentItem.sco}}
-            p date: {{currentItem.date}}
-            div.caption
+        div.container-fluid
+            div.row
+                input.form-control(type="string" ng-model='filterText' ng-change="filterChanged()" placeholder="Filter" novalidate user-log elementtype='TEXTBOX' loggroup='details' logtags='filter')
+            div.row
+                div.col-lg-2
+                    a(ng-click='previous()' title='Previous' href="#" user-log elementtype='BUTTON' loggroup='details' logtags='navigate,previous')
+                      span.noselect.navbar-button.btn-lg.glyphicon.glyphicon-arrow-left.navbar-left.navbar-text
+                div.col-lg-8
+                    h4.navbar-brand.my-navbar-brand {{displayIndex}} of {{posts.length}} Items
+                div.col-lg-2
+                    a(ng-click='next()' title='Next' href="#" user-log elementtype='BUTTON' loggroup='details' logtags='navigate,next')
+                       span.noselect.navbar-button.btn-lg.glyphicon.glyphicon-arrow-right.navbar-right.navbar-text
+        div.container-fluid
+            div.row
+                div.col-sm-4
+                    img.thumbnail.detailsImg(ng-click="showImage(currentItem._source.imageUrl)" ng-src="{{currentItem._source.imageUrl}}" user-log elementtype='ICON' loggroup='details' logtags='social,image')
+                div.col-sm-8
+                    p User:
+                        a(href='{{socialMediaUrl}}' target="_blank" user-log elementtype='LINK' loggroup='details' logtags='navigate,social,user') {{currentItem._source.user}}
+                    p Date: {{currentItem._source.post_date | dateParse:'dd/MM/yyyy - hh:mm a'}}
+    div
+        div.caption
             p(id="caption")

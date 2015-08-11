@@ -99,9 +99,13 @@ angular.module('NodeWebBase')
     .directive('map',function ($rootScope) {
         function link(scope, element, attrs) {
             $(document).ready(function () {
+                scope.style = {
+                    height: '100%'
+                };
                 var myLatlng = new google.maps.LatLng(41.495753190958816,-81.70090198516846);
                 var mapOptions = {
                     zoom: 10,
+                    //minZoom: 2,
                     center: myLatlng,
                     scaleControl: true
                 };
@@ -124,6 +128,34 @@ angular.module('NodeWebBase')
                     polygonOptions:$rootScope.theme.shapeStyles,
                     rectangleOptions:$rootScope.theme.shapeStyles
                 });
+
+                scope.$watch
+                (
+                    function () {
+                        return element.width();
+                    },
+                    function (newValue, oldValue) {
+                        if (newValue != oldValue) {
+                            var center = scope.map.getCenter();
+                            google.maps.event.trigger(scope.map, "resize");
+                            scope.map.setCenter(center);
+                        }
+                    }
+                );
+
+                scope.$watch
+                (
+                    function () {
+                        return element.height();
+                    },
+                    function (newValue, oldValue) {
+                        if (newValue != oldValue) {
+                            var center = scope.map.getCenter();
+                            google.maps.event.trigger(scope.map, "resize");
+                            scope.map.setCenter(center);
+                        }
+                    }
+                );
 
                 scope.drawingManager.setMap(scope.map);
 

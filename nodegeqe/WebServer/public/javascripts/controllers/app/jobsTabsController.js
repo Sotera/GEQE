@@ -1,31 +1,13 @@
 angular.module('NodeWebBase')
-    .controller('tabsController', function ($scope, $rootScope, $http) {
+    .controller('jobsTabsController', ['$scope','$rootScope','$http', function ($scope, $rootScope, $http) {
         $scope.tabs = [{
-            title: 'Run',
+            title: 'Query',
             url: 'one.tpl.html'
 
         }, {
-            title: 'Results',
+            title: 'Model',
             url: 'two.tpl.html'
         }];
-
-
-
-        $scope.getJobStatus = function(){
-            if(!$rootScope.isAppConfigured())
-                return;
-
-            $http({
-                method:"GET",
-                url: "app/controlBox/jobStatus"})
-                .success(function (response) {
-                        $scope.jobs= response;
-                }).error($rootScope.showError);
-        };
-
-        $rootScope.$on('refreshJobsList', function(){
-            $scope.getJobStatus();
-        });
 
         $scope.currentTab = 'one.tpl.html';
 
@@ -42,7 +24,7 @@ angular.module('NodeWebBase')
         };
 
         $scope.clearShapes = function(){
-            $rootScope.$emit("clearCurrentShapes");
+            $rootScope.$emit("clearCurrentShapes",["score","polyset"]);
         };
 
         $scope.clearResults = function(){
@@ -54,5 +36,4 @@ angular.module('NodeWebBase')
             $scope.clearResults();
         };
 
-
-    });
+ }]);
