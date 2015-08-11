@@ -24,7 +24,11 @@
       "type": "string",
       "required": true
     },
-    "partitions": {
+    "event_partitions": {
+      "type": "Number",
+      "required": true
+    },
+    "location_partitions": {
       "type": "Number",
       "required": true
     },

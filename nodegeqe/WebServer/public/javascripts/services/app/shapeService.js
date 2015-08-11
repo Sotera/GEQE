@@ -2,8 +2,11 @@
 angular.module('NodeWebBase')
     .service('shapeService', ['$rootScope', '$http','ngDialog','themeChangedMsg','toggleEditMsg',function ($rootScope, $http, ngDialog,themeChangedMsg,toggleEditMsg) {
         var me = this;
-        me.shapes = [];
-        me.scoreShapes = [];
+        me.shapes = {
+            "score":[],
+            "polyset":[],
+            "dataset":[]
+        };
         me.map = null;
         me.drawingManager = null;
         me.editing = false;
@@ -15,7 +18,7 @@ angular.module('NodeWebBase')
             google.maps.event.addListener(me.drawingManager, 'rectanglecomplete', me.handleShape);
 
             $rootScope.$on('drawPolygonFile', function (event, data) {
-                me.clearCurrentShapes();
+                me.clearCurrentShapes(["polyset"]);
                 me.drawPolygonFile(data);
             });
 
@@ -24,19 +27,19 @@ angular.module('NodeWebBase')
                     me.toggleEditing(data);
             });
 
-            $rootScope.$on('clearCurrentShapes', function () {
-                me.clearCurrentShapes();
+            $rootScope.$on('clearCurrentShapes', function (event,shapeTypes) {
+                me.clearCurrentShapes(shapeTypes);
             });
 
             $rootScope.$on('clearAll', function () {
                 me.clearAll();
             });
 
-            $rootScope.$on('deleteShape', function (event, shape) {
+            $rootScope.$on('deleteShape', function (event, shape, shapeType) {
                 shape.setMap(null);
-                var index = me.shapes.indexOf(shape);
+                var index = me.shapes[shapeType].indexOf(shape);
                 if (index > -1) {
-                    me.shapes.splice(index, 1);
+                    me.shapes[shapeType].splice(index, 1);
                 }
             });
 
@@ -45,11 +48,14 @@ angular.module('NodeWebBase')
             });
 
             $rootScope.$on('drawShapes', function (event, data, shapeType) {
-                me.clearCurrentShapes();
+                me.clearCurrentShapes([shapeType]);
 
                 switch (shapeType) {
                     case "score":
                         me.drawScoreShapes(data);
+                        break;
+                    case "dataset":
+                        me.drawDataSetShapes(data);
                         break;
                 }
             });
@@ -61,14 +67,24 @@ angular.module('NodeWebBase')
                         rectangleOptions: $rootScope.theme.shapeStyles
                     });
 
-                    angular.forEach(me.shapes, function (shape) {
-                        shape.setOptions($rootScope.theme.shapeStyles);
+                    var shapeTypes = ["score","polyset"];
+                    angular.forEach(shapeTypes, function (shapeType) {
+                        angular.forEach(me.shapes[shapeType], function (shape) {
+                            shape.setOptions($rootScope.theme.shapeStyles);
+                        });
                     });
 
-                    angular.forEach(me.scoreShapes, function (shape) {
-                        shape.setOptions($rootScope.theme.shapeStyles);
-                    });
                 }
+            });
+
+            $rootScope.$on('selectDatasetShape', function (event, dataset) {
+                angular.forEach(me.shapes['dataset'], function (shape) {
+                    if(shape.name === dataset.name){
+                        shape.setOptions({strokeColor:'green',strokeWeight: 3});
+                        return;
+                    }
+                    shape.setOptions({strokeColor:'lightblue',strokeWeight: 2});
+                });
             });
 
             $rootScope.$on('getShapesText', function (event, callbackInfo) {
@@ -82,7 +98,7 @@ angular.module('NodeWebBase')
             shape.setEditable(true);
             if ($rootScope.theme && $rootScope.theme.shapeStyles)
                 shape.setOptions($rootScope.theme.shapeStyles);
-            me.shapes.push(shape);
+            me.shapes["polyset"].push(shape);
             shape.geqeData = {
                 "name": "site",
                 "dates": []
@@ -103,7 +119,7 @@ angular.module('NodeWebBase')
             var sites = {
                 "sites": []
             };
-            angular.forEach(me.shapes, function (shape) {
+            angular.forEach(me.shapes["polyset"], function (shape) {
                 sites.sites.push(me.getSiteFromShape(shape));
             });
             var retval = angular.toJson(sites);
@@ -207,7 +223,7 @@ angular.module('NodeWebBase')
                         if ($rootScope.theme && $rootScope.theme.shapeStyles)
                             polygon.setOptions($rootScope.theme.shapeStyles);
 
-                        me.shapes.push(polygon);
+                        me.shapes["polyset"].push(polygon);
                         polygon.geqeData = {
                             "name": sites.sites[idx].name,
                             "dates": sites.sites[idx].dates
@@ -223,20 +239,17 @@ angular.module('NodeWebBase')
         };
 
         me.clearAll = function () {
-            me.clearCurrentShapes();
+            me.clearCurrentShapes(["score","polyset"]);
         };
 
-        me.clearCurrentShapes = function () {
-            angular.forEach(me.shapes, function (shape, idx) {
-                shape.setMap(null);
+        me.clearCurrentShapes = function (shapeTypes) {
+            angular.forEach(shapeTypes, function(shapeType){
+                angular.forEach(me.shapes[shapeType], function (shape) {
+                    shape.setMap(null);
+                });
+                me.shapes[shapeType].length=0;
             });
 
-            angular.forEach(me.scoreShapes, function (shape, idx) {
-                shape.setMap(null);
-            });
-
-            me.shapes = [];
-            me.scoreShapes = [];
         };
 
         me.addShapeClickListener = function(shape) {
@@ -284,7 +297,7 @@ angular.module('NodeWebBase')
                         };
 
                         $scope.delete = function(){
-                            $rootScope.$emit("deleteShape", shape);
+                            $rootScope.$emit("deleteShape", shape, "polyset");
                             $scope.closeThisDialog(null);
                         };
                     }]
@@ -315,10 +328,46 @@ angular.module('NodeWebBase')
                     polygon.setOptions($rootScope.theme.shapeStyles);
 
                 polygon.setMap(me.map);
-                me.scoreShapes.push(polygon);
+                me.shapes['score'].push(polygon);
             });
             me.calculateBounds(locations);
             $rootScope.$emit("drawMapMarkers",clusters,'cluster');
 
         };
+
+        me.drawDataSetShapes = function (data) {
+            var locations = [];
+
+            data.forEach(function (dataset) {
+                var pts = dataset.boundingPoly;
+
+                var latlonList = [];
+                angular.forEach(pts, function (pt) {
+                    var location = new google.maps.LatLng(pt.lat, pt.lng);
+                    latlonList.push(location);
+                    locations.push(location)
+                });
+
+                var polygon = new google.maps.Polygon({
+                    paths: latlonList
+                });
+
+                if ($rootScope.theme && $rootScope.theme.shapeStyles)
+                    polygon.setOptions($rootScope.theme.shapeStyles);
+
+                polygon.setOptions({
+                    "strokeColor":"lightblue",
+                    "fillOpacity": 0,
+                    "clickable":false
+                });
+
+                polygon.setMap(me.map);
+                polygon.name = dataset.name;
+                me.shapes['dataset'].push(polygon);
+            });
+
+            me.calculateBounds(locations);
+
+        };
+
     }]);

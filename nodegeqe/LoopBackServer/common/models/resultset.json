@@ -30,6 +30,10 @@
       "type": "Date",
       "required": true,
       "defaultFn": "now"
+    },
+    "modelTerms":{
+      "type": ["string"],
+      "required":false
     }
   },
   "validations": [],

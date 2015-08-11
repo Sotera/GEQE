@@ -5,7 +5,6 @@ angular.module('NodeWebBase')
     .controller('modelTabController', ['$scope','$rootScope','$http','setSelectionMsg', function ($scope, $rootScope, $http,setSelectionMsg) {
         $scope.scoreFiles = [];
         $scope.polygonFiles = [];
-        $scope.trainingFiles = [];
 
 
         $scope.popScore = function() {
@@ -23,19 +22,25 @@ angular.module('NodeWebBase')
             }).error($rootScope.showError)
         };
 
+
         $scope.populatePolygonSelect = function() {
             if(!$rootScope.isAppConfigured())
                 return;
+
             $http({
                 method:"GET",
-                url: "app/controlBox/populate/polygons",
-                params : {
-                    user: $rootScope.username
-                }}).success(function (response) {
-                    $scope.polygonFiles = response.lFiles;
-                }).error($rootScope.showError)
+                url: "app/sitelists/list/"+$rootScope.username,
+                params: {}
+            }).success(function (response) {
+                $scope.polygonFiles = response
+            }).error($rootScope.showError);
         };
 
+
+        $scope.drawPolygonFile = function(){
+            var modelId = $scope.getPolygonId();
+            if (!modelId)  $rootScope.showErrorMessage("Polygon name invalid.",'Polygon must be saved prior to use.');
+            else $rootScope.$emit("drawPolygonFile", modelId)
 
         setSelectionMsg.listen(function(evt,vals){
             if(vals.type="polygonSetSelected")
@@ -53,41 +58,75 @@ angular.module('NodeWebBase')
             maxOut:50
         };
 
-        $scope.getScores = function() {
-            if(!$rootScope.isAppConfigured())
-                return;
-            var drawMarkers = $("#drawMarkers").is(":checked");
-            $scope.getScoresModel.user = $rootScope.username;
 
-            $http({
-                method: "GET",
-                url: "app/controlBox/getScores",
-                params: $scope.getScoresModel
-            }).success(function (response) {
-
-                if((!response.clusters || response.clusters == 0) &&
-                    (!response.dates || response.dates == 0))
-                {
-                    $rootScope.showErrorMessage("Get Scores","No Scores Returned");
+        /**
+         * Get the id for the current polyFile from the polygonList
+         * Undefined if the model has not been saved
+         */
+        $scope.getPolygonId = function(){
+            for  (var i=0; i<$scope.polygonFiles.length; i++){
+                if ($scope.polygonFiles[i].name == $scope.polyFile){
+                    return $scope.polygonFiles[i].id;
                 }
-
-                $rootScope.$emit("loadNavData", response);
-
-            }).error($rootScope.showError)
+            }
+            return undefined;
         };
 
 
-        $scope.onDropZoneClicked = function(event){
-            var fileSelector = $('<input type="file" />');
+        /**
+         * Save the site list (polygon)
+         */
+        $scope.saveList = function(){
 
-            fileSelector.change(function(evt){
-                $rootScope.$emit("renderKmlFile",evt.target.files[0]);
-            });
-            fileSelector.click();
+            $rootScope.$emit("getShapesText",
+                {
+                    "scope":this,
+                    "callback":function(resultsText){
+                        if(!$rootScope.isAppConfigured())
+                            return;
+                        var pName = $scope.polyFile;
+                        var siteList = JSON.parse(resultsText);
+                        siteList.name = pName;
+                        siteList.username = $rootScope.username;
+                        var modelId = $scope.getPolygonId();
+                        if (modelId) siteList.id = modelId;
+
+                        $http({
+                            method:"POST",
+                            url: "app/sitelists/save",
+                            params: {
+                                siteList: siteList
+                            }}).success(function (response) {
+                            $("#resultsText").text(pName + " written");
+                            $scope.populatePolygonSelect(); // refresh the polygon list to get the new id
+                        }).error($rootScope.showError)
+                    }
+                });
         };
 
-        $scope.populateTrainingSelect = function() {
-            if(!$rootScope.isAppConfigured())
+        $rootScope.$on('sampleShape',function(event,item){
+
+            if(!item)
+                return;
+            $http({
+                method: "POST",
+                url: "app/posts/sitelist",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                data:{
+                    "sites": [item],
+                    "from":0,
+                    "size":100
+                }
+            }).success(function (response) {
+                $rootScope.$emit("clearMarkers",['training']);
+                $rootScope.$emit("drawMapMarkers",response.hits, "training");
+            }).error($rootScope.showError);
+        });
+
+        $scope.getDataSets = function() {
+            if (!$rootScope.isAppConfigured())
                 return;
 
             $http({

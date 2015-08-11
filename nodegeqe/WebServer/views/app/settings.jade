@@ -29,19 +29,29 @@
 
             div.row
                 p.subheading System Configuration
-                fieldset
-                    div.col-sm-6
-                        .control-group
-                            label.control-label(for='serviceHostNameTextBox') Service Url
-                            .controls
-                                div.form-group.form-group-sm
-                                    input#serviceHostNameTextBox.form-control(type='text', ng-model='data.serviceHostName')
-                    div.col-sm-6
-                        .control-group
-                            label.control-label(for='servicePortTextBox') Port
-                            .controls
-                                div.form-group.form-group-sm
-                                    input#servicePortTextBox.form-control(type='text', ng-model='data.servicePort')
+
+
+            div.row
+                div.col-sm-6
+                    .control-group
+                        label.control-label(for='modelSavePathTextBox') Model Save Path
+                        .controls
+                            div.form-group.form-group-sm
+                                input#modelSavePathTextBox.form-control(type='text', ng-model='data.modelSavePath')
+            fieldset
+            //
+                div.col-sm-6
+                    .control-group
+                        label.control-label(for='serviceHostNameTextBox') Service Url
+                        .controls
+                            div.form-group.form-group-sm
+                                input#serviceHostNameTextBox.form-control(type='text', ng-model='data.serviceHostName')
+                div.col-sm-6
+                    .control-group
+                        label.control-label(for='servicePortTextBox') Port
+                        .controls
+                            div.form-group.form-group-sm
+                                input#servicePortTextBox.form-control(type='text', ng-model='data.servicePort')
             div.row
                 p The following require a page refresh.
                 div.col-sm-6

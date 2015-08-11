@@ -22,6 +22,7 @@ angular.module('NodeWebBase')
             $rootScope.servicePort = res.servicePort;
             $rootScope.userLoggingEnabled = res.userLoggingEnabled;
             $rootScope.userLoggingUrl = res.userLoggingUrl;
+            $rootScope.modelSavePath = res.modelSavePath
 
 
             setFullNameMsg.broadcast();
@@ -29,9 +30,7 @@ angular.module('NodeWebBase')
         };
 
         $rootScope.isAppConfigured = function(){
-          return $rootScope.fullname &&
-            $rootScope.serviceHostName &&
-            $rootScope.servicePort;
+          return $rootScope.fullname
         };
 
         $rootScope.showErrorMessage = function(source, reason){

@@ -1,5 +1,5 @@
 {
-  "name": "job",
+  "name": "geqeModel",
   "base": "PersistedModel",
   "strict": false,
   "idInjection": true,
@@ -8,21 +8,9 @@
       "type": "string",
       "required": true
     },
-    "status": {
-      "type": "string",
-      "default": "WAITING"
-    },
     "queryType": {
       "type": "string",
       "required": true
-    },
-    "limit": {
-      "type": "Number"
-    },
-    "customStopWords": {
-      "type": [
-        "string"
-      ]
     },
     "created": {
       "type": "Date",
@@ -48,16 +36,6 @@
       "type": "belongsTo",
       "model": "dataset",
       "foreignKey": "datasetId"
-    },
-    "resultset": {
-      "type": "belongsTo",
-      "model": "resultset",
-      "foreignKey": "resultsetId"
-    },
-    "geqeModel": {
-      "type": "belongsTo",
-      "model": "geqeModel",
-      "foreignKey": "geqeModelId"
     }
   },
   "acls": [],

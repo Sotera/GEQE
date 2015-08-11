@@ -24,7 +24,7 @@ angular.module('NodeWebBase')
         };
 
         $scope.clearShapes = function(){
-            $rootScope.$emit("clearCurrentShapes");
+            $rootScope.$emit("clearCurrentShapes",["score","polyset"]);
         };
 
         $scope.clearResults = function(){

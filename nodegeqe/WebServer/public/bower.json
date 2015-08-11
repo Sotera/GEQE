@@ -10,6 +10,7 @@
     "ngDialog": "~0.3.12",
     "n3-line-chart": "1.1.9",
     "angular-smart-table": "~2.1.0",
-    "angular-ui-layout":"~1.0.5"
+    "angular-ui-layout": "~1.0.5",
+    "jqcloud2": "~2.0.1"
   }
 }

@@ -31,6 +31,7 @@ app.use('/views/app', require('./routes/app/app'));
 app.use('/app/controlBox', require('./routes/app/controlBox'));
 app.use('/app/users', require('./routes/app/users'));
 app.use('/app/sitelists',require('./routes/app/sitelists'));
+app.use('/app/geqeModels',require('./routes/app/geqeModels'));
 app.use('/app/datasets',require('./routes/app/datasets'));
 app.use('/app/resultsets',require('./routes/app/resultsets'));
 app.use('/app/jobs',require('./routes/app/jobs'));
