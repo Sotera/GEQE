@@ -178,12 +178,14 @@ angular.module('NodeWebBase')
         me.toggleEditing = function (val) {
             console.log("Trying to make editable", val);
             me.editing = val;
-            angular.forEach(me.shapes, function (shape, idx) {
+            console.log(me.shapes);
+            angular.forEach(me.shapes.polyset, function (shape, idx) {
                 shape.editable=val;
+                console.log(shape);
                 shape.editable_changed();
             });
 
-            angular.forEach(me.scoreShapes, function (shape, idx) {
+            angular.forEach(me.shapes.score, function (shape, idx) {
                 shape.editable=val;
                 shape.editable_changed();
             });
@@ -289,7 +291,7 @@ angular.module('NodeWebBase')
                         };
 
                         $scope.sample = function(){
-
+                            console.log("Sampleing")
                             shape.geqeData.dates = $scope.dateRanges;
                             shape.geqeData.name = $scope.name;
                             $rootScope.$emit("sampleShape",me.getSiteFromShape(shape));

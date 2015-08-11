@@ -25,12 +25,19 @@ div.scrollable(ng-style="style" ng-controller="jobsTabsController")
         div.form-group
             label(for='pFileName') Polygon Set
             div.input-group-sm
-                select.form-control( ng-options="item.name for item in polygonFiles | orderBy: item" ng-model="polygonSetSelected")
+                select.form-control( ng-options="item.name for item in polygonFiles | orderBy:'name'" ng-model="polygonSetSelected")
                     option(value="") --Select--
             a.text-left(href="", data-toggle="collapse", data-target="#newPolySet")
                     | new polyset
             span.pull-right
                 button.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="showEditingTools()" ng-class="{'disabled': !polygonSetSelected, 'btn-info': editing }" title="Draw polygons to the map." user-log elementtype='BUTTON' loggroup='run_tab' logtags='draw,training_file')
+
+            div.form-group.collapse(id="newPolySet")
+                div.input-group
+                    input.form-control(placeholder="name", ng-model="newPolySetName")
+                    span.input-group-btn
+                        button.btn.btn-default(ng-click="saveItem()" id="savePolygon" title="Save." user-log elementtype='BUTTON' loggroup='run_tab' logtags='refresh,training_file')
+                            | Save
     br
     div.row
       div.col-sm-12(role="navigation")
@@ -59,38 +66,20 @@ div.scrollable(ng-style="style" ng-controller="jobsTabsController")
                        div( id="percentReturnInput" class="invis")
                                 label(for='sTopPercent') Return Percent:
                                 input.form-control(ng-model="run.sTopPercent" id="sTopPercent" )
+                   div.form-group
+                        label(for="cStopW") Custom Stop Words
+                        input.form-control( type="text" ng-model="run.cStopW" id="cStopW" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,custom_stop_words')
+                   div.form-group
+                        div.radio
+                            label
+                                input(type ="radio" value="0" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,location')
+                                | Query by Location
+                        div.radio
+                            label
+                                input(type ="radio" value="1" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,event')
+                                | Query by Event
+                   button.form-control.btn.btn-default(ng-click="applyScores()" title='Start Query Job' user-log elementtype='BUTTON' loggroup='run_tab' logtags='query_job,start') Submit Query Job
 
-            div.tab( id="two.tpl.html" ng-class="{hidden:!isActiveTab('two.tpl.html')}")
-                div(ng-controller="modelTabController")
-                    div.form
-                        fieldset.scheduler-border
-                            legend.scheduler-border Run Modeling Job
-                            div.form-group-sm
-                                label(for='sFileName') Model Name:
-                                input.form-control(ng-model="run.sFileName" id="sFileName" value="my-scores" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,name')
-                            div( id="hr3" )
-                                div.form-group-sm
-                                    label Build Location Model
-                                        input.form-control-sm( style="margin-left: 5px;" type ="radio" value="0" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,location')
-                                    br
-                                    label Build Event Model
-                                        input.form-control-sm( style="margin-left: 5px;" type ="radio" value="1" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,event')
-                        div.form-group
-                                label(for="cStopW") Custom Stop Words
-                                input.form-control( type="text" ng-model="run.cStopW" id="cStopW" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,custom_stop_words')
-
-                                button.form-control.btn.btn-default(ng-click="submitModelJob()" title='Start Query Job' user-log elementtype='BUTTON' loggroup='run_tab' logtags='query_job,start') Submit Modeling Job
-                        div.form-group
-                           div.radio
-                               label
-                                  input(type ="radio" value="0" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,location')
-                                  | Query by Location
-                           div.radio
-                               label
-                                  input(type ="radio" value="1" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,event')
-                                  | Query by Event
-
-                        button.form-control.btn.btn-default(ng-click="applyScores()" title='Start Query Job' user-log elementtype='BUTTON' loggroup='run_tab' logtags='query_job,start') Submit Query Job
 
             div.tab( id="two.tpl.html" ng-class="{hidden:!isActiveTab('two.tpl.html')}")
                 form.col-sm-12(ng-controller="modelTabController")
