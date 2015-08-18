@@ -39,7 +39,8 @@ angular.module('NodeWebBase')
                 if(newval) {
                     $scope.drawPolygonFile();
                 }
-                    toggleEditMsg.broadcast(false);
+                $scope.editing=false;
+                    //toggleEditMsg.broadcast(false);
             }
         });
 
@@ -70,7 +71,7 @@ angular.module('NodeWebBase')
             if(newval!=oldval){
                 if($("#map-canvas").hasClass("mapHighlight")){
                     $scope.updateItem();
-                };
+                }
 
                 toggleEditMsg.broadcast(newval);
             }
