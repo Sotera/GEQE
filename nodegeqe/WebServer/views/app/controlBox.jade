@@ -34,7 +34,7 @@ div.scrollable(ng-style="style" ng-controller="jobsTabsController")
 
             div.form-group.collapse(id="newPolySet")
                 div.input-group
-                    input.form-control(placeholder="name", ng-model="newPolySetName")
+                    input.form-control(placeholder="name", ng-model="newPolySetName", id="newPolySetInput")
                     span.input-group-btn
                         button.btn.btn-default(ng-click="saveItem()" id="savePolygon" title="Save." user-log elementtype='BUTTON' loggroup='run_tab' logtags='refresh,training_file')
                             | Save

@@ -86,7 +86,7 @@ angular.module('NodeWebBase')
          * Undefined if the model has not been saved
          */
         $scope.getPolygonId = function getPolygonId(){
-            return (typeof $scope.polygonSetSelected.id!="undefined")? $scope.polygonSetSelected.id : 0;
+            return ( $scope.polygonSetSelected && typeof $scope.polygonSetSelected.id!="undefined")? $scope.polygonSetSelected.id : 0;
         };
 
 
@@ -116,7 +116,8 @@ angular.module('NodeWebBase')
                                 siteList: siteList
                             }}).success(function (response) {
                             //RESET
-                            $("#newPolySet").toggleClass("in").text("");
+                            $("#newPolySet").toggleClass("in");
+                            $("#newPolySetInput").val("");
                             $("#resultsText").text(pName + " written");
                             $scope.populatePolygonSelect(); // refresh the polygon list to get the new id
                         }).error($rootScope.showError)
