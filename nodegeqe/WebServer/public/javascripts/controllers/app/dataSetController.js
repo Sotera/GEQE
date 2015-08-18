@@ -29,15 +29,17 @@ angular.module('NodeWebBase')
         };
 
         $scope.$watch("dataSetSelected", function(newval, oldval){
-            if(newval && newval!=oldval)
+            if(newval!=oldval)
                     setSelectionMsg.broadcast('dataSetSelected', newval)
         });
 
         $scope.$watch("polygonSetSelected", function(newval,oldval){
-            if(newval && newval!=oldval) {
-                setSelectionMsg.broadcast('polygonSetSelected',newval)
-                $scope.drawPolygonFile();
-                toggleEditMsg.broadcast(false);
+            if(newval!=oldval) {
+                setSelectionMsg.broadcast('polygonSetSelected',newval);
+                if(newval) {
+                    $scope.drawPolygonFile();
+                }
+                    toggleEditMsg.broadcast(false);
             }
         });
 
@@ -66,11 +68,11 @@ angular.module('NodeWebBase')
             console.log("datasetcontroller editing: " , newval);
 
             if(newval!=oldval){
-                toggleEditMsg.broadcast(newval);
+                if($("#map-canvas").hasClass("mapHighlight")){
+                    $scope.updateItem();
+                };
 
-                if($("#canvas-map").hasClass("mapHighlight")){
-                    $scope.saveList();
-                }
+                toggleEditMsg.broadcast(newval);
             }
         });
 
@@ -94,6 +96,32 @@ angular.module('NodeWebBase')
             $scope.editing = !$scope.editing;
         };
 
+
+        $scope.updateItem = function updateItem(item) {
+            $rootScope.$emit("getShapesText",
+                {
+                    "scope":this,
+                    "callback":function(resultsText){
+                        if(!$rootScope.isAppConfigured())
+                            return;
+                        var pName = $scope.polygonSetSelected.name;
+                        var siteList = JSON.parse(resultsText);
+                        siteList.name = pName;
+                        siteList.username = $rootScope.username;
+                        var modelId = $scope.getPolygonId();
+                        if (modelId) siteList.id = modelId;
+
+                        $http({
+                            method:"POST",
+                            url: "app/sitelists/save",
+                            params: {
+                                siteList: siteList
+                            }}).success(function (response) {
+                    console.log("Saved");
+                        }).error($rootScope.showError)
+                    }
+                });
+        };
 
         $scope.saveItem = function saveItem(item) {
             $rootScope.$emit("getShapesText",
@@ -123,7 +151,7 @@ angular.module('NodeWebBase')
                         }).error($rootScope.showError)
                     }
                 });
-        }
+        };
 
         /**
          * Save the site list (polygon)

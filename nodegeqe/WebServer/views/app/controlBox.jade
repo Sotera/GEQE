@@ -49,8 +49,18 @@ div.scrollable(ng-style="style" ng-controller="jobsTabsController")
             div.tab( id="one.tpl.html" ng-class="{hidden:!isActiveTab('one.tpl.html')}")
                 form.col-sm-12(ng-controller="runTabController")
                    div.form-group
-                            label(for='sFileName') Job Name:
+                            label(for='sFileName') Job Name
                             input.form-control(ng-model="run.sFileName" id="sFileName" value="my-scores" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,name')
+                   div.form-group
+                       div.checkbox
+                          label
+                            input(type="checkbox", data-toggle="collapse", data-target="#savedModels", name="againstASavedModel", ng-model="againstASavedModel")
+                            | against a saved model
+
+                       div.form-group.collapse(id="savedModels")
+                            div.input-group-sm
+                                select.form-control( ng-options="item.name for item in geqeModels | orderBy:'name'" ng-model="geqeModel")
+                                    option(value="") --Select--
                    div.form-group
                        div.checkbox
                             label(for='bPercent')
@@ -59,12 +69,12 @@ div.scrollable(ng-style="style" ng-controller="jobsTabsController")
 
                    div.form-group
                        div(id="rankReturnInput")
-                                label(for='sTopN') Return top:
+                                label(for='sTopN') Return Top
                                 input.form-control(ng-model="run.sTopN" id="sTopN" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,top')
 
                    div.form-group
                        div( id="percentReturnInput" class="invis")
-                                label(for='sTopPercent') Return Percent:
+                                label(for='sTopPercent') Return Percent
                                 input.form-control(ng-model="run.sTopPercent" id="sTopPercent" )
                    div.form-group
                         label(for="cStopW") Custom Stop Words
@@ -84,19 +94,20 @@ div.scrollable(ng-style="style" ng-controller="jobsTabsController")
             div.tab( id="two.tpl.html" ng-class="{hidden:!isActiveTab('two.tpl.html')}")
                 form.col-sm-12(ng-controller="modelTabController")
                         div.form-group
-                            label(for='sFileName') Job Name:
-                            input.form-control(ng-model="run.sFileName" id="sFileName" value="my-scores" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,name')
-                        div.form-group
-                            label(for="cStopW") Custom Stop Words
-                            input.form-control( type="text" ng-model="run.cStopW" id="cStopW" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,custom_stop_words')
-                        div.form-group
-                                div.radio
-                                   label
-                                      input( type ="radio" value="0" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,location')
-                                      | Query by Location
-                                div.radio
-                                  label
-                                      input( type ="radio" value="1" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,event')
-                                      | Query by Event
+                            small
+                                | Run Modeling Job
+                            div.form-group
+                                label(for='sFileName') Model Name:
+                                input.form-control(ng-model="run.sFileName" id="sFileName" value="my-scores" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,name')
+                            div( id="hr3" )
+                                div.form-group
+                                    div.radio
+                                        label
+                                            input(type ="radio" value="0" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,location')
+                                            | Build Location Model
+                                        br
+                                        label
+                                            input(type ="radio" value="1" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,event')
+                                            | Build Event Model
 
-                        button.form-control.btn.btn-default(ng-click="applyScores()" title='Start Query Job' user-log elementtype='BUTTON' loggroup='run_tab' logtags='query_job,start') Submit Modeling Job
+                            button.form-control.btn.btn-default(ng-click="submitModelJob()" title='Start Query Job' user-log elementtype='BUTTON' loggroup='run_tab' logtags='query_job,start') Submit Modeling Job

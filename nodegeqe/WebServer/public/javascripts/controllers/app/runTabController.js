@@ -9,12 +9,7 @@ angular.module('NodeWebBase')
         $scope.dataSetSelected = null;
         $scope.polygonSetSelected=null;
         $scope.geqeModel = null;
-
-        $scope.modelSelected = function (item) {
-            console.log("Selected Model", item)
-            $scope.geqeModel = item;
-        };
-
+        $scope.againstASavedModel=false;
 
         setSelectionMsg.listen(function (evt, type, val) {
             if (type == "polygonSetSelected")
@@ -102,7 +97,7 @@ angular.module('NodeWebBase')
                 $rootScope.showErrorMessage("Query Job", "Please select a data set.");
                 return;
             }
-            if ($scope.polygonSetSelected && $scope.polygonSetSelected.name != "--Select--" && $scope.geqeModel) {
+            if ($scope.polygonSetSelected && $scope.polygonSetSelected.name != "--Select--" && $scope.againstASavedModel) {
                 $rootScope.showErrorMessage("Query Job", "Select a Polygon OR a model, but not both.");
                 return;
             }
@@ -125,7 +120,7 @@ angular.module('NodeWebBase')
             };
 
             // set the model or polygon
-            if ($scope.geqeModel) {
+            if ($scope.againstASavedModel && $scope.geqeModel) {
                 jobObj['geqeModelId'] = $scope.geqeModel.id
             }
             else {
@@ -162,10 +157,24 @@ angular.module('NodeWebBase')
         };
 
 
+        $scope.populateModelSelect = function(){
+            if(!$rootScope.isAppConfigured()) return;
+
+            $http({
+                method:"GET",
+                url: "app/geqeModels/list/"+$rootScope.username,
+                params: {}
+            }).success(function (response) {
+                console.log(response);
+                $scope.geqeModels = [].concat(response)
+            }).error($rootScope.showError);
+
+        };
         //go ahead and get the data sets from the server
         //INIT
         var watchRemoval = $scope.$watch($rootScope.isAppConfigured, function (newVal, oldVal) {
             if (newVal) {  // Don't do anything if Undefined.
+                $scope.populateModelSelect();
                 watchRemoval();
             }
         })
