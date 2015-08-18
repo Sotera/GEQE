@@ -43,7 +43,7 @@ div( id='details' ng-controller='detailsController')
                 div.col-sm-8
                     p User:
                         a(href='{{socialMediaUrl}}' target="_blank" user-log elementtype='LINK' loggroup='details' logtags='navigate,social,user') {{currentItem._source.user}}
-                    p Date: {{currentItem._source.post_date | dateParse:'yyyy-MM-dd  hh:mm a'}}
+                    p Date: {{currentItem._source.post_date | dateParse:'dd/MM/yyyy - hh:mm a'}}
     div
         div.caption
             p(id="caption")
