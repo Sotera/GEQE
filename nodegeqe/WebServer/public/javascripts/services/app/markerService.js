@@ -289,7 +289,7 @@ angular.module('NodeWebBase')
                 */
                 var markerLocation = new google.maps.LatLng(item.centerPoint.lat,  item.centerPoint.lng);
                 locations.push(markerLocation);
-                me.putScoreMarker(markerLocation, "need to replace with something", item, minScore,maxScore,item['score']);
+                me.putScoreMarker(markerLocation, ""+item['score'], item, minScore,maxScore,item['score']);
 
             });
         };
