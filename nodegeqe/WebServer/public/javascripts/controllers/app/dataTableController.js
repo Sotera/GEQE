@@ -59,6 +59,11 @@ angular.module('NodeWebBase')
             });
 
             $rootScope.$on('loadItemPosts',function(event,item){
+                console.log("ITEM: ",item)
+                var dateranges = [];
+                if (item.day && item.day != "None"){
+                    dateranges.push({"min": item.day,"max":item.day});
+                }
                 if(!item.posts) {
                     $http({
                         method: "POST",
@@ -70,7 +75,8 @@ angular.module('NodeWebBase')
                             "from": 0,
                             "size": 100,
                             "boundingPoly": item.boundingPoly,
-                            "query_string": item.significantTerms.join(' ')
+                            "query_string": item.significantTerms.join(' '),
+                            "dates" : dateranges
                         }
                     }).success(function (response) {
                         item.posts = response.hits;
