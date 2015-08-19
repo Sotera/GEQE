@@ -135,6 +135,12 @@ angular.module('NodeWebBase')
             angular.forEach(data,function(group,idx){
                 if(!group.day)
                     group.day="None";
+
+                // add the day to each bin to allow posts qpi to query for a date
+                angular.forEach(group.bins,function(bin,idx){
+                    bin.day = group.day
+                })
+
                 var catalogItem = $scope.getCatalogItem(group.day);
 
                 if(!catalogItem){
