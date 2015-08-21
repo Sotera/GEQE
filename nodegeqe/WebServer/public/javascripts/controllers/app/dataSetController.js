@@ -48,7 +48,7 @@ angular.module('NodeWebBase')
             $scope.populatePolygonSelect();
         };
 
-        //TODO: Needs to be depracated and replaced with getPolygonSets
+        //TODO: Needs to be deprecated and replaced with getPolygonSets
         $scope.populatePolygonSelect = function() {
             if(!$rootScope.isAppConfigured())
                 return;
@@ -66,13 +66,10 @@ angular.module('NodeWebBase')
         };
 
         $scope.$watch("editing", function(newval,oldval){
-            console.log("datasetcontroller editing: " , newval);
-
             if(newval!=oldval){
                 if($("#map-canvas").hasClass("mapHighlight")){
                     $scope.updateItem();
                 }
-
                 toggleEditMsg.broadcast(newval);
             }
         });
@@ -123,7 +120,35 @@ angular.module('NodeWebBase')
                     }
                 });
         };
+        $scope.saveNewItem = function saveNewItem(item) {
+            $rootScope.$emit("getShapesText",
+                {
+                    "scope":this,
+                    "callback":function(resultsText){
+                        if(!$rootScope.isAppConfigured())
+                            return;
+                        var pName = $scope.newPolySetName;
+                        var siteList = JSON.parse(resultsText);
+                        siteList.name = pName;
+                        siteList.username = $rootScope.username;
+                        var modelId = null;
+                        if (modelId) siteList.id = modelId;
 
+                        $http({
+                            method:"POST",
+                            url: "app/sitelists/save",
+                            params: {
+                                siteList: siteList
+                            }}).success(function (response) {
+                            //RESET
+                            $("#newPolySet").toggleClass("in");
+                            $("#newPolySetInput").val("");
+                            $("#resultsText").text(pName + " written");
+                            $scope.populatePolygonSelect(); // refresh the polygon list to get the new id
+                        }).error($rootScope.showError)
+                    }
+                });
+        };
         $scope.saveItem = function saveItem(item) {
             $rootScope.$emit("getShapesText",
                 {
