@@ -5,7 +5,7 @@ var netHelpers = just_include('netHelpers');
 
 router.delete('/delete/:vp', function(req,res){
     var sitelist = req.params.vp;
-    netHelpers.performAjaxRequest(remoteHost, 5500, '/api/sitelists/'+sitelist , 'DELETE',{}, function (resultObject) {
+    netHelpers.performAjaxRequest("localhost", 5500, '/api/sitelists/'+sitelist , 'DELETE',{}, function (resultObject) {
         if (resultObject.error) {
             res.status(resultObject.error.status).send(resultObject.error.message);
             return;

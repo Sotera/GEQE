@@ -74,6 +74,13 @@ angular.module('NodeWebBase')
             }
         });
 
+        $scope.removePolySet= function removePolySet(){
+            console.log("removePolySet " , $scope.polygonSetSelected);
+            $http.delete("app/sitelists/delete/"+$scope.polygonSetSelected.id).success(function (response) {
+                 $scope.populatePolygonSelect(); // refresh the polygon list to get the new id
+            }).error($rootScope.showError);
+        };
+
         $scope.drawPolygonFile = function(){
             var modelId = $scope.getPolygonId();
             if (!modelId)  $rootScope.showErrorMessage("Polygon name invalid.",'Polygon must be saved prior to use.');
