@@ -221,6 +221,8 @@ angular.module('NodeWebBase')
                         $rootScope.showErrorMessage("JSON Parsing", err);
                         return;
                     }
+                    // Prevent the map from resetting if the number of sites == 0.
+                    if(sites.sites.length == 0 ) return;
                     angular.forEach(sites.sites, function (site, idx) {
                         latLngs[idx] = [];
                         for (var i = 0; i < site.lats.length; i++) {
