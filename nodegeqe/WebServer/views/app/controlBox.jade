@@ -14,29 +14,27 @@ div.scrollable(ng-style="style" ng-controller="jobsTabsController")
   div.container-fluid
     div.row
       form.col-sm-12(ng-controller="dataSetController")
-        div.form-group-sm
+        div.form-group-sm.form-group
             label(for='dataSetSelect') Data Set
             span.pull-right
                 button.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click='refreshAll()' title="Refresh file list." user-log elementtype='BUTTON' loggroup='run_tab' logtags='run,refresh,data_set_files')
             select.form-control(id="dataSetSelect" ng-options="item.name for item in dataSets | orderBy: item.name" ng-model="dataSetSelected" user-log elementtype='DROPDOWNLIST' loggroup='run_tab' logtags='run,select,data_set_files')
                 option(value="") --Select--
-
-        br
-        div.form-group
+        div.form-group.form-group-sm
             label(for='pFileName') Polygon Set
             div.input-group-sm
-                select.form-control( ng-options="item.name for item in polygonFiles | orderBy:'name'" ng-model="polygonSetSelected")
+                select.form-control( ng-options="item.name for item in polygonFiles | orderBy:'name'" ng-model="polygonSetSelected" ng-disabled='editing')
                     option(value="") --Select--
-            a.text-left(href="", data-toggle="collapse", data-target="#newPolySet")
+            a.text-left(href="", data-toggle="collapse", data-target="#newPolySet", ng-disabled='editing')
                     | new polyset
-            span.pull-right
+            i.pull-right
                 button.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="showEditingTools()" ng-class="{'disabled': !polygonSetSelected, 'btn-info': editing }" title="Draw polygons to the map." user-log elementtype='BUTTON' loggroup='run_tab' logtags='draw,training_file')
 
-            div.form-group.collapse(id="newPolySet")
-                div.input-group
+        div.form-group.form-group-sm.collapse(id="newPolySet")
+                div.input-group.input-group-sm
                     input.form-control(placeholder="name", ng-model="newPolySetName", id="newPolySetInput")
                     span.input-group-btn
-                        button.btn.btn-default(ng-click="saveItem()" id="savePolygon" title="Save." user-log elementtype='BUTTON' loggroup='run_tab' logtags='refresh,training_file')
+                        button.btn.btn-default(ng-click="saveNewItem()" id="savePolygon" title="Save." user-log elementtype='BUTTON' loggroup='run_tab' logtags='refresh,training_file')
                             | Save
     br
     div.row
@@ -95,15 +93,15 @@ div.scrollable(ng-style="style" ng-controller="jobsTabsController")
                 form.col-sm-12(ng-controller="modelTabController")
                         div.form-group-sm
                             label(for='sFileName') Model Name
-                                input.form-control(ng-model="run.sFileName" id="sFileName" value="my-scores" user-log elementtype='TEXTBOX' loggroup='run_tab' logtags='query_job,name')
-                        div.form-group
+                            input.form-control(ng-model="model.sFileName" id="sFileName" value="my-scores" user-log elementtype='TEXTBOX' loggroup='model_tab' logtags='query_job,name')
+                        div.form-group-sm
                             div.radio
                                 label
-                                    input(type ="radio" value="0" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,location')
+                                    input(type ="radio" value="0" ng-model="model.useTimeSeries" user-log elementtype='RADIO' loggroup='model_tab' logtags='query_job,location')
                                     | Build Location Model
-                                br
+                            div.radio
                                 label
-                                    input(type ="radio" value="1" ng-model="run.useTimeSeries" user-log elementtype='RADIO' loggroup='run_tab' logtags='query_job,event')
+                                    input(type ="radio" value="1" ng-model="model.useTimeSeries" user-log elementtype='RADIO' loggroup='model_tab' logtags='query_job,event')
                                     | Build Event Model
 
-                        button.form-control.btn.btn-default(ng-click="submitModelJob()" title='Start Query Job' user-log elementtype='BUTTON' loggroup='run_tab' logtags='query_job,start') Submit Modeling Job
+                        button.form-control.btn.btn-default(ng-click="submitModelJob()" title='Start Query Job' user-log elementtype='BUTTON' loggroup='model_tab' logtags='query_job,start') Submit Modeling Job
