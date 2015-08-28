@@ -30,7 +30,7 @@ div.scrollable(ng-style="style" ng-controller="jobsTabsController")
             i.pull-right
                 button.btn.btn-default.btn-xs.glyphicon.glyphicon-pencil(ng-click="showEditingTools()" ng-class="{'disabled': !polygonSetSelected, 'btn-info': editing }" title="Draw polygons to the map." user-log elementtype='BUTTON' loggroup='run_tab' logtags='draw,training_file')
             i.pull-right
-                button.btn.btn-default.btn-xs.glyphicon.glyphicon-trash(ng-click="removePolySet()" ng-class="{'disabled': !polygonSetSelected, 'btn-info': editing }" title="Draw polygons to the map." user-log elementtype='BUTTON' loggroup='run_tab' logtags='draw,training_file')
+                button.btn.btn-default.btn-xs.glyphicon.glyphicon-trash(ng-click="removePolySet()" ng-class="{'disabled': !polygonSetSelected && !editing }" title="Delete the polygon set." user-log elementtype='BUTTON' loggroup='run_tab' logtags='draw,training_file')
 
 
           div.form-group.form-group-sm.collapse(id="newPolySet")
