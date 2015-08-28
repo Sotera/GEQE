@@ -75,10 +75,12 @@ angular.module('NodeWebBase')
         });
 
         $scope.removePolySet= function removePolySet(){
-            console.log("removePolySet " , $scope.polygonSetSelected);
-            $http.delete("app/sitelists/delete/"+$scope.polygonSetSelected.id).success(function (response) {
-                 $scope.populatePolygonSelect(); // refresh the polygon list to get the new id
-            }).error($rootScope.showError);
+            if(confirm("Remove the polygon set?")){
+                console.log("removePolySet " , $scope.polygonSetSelected);
+                $http.delete("app/sitelists/delete/"+$scope.polygonSetSelected.id).success(function (response) {
+                    $scope.populatePolygonSelect(); // refresh the polygon list to get the new id
+                }).error($rootScope.showError);
+            }
         };
 
         $scope.drawPolygonFile = function(){

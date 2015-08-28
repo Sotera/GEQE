@@ -3,7 +3,17 @@
 /**
  * UI.Layout
  */
-function OnResize(){}
+
+function resizeTable(){
+    console.log("resizeTable!!! " ) ;
+    var tabs =  $("#tabs");
+   tabs.find("table").css("height", tabs.closest(".ui-layout-container").height() - tabs.find(".nav").height());
+}
+
+$(window).load(function(){
+    resizeTable();
+});
+
 angular.module('ui.layout', [])
   .controller('uiLayoutCtrl', ['$scope', '$attrs', '$element', 'LayoutContainer', function uiLayoutCtrl($scope, $attrs, $element, LayoutContainer) {
     var ctrl = this;
@@ -19,6 +29,7 @@ angular.module('ui.layout', [])
     ctrl.bounds = $element[0].getBoundingClientRect();
     ctrl.isUsingColumnFlow = opts.flow === 'column';
     ctrl.onresize = $attrs.onresize || null;
+
 
     ctrl.sizeProperties = !ctrl.isUsingColumnFlow ?
     { sizeProperty: 'height', offsetSize: 'offsetHeight', offsetPos: 'top', flowProperty: 'top', oppositeFlowProperty: 'bottom', mouseProperty: 'clientY', flowPropertyPosition: 'y' } :
@@ -560,6 +571,7 @@ angular.module('ui.layout', [])
               }
             }
           }
+            eval(ctrl.onresize);
         });
 
         afterButton.on('click', function() {
@@ -619,9 +631,12 @@ angular.module('ui.layout', [])
               }
             }
           }
+           eval(ctrl.onresize);
         });
 
-        element.on('mousedown touchstart', function(e) {
+
+
+          element.on('mousedown touchstart', function(e) {
           ctrl.movingSplitbar = scope.splitbar;
           ctrl.processSplitbar(scope.splitbar);
 

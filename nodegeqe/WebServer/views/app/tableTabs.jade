@@ -8,8 +8,8 @@ div.scrollable.tabs(id="tabs" ng-style="style" ng-controller="tableTabsControlle
       div.tab-content
          div.tab( id="jobsTab" ng-class="{hidden:!isActiveTab('jobsTab')}")
             .container-fluid
-               div.row-jobs-table
-                  div.column-buttons.affix
+               div.row-jobs-table.table-responsive
+                  div.column-buttons
                      button.btn.btn-default.btn-xs.glyphicon.glyphicon-refresh(ng-click="getJobStatus()" title="Get job status." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
                      button.btn.btn-default.btn-xs.glyphicon.glyphicon-eye-open(ng-click="viewJobData()" title="View job data." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
                      button.btn.btn-default.btn-xs.glyphicon.glyphicon-trash(ng-click="deleteJob()" ng-class="{disabled:!isSelectedRowDeletable()}" title="Delete Job." user-log elementtype='BUTTON' loggroup='results_tab' logtags='jobs,refresh')
@@ -18,24 +18,24 @@ div.scrollable.tabs(id="tabs" ng-style="style" ng-controller="tableTabsControlle
                   div.column-table
                      table.table.table-striped(st-table="displayedCollection" st-safe-src="rowCollection")
                         thead
-                        tr
-                           th.mid(st-sort="jobname")
-                              | Name
-                           th.mid(st-sort="status") Status
-                           th.mid(st-sort="queryType") Type
-                           th.mid(st-sort="created") Submitted
-                           th.mid(st-sort="username") Username
+                          tr
+                            th.mid(st-sort="jobname")
+                               | Name
+                            th.mid(st-sort="status") Status
+                            th.mid(st-sort="queryType") Type
+                            th.mid(st-sort="created") Submitted
+                            th.mid(st-sort="username") Username
 
-                        tbody
-                        tr(st-select-row="row" ng-click="rowClicked(row)" st-select-mode="single" ng-repeat="row in displayedCollection" ng-class="row.isSelected ? 'st-selected':''")
-                           td.mid {{row.name}}
-                           td.mid {{row.status}}
-                           td.mid {{row.queryType}}
-                           td.mid {{row.created}}
-                           td.mid {{row.username}}
+                        tbody(style="overflow:scroll;")
+                          tr(st-select-row="row" ng-click="rowClicked(row)" st-select-mode="single" ng-repeat="row in displayedCollection" ng-class="row.isSelected ? 'st-selected':''")
+                            td.mid {{row.name}}
+                            td.mid {{row.status}}
+                            td.mid {{row.queryType}}
+                            td.mid {{row.created}}
+                            td.mid {{row.username}}
 
          div.tab( id="dataTab" ng-class="{hidden:!isActiveTab('dataTab')}")
-            div(ng-controller="dataTableController").scrollTable
+            div(ng-controller="dataTableController").scrollTable.table-responsive
                table.table.table-striped(st-table="displayedCollection" st-safe-src="rowCollection")
                   thead
                      tr
@@ -44,7 +44,7 @@ div.scrollable.tabs(id="tabs" ng-style="style" ng-controller="tableTabsControlle
                         th.mid(st-sort="_source.post_date") Date
                         th.mid(st-sort="_source.location.coordinates[1]") lat
                         th.mid(st-sort="_source.location.coordinates[0]") lon
-                  tbody
+                  tbody(style="overflow:scroll;")
                      tr(st-select-row="row" ng-click="rowClicked(row)" st-select-mode="single" ng-repeat="row in displayedCollection" ng-class="row.isSelected ? 'st-selected':''")
                         td.mid {{row._source.user }}
                         td.mid {{row._source.message}}
