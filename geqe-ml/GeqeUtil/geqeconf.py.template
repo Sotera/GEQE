@@ -1,0 +1,38 @@
+import os
+
+"""
+All settings required to operate the GeqeConsumer and GeqeRunner
+to execute jobs on behalf of the geqe-webserver
+"""
+
+# set to None to lauch spark jobs, otherwise mock data is returned instead.
+# MOCK_DATA_PATH = None
+MOCK_DATA_PATH = {
+    "location": "GeqeUtil/MOCK_JOB_DATA/locationResult.json",
+    "event" : "GeqeUtil/MOCK_JOB_DATA/eventResult.json"
+}
+
+LOOPBACK_SERVICE = "http://localhost:5500"
+WAIT_TIME = 5   #polling interval (Seconds)
+SPARK_SUBMIT_PATH = "spark-submit"
+PROJECT_ROOT_PATH = "../"   # replace with full file system path to this project
+
+
+#automatically include all project python files when running spark submit
+PY_FILES = []
+PY_FILES.extend(filter(lambda x: x[-3:] == '.py', os.listdir(PROJECT_ROOT_PATH)))
+PY_FILES.extend(map(lambda x: 'GeqeUtil/'+x,filter(lambda x: x[-3:] == '.py', os.listdir(PROJECT_ROOT_PATH+"GeqeUtil"))))
+PY_FILES.extend(map( lambda x: 'lib/'+x,filter(lambda x: x[-3:] == '.py', os.listdir(PROJECT_ROOT_PATH+"lib"))))
+
+
+SPARK_OPTIONS = [
+    "--master" , "local",
+    "--py-files" , ','.join(PY_FILES),
+    "--executor-memory" , "4g",
+    "--driver-memory" ,  "2g",
+    "--total-executor-cores", "4"
+]
+
+# specify an elastic search host to add result-set data to elastic search in addition to the geqe-dataserver
+ES_HOST = None
+ES_PORT = 9200
