@@ -1,4 +1,5 @@
 from operator import add
+from nltk.stem.api import StemmerI
 from datetime import date, timedelta, datetime
 from math import sqrt, log10
 from pyspark.mllib.linalg import SparseVector
@@ -110,34 +111,34 @@ def loadRecord(line, dType):
         traceback.print_exc()
         return None
 
-
 def hasScorableWord(text,bUseStopFilter, bc_lStopWords):
-    stopwords = bc_lStopWords.value
-    terms = text.replace("="," ").split(' ')
-    for word in terms:
-        if scorableWord(word,bUseStopFilter,stopwords):
-            return True
+    if len(uniqueWords(text, bUseStopFilter, bc_lStopWords))!=0:
+        return True
     return False
 
+def uniqueWords(caption, bUseStopFilter, bc_lStopWords):
+    return set(wordBreak(caption, bUseStopFilter, bc_lStopWords))
+
+def wordBreak(caption, bUseStopFilter, bc_lStopWords):
+    caption = re.sub('[\s#]',' ',caption.lower(),flags=re.UNICODE)
+    caption = re.sub('[^\w\s]','',caption)
+    allWords = caption.strip().split(' ')
+    filteredList = []
+    stopwords = bc_lStopWords.value
+    stemmer = StemmerI()
+    for word in allWords:
+        if scorableWord(word, bUseStopFilter, stopwords):
+            filteredList.append(stemmer.stem(word))
+    return filteredList
 
 def scorableWord(word, bUseStopFilter, stopwords):
     if word == "":
         return False
-    if (word.find("@")!=-1) or (word.find("/")!=-1) or (word.find("-")!=-1) or (word.find("=")!=-1) or (word.find("_")!=-1):
-        return False
     if (word.find("http")!=-1) or (word.find(".com")!=-1):
         return False
-    modWord = scrubWord(word)
-    if modWord == "":
-        return False
-    if bUseStopFilter and (modWord in stopwords):
+    if bUseStopFilter and (word in stopwords):
         return False
     return True
-
-
-def scrubWord(word):
-    return word.strip('!@#$%^&*()_-+=<,>.?/:;"\'{}[]|').lower()
-
 
 def badData(record, bUseStopFilter, bc_lStopWords):
     stopwords = bc_lStopWords.value
@@ -163,7 +164,6 @@ def inROI(lat, lon, bc_lTargetPolygons):
             return True
     return False
 
-
 def inEOI(lat, lon, dt, bc_lTargetPolygons):
     recordPoint = pointClass.Point(lon,lat)
     rDate = dt.date()
@@ -182,72 +182,6 @@ def outEOI(lat,lon,dt, bc_lTargetPolygons):
 
 def inUOI(username, bc_lTrainUsr):
     return username in bc_lTrainUsr.value
-
-def wordBreak(caption, bUseStopFilter, bc_lStopWords):
-    caption = re.sub('[\s#]',' ',caption.lower(),flags=re.UNICODE)
-    caption = re.sub('[^\w\s]','',caption)
-    allWords = caption.strip().split(' ')
-    filteredList = []
-    stopwords = bc_lStopWords.value
-    for word in allWords:
-        if scorableWord(word, bUseStopFilter, stopwords):
-            filteredList.append(scrubWord(word))
-    return filteredList
-
-def uniqueWords(caption, bUseStopFilter,bc_lStopWords):
-    return set(wordBreak(caption, bUseStopFilter, bc_lStopWords))
-
-
-
-def justScore(caption, bc_scores):
-    s1 = caption.split(' ')
-    capScore = 0.0
-    nTerms = 0
-    scoredWords = bc_scores.value.keys()
-    for t1 in s1:
-        t1Clean = scrubWord(t1)
-        if t1Clean=="":
-            continue
-        if t1Clean in scoredWords:
-            capScore = capScore + bc_scores.value[t1Clean]
-            nTerms = nTerms + 1
-    if nTerms != 0:
-        return capScore/nTerms
-    return 0.0
-
-def filterZeroScores(caption, bc_scores):
-    capScore = justScore(caption, bc_scores)
-    return capScore != 0.0
-
-
-def filterEmptyFeatureVec(record, bc_dArrPos):
-    caption = record['caption']
-    s1 = caption.split(' ')
-
-def scoreCaption(record, bc_scores):
-    lat = float(record['latitude'])
-    lon = float(record['longitude'])
-    caption = record['caption']
-    user = record['user_name']
-    capScore = justScore(record, bc_scores)
-    retList = [lat, lon, caption, capScore, user]
-    return retList
-
-def applyThreshold(record, threshold, bc_scores):
-    capScore = justScore(record, bc_scores)
-    if  capScore > threshold:
-        return True
-    return False
-
-def scoreCaptionAggregate(record, threshold, bc_scores):
-    lat = (int(float(record['latitude'])/.005)*1.)*.005
-    lon = (int(float(record['longitude'])/.005)*1.)*.005
-    capScore = justScore(record, bc_scores)
-    bPass = 0
-    if capScore > threshold:
-        bPass=1
-    retTup = ((lat,lon), [capScore, 1, bPass])
-    return retTup
 
 def placeToLP(record, bInRegion, bc_dArrPos):
     lat = record.lat
@@ -282,7 +216,6 @@ def combineGroups(record):
         ind = ind +1
     return LabeledPoint(label, SparseVector(len(lPlace), cVec))
 
-
 def wordCorpusCount(df, bUseStopFilter, bc_lStopWords):
     """
     Returns a dict of {word:count,..}
@@ -292,8 +225,6 @@ def wordCorpusCount(df, bUseStopFilter, bc_lStopWords):
     :return:
     """
     return df.flatMap(lambda x: [(w,None) for w in uniqueWords(x.text, bUseStopFilter, bc_lStopWords)]).countByKey()
-
-
 
 def createFeatureVector(df, bUseStopFilter, bc_lStopWords, nFeatures, dictFile, bc_dIDF, nTot):
     # Do word count for training region
