@@ -13,11 +13,14 @@ geqe-comm is a a set of utilities used to connect the Geo Event Query By Example
 
 ###Testing / Development
 
-The GeqeConsumer can stand in as a MOCK backend and return pre-generated results for front-end
-testing and development by setting a MOCK_DATA_PATH in geqeconf.py
+The MockGeqeConsumer can stand in as a mock backend and return pre-generated results for front-end
+testing and development.
 
 
 ### Quickstart
 
 1. Copy geqeconf.py.template to geqeconf.py
-2.  Set PROJECT_ROOT_PATH in geqeconf.py to the location of the GEQE repo on your machine.  i.e: /home/users/you/GEQE  
+2. Set PROJECT_ROOT_PATH in geqeconf.py to the location of the GEQE repo on your machine.  i.e: /home/users/you/GEQE
+3. Setup and launch the loopback server and webserver
+4. If you have processed data and spark cluster ready to go edit your geqeconf.py and run python GeqeConsumer.py  
+5. For front end development / testing with staged data and a spark cluster run python MockGeqeConsumer.py

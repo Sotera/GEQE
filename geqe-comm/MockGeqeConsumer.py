@@ -17,10 +17,10 @@ os.chdir(conf.PROJECT_ROOT_PATH)
 
 """
 
-Long running job to wait for and launch spark jobs for the geqe web app.
+Long running job to wait for and jobs to be submitted and return canned MOCK data.
 
 Usage:
-python GeqeConsumer.py
+python MockGeqeConsumer.py  (requires a geqe-dataserver instance to be running)
 
 """
 
@@ -94,24 +94,62 @@ class JobRunner(Thread):
 
 
     def executeJob(self,job):
-        print 'running job ',job
 
-        stdoutFile = open('stdout.log','w')
-        stderrFile = open('stderr.log','w')
-        command = [conf.SPARK_SUBMIT_PATH]
-        command.extend(conf.SPARK_OPTIONS)
-        command.append('geqe-comm/GeqeRunner.py')
+        time.sleep(5)
+        job['status'] = 'RUNNING'
+        (responseCode,job) =  self.service.saveJob(job)
+        if responseCode != 200:  raise Exception("could not save job status.")
+
+
+        filePath = conf.MOCK_DATA_PATH[job['queryType']]
+        with open(filePath,'r') as handle:
+            data = json.loads(handle.read())
+        result_set = GeqeAPI.rawResultToResultDocument(job,data)
+        (response,result_set) = self.service.saveResultset(result_set)
+        if response != 200:
+            job['status'] = 'FAILED'
+            self.service.saveJob(job)
+            print str(result_set)
+            raise Exception("Could not save result set. error: "+str(response))
+
+        if 'modelSavePath' in job and job['modelSavePath'] is not None:
+            # save the model meta data
+            modelData = {
+                "name" : job['name'],
+                "username": job["username"],
+                "queryType": job["queryType"],
+                "modelSavePath": job['modelSavePath'],
+                "siteListId" : job["siteListId"],
+                "datasetId" :  job["datasetId"]
+            }
+
+            (response,modelData) = self.service.saveModelData(modelData)
+            if response != 200:
+                job['status'] = 'FAILED'
+                self.service.saveJob(job)
+                raise Exception("Could not save model metadata: "+str(response)+" \n"+str(modelData))
+
+
+
+        # save the results set into elastic search
         if conf.ES_HOST is not None:
-            command.extend(["--elasticsearchHost",conf.ES_HOST,"--elasticsearchPort",conf.ES_PORT])
-        command.extend([self.service.serviceURL,job['id']])
-        command = map(str,command)
-        with open('lastcommand.sh','w') as handle:
-            handle.write(' '.join(command))
-        result = subprocess.call(command,stdout=stdoutFile,stderr=stderrFile)
-        print 'result: ',str(result)
-        stderrFile.close()
-        stdoutFile.close()
-        return int(result) == 0
+            elaticsearchConnetor = GeqeAPI.ElasticSearchHelper(conf.ES_HOST,port=conf.ES_PORT)
+            (response,es_result) = elaticsearchConnetor.addResultSet(result_set)
+            if response != 201:
+                job['status'] = 'FAILED'
+                self.service.saveJob(job)
+                raise Exception("Could not save result set to es. error: "+str(response)+" \n"+str(result_set))
+
+
+        time.sleep(5)
+        job['status'] = 'SUCCESS'
+        job['resultsetId'] = result_set['id']
+        (response,job) = self.service.saveJob(job)
+        if response != 200:
+            raise Exception("could not save job status.")
+
+        return True
+
 
 
 
@@ -121,6 +159,15 @@ if __name__ == '__main__':
     global CLUSTER_STATUS
 
     service = GeqeAPI.GeqeRestHelper(conf.LOOPBACK_SERVICE)
+
+    # insert mock dataset for front end testing, ensures a usable UI
+    for shape in [1,2]:
+        dataset = GeqeAPI.getMockDataSet(shape=shape)
+        (response,dataset) = service.saveDataset(dataset)
+        if response != 200:
+            print 'response: ',response
+            print  dataset
+            raise Exception("Could not save MOCK dataset.")
 
     (response,clusterStatus) = service.putStatus({'host': platform.node(), 'status':'RUNNING'})
     if response!= 200:
