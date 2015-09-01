@@ -15,14 +15,15 @@ MOCK_DATA_PATH = {
 LOOPBACK_SERVICE = "http://localhost:5500"
 WAIT_TIME = 5   #polling interval (Seconds)
 SPARK_SUBMIT_PATH = "spark-submit"
-PROJECT_ROOT_PATH = "../"   # replace with full file system path to this project
+PROJECT_ROOT_PATH = ""   # replace with full file system path to this project
 
 
 #automatically include all project python files when running spark submit
 PY_FILES = []
-PY_FILES.extend(filter(lambda x: x[-3:] == '.py', os.listdir(PROJECT_ROOT_PATH)))
-PY_FILES.extend(map(lambda x: 'GeqeUtil/'+x,filter(lambda x: x[-3:] == '.py', os.listdir(PROJECT_ROOT_PATH+"GeqeUtil"))))
-PY_FILES.extend(map( lambda x: 'lib/'+x,filter(lambda x: x[-3:] == '.py', os.listdir(PROJECT_ROOT_PATH+"lib"))))
+def getFiles(subdir):
+  return map(lambda x: subdir+'/'+x,filter(lambda x: x[-3:] == '.py', os.listdir(PROJECT_ROOT_PATH+'/'+subdir)))
+for subdir in ['geqe-comm','geqe-ml','geqe-ml/lib']:
+  PY_FILES.extend(getFiles(subdir))
 
 
 SPARK_OPTIONS = [

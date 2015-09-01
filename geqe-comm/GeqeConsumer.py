@@ -6,11 +6,14 @@ import geqeconf as conf
 import json
 import platform
 
-print 'project root: ',conf.PROJECT_ROOT_PATH
+print '\nproject root: ',conf.PROJECT_ROOT_PATH
 print 'looback url: ',conf.LOOPBACK_SERVICE
 print 'spark-submit: ',conf.SPARK_SUBMIT_PATH
 print '--py-files: ',conf.PY_FILES
+if conf.PROJECT_ROOT_PATH is None or conf.PROJECT_ROOT_PATH == '' or conf.PROJECT_ROOT_PATH[0] == '.':
+    raise ValueError("You mest set PROJECT_ROOT_PATH in geqeconf.py to the full system path of the root project.")
 os.chdir(conf.PROJECT_ROOT_PATH)
+print '\n'
 
 """
 
@@ -102,7 +105,7 @@ class JobRunner(Thread):
         stderrFile = open('stderr.log','w')
         command = [conf.SPARK_SUBMIT_PATH]
         command.extend(conf.SPARK_OPTIONS)
-        command.append('GeqeUtil/GeqeRunner.py')
+        command.append('geqe-comm/GeqeRunner.py')
         if conf.ES_HOST is not None:
             command.extend(["--elasticsearchHost",conf.ES_HOST,"--elasticsearchPort",conf.ES_PORT])
         command.extend([self.service.serviceURL,job['id']])
@@ -210,11 +213,3 @@ if __name__ == '__main__':
         sys.exit()
     finally:
         service.deleteStatus(clusterStatus)
-
-
-
-
-
-
-
-
