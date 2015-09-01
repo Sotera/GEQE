@@ -1,9 +1,10 @@
-backend-tangelo-server/conf.json
-nodegeqe/LoopBackServer/node_modules
-nodegeqe/WebServer/node_modules
-nodegeqe/WebServer/public/javascripts/vendor
+
+LoopBackServer/node_modules
+WebServer/node_modules
+WebServer/public/javascripts/vendor
 node_modules
 *.pyc
 *.log
 *.idea
+*.iml
 .DS_Store
