@@ -13,8 +13,10 @@ The GEQE tool (pronounced "Jeh Key") is aimed at leveraging geo-located temporal
 
 ## Getting Started
 
-1. First go to the geqe-ml directory and see the README and docs.  You'll need to setup some data and an Apache Spark Cluster.  For front end development only you can setup a MOCK service in place of an actual geqe-ml backend, see geqe-ml/GeqeUtil/GeqeConsumer.py
+1. First go to the geqe-ml directory and see the README and docs.  You'll need to setup some data and an Apache Spark Cluster.  For front end development only you can setup a MOCK service in place of an actual geqe-ml backend, see geqe-comm/MockGeqeConsumer.py
 
 2.  Install and setup the LoopBackServer (see LoopBackServer/README.md)
 
 3.  Install and setup the WebServer (see WebServer/README.md)
+
+4.  Run a GeqeConsumer (see geqe-comm) to execute geqe jobs on your spark cluster.
