@@ -3,8 +3,9 @@ var router = express.Router();
 
 var netHelpers = just_include('netHelpers');
 
-var ES_HOST = '172.21.10.140';//'scc.silverdale.dev';
-var ES_PORT = 9200;
+var config = require("../../config.json")
+var ES_HOST = config.es_host
+var ES_PORT = config.es_port
 
 
 
