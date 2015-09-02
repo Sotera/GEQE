@@ -32,7 +32,7 @@ def run(jobNm,sc,sqlContext,inputFile,lPolygon,dictFile,
         strStop=''):
 
     if bWriteMonitor:
-        import monitoring
+        import plotting
 
     bc_lTargetPolygons = sc.broadcast(lPolygon)
     stopSet = set(strStop.split(',')) if strStop !='' else set()
@@ -58,7 +58,7 @@ def run(jobNm,sc,sqlContext,inputFile,lPolygon,dictFile,
     if bWriteMonitor:
         mPY[mInd] = diff
         mInd = mInd+1
-        monitoring.updatePlot(mPX, mPY, mSL, jobNm)
+        plotting.updateMonitorPlot(mPX, mPY, mSL, jobNm)
 
     #Find the word document frequency for the corpus
     #this is used for an idf score used in feature vector formation
@@ -85,7 +85,7 @@ def run(jobNm,sc,sqlContext,inputFile,lPolygon,dictFile,
     if bWriteMonitor:
         mPY[mInd] = diff
         mInd = mInd+1
-        monitoring.updatePlot(mPX, mPY, mSL, jobNm)
+        plotting.updateMonitorPlot(mPX, mPY, mSL, jobNm)
 
     # Split data into training and apply samples
     # training data is 2 parts, inside r.o.i., and a sample of the areas outside the r.o.i.
@@ -105,7 +105,7 @@ def run(jobNm,sc,sqlContext,inputFile,lPolygon,dictFile,
     if bWriteMonitor:
         mPY[mInd] = diff
         mInd = mInd+1
-        monitoring.updatePlot(mPX, mPY, mSL, jobNm)
+        plotting.updateMonitorPlot(mPX, mPY, mSL, jobNm)
 
     # Create training vectors from in region data, and sample of out region data
     t1 = time.time()
@@ -130,7 +130,7 @@ def run(jobNm,sc,sqlContext,inputFile,lPolygon,dictFile,
     if bWriteMonitor:
         mPY[mInd] = diff
         mInd = mInd+1
-        monitoring.updatePlot(mPX, mPY, mSL, jobNm)
+        plotting.updateMonitorPlot(mPX, mPY, mSL, jobNm)
 
     # train model
     t1 = time.time()
@@ -144,7 +144,7 @@ def run(jobNm,sc,sqlContext,inputFile,lPolygon,dictFile,
     if bWriteMonitor:
         mPY[mInd] = diff
         mInd = mInd+1
-        monitoring.updatePlot(mPX, mPY, mSL, jobNm)
+        plotting.updateMonitorPlot(mPX, mPY, mSL, jobNm)
 
     # apply model
     t1 = time.time()
@@ -158,7 +158,7 @@ def run(jobNm,sc,sqlContext,inputFile,lPolygon,dictFile,
     if bWriteMonitor:
         mPY[mInd] = diff
         mInd = mInd+1
-        monitoring.updatePlot(mPX, mPY, mSL, jobNm)
+        plotting.updateMonitorPlot(mPX, mPY, mSL, jobNm)
 
     #Get the results
     t1 = time.time()
@@ -168,7 +168,7 @@ def run(jobNm,sc,sqlContext,inputFile,lPolygon,dictFile,
     print "Time to create json objects for output: ", diff
     if bWriteMonitor:
         mPY[mInd] = diff
-        monitoring.updatePlot(mPX, mPY, mSL, jobNm)
+        plotting.updateMonitorPlot(mPX, mPY, mSL, jobNm)
 
     diff = time.time() - t0
     print "<----------BOOM GOES THE DYNOMITE!---------->"

@@ -29,7 +29,7 @@ def run(jobNm, sc, sqlContext, inputFile, dictFile,
 
     # import monitoring if needed
     if bWriteMonitor:
-        import  monitoring
+        import  plotting
 
     #Create monitoring plot and associated vectors
     mPX = range(8)
@@ -61,7 +61,7 @@ def run(jobNm, sc, sqlContext, inputFile, dictFile,
     if bWriteMonitor:
         mPY[mInd] = diff
         mInd = mInd+1
-        monitoring.updatePlot(mPX, mPY, mSL, jobNm)
+        plotting.updateMonitorPlot(mPX, mPY, mSL, jobNm)
 
     #Read in data and filter out entries with no valid words
     t1 = time.time()
@@ -76,7 +76,7 @@ def run(jobNm, sc, sqlContext, inputFile, dictFile,
     if bWriteMonitor:
         mPY[mInd] = diff
         mInd = mInd+1
-        monitoring.updatePlot(mPX, mPY, mSL, jobNm)
+        plotting.updateMonitorPlot(mPX, mPY, mSL, jobNm)
 
     #Format data for ML input
     t1 = time.time()
@@ -93,7 +93,7 @@ def run(jobNm, sc, sqlContext, inputFile, dictFile,
     if bWriteMonitor:
         mPY[mInd] = diff
         mInd = mInd+1
-        monitoring.updatePlot(mPX, mPY, mSL, jobNm)
+        plotting.updateMonitorPlot(mPX, mPY, mSL, jobNm)
 
     # Read in Model
     t1 = time.time()
@@ -104,7 +104,7 @@ def run(jobNm, sc, sqlContext, inputFile, dictFile,
     if bWriteMonitor:
         mPY[mInd] = diff
         mInd = mInd+1
-        monitoring.updatePlot(mPX, mPY, mSL, jobNm)
+        plotting.updateMonitorPlot(mPX, mPY, mSL, jobNm)
 
     # apply model
     t1 = time.time()
@@ -118,7 +118,7 @@ def run(jobNm, sc, sqlContext, inputFile, dictFile,
     if bWriteMonitor:
         mPY[mInd] = diff
         mInd = mInd+1
-        monitoring.updatePlot(mPX, mPY, mSL, jobNm)
+        plotting.updateMonitorPlot(mPX, mPY, mSL, jobNm)
 
     #Get the results
     t1 = time.time()
@@ -129,7 +129,7 @@ def run(jobNm, sc, sqlContext, inputFile, dictFile,
     if bWriteMonitor:
         mPY[mInd] = diff
         mInd = mInd+1
-        monitoring.updatePlot(mPX, mPY, mSL, jobNm)
+        plotting.updateMonitorPlot(mPX, mPY, mSL, jobNm)
 
     diff = time.time() - t0
     print "<----------BOOM GOES THE DYNOMITE!---------->"

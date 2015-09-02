@@ -17,11 +17,8 @@ import sys
 import argparse
 import codecs
 sys.path.insert(0, './lib/')
-import clustering
 import aggregatedComparison
-import shapeReader
 import fspLib
-import monitoring
 import time
 
 if __name__ == "__main__":

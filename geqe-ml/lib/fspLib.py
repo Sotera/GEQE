@@ -134,7 +134,7 @@ def wordBreak(caption, bUseStopFilter, bc_lStopWords):
 def scorableWord(word, bUseStopFilter, stopwords):
     if word == "":
         return False
-    if (word.find("http")!=-1) or (word.find(".com")!=-1):
+    if (word.find("http")!=-1) or (word.find(".com")!=-1) or (word.find("www.")!=-1):
         return False
     if bUseStopFilter and (word in stopwords):
         return False
