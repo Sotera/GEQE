@@ -20,7 +20,7 @@ import json
 from datetime import date,datetime
 
 
-def readInShaeDocument(data):
+def readInShapeDocument(data):
     lST = []
     siteList = data['sites']
     for site in siteList:
@@ -35,10 +35,39 @@ def readInShaeDocument(data):
         lST.append(pointClass.spaceTimePlane(pList,dList,site['name']))
     return lST
 
-
 def readInShapeJson(fileName):
     data = json.loads(open(fileName).read())
-    return readInShaeDocument(data)
+    return readInShapeDocument(data)
+
+def createTestSiteList(fileName):
+    data = json.loads(open(fileName)).read()
+    return testListFromData(data)
+
+def testListFromData(data):
+    #return value is list of lists;
+    # 0 - polygons labeldd 'train'
+    # 1 - polygons labeled 'pos'
+    # 2 - polygons labeled 'neg'
+    lTrain, lPos, lNeg = [], [], []
+    for site in data['sites']:
+        pList = []
+        dList = []
+        for i2 in range(len(site['lats'])):
+            pList.append(pointClass.Point(site['lons'][i2],site['lats'][i2]))
+        for datePairs in site['dates']:
+            mindate = datetime.strptime(datePairs['min'].split('T')[0],'%Y-%m-%d').date()
+            maxdate = datetime.strptime(datePairs['max'].split('T')[0],'%Y-%m-%d').date()
+            dList.append((mindate,maxdate))
+        name = site["name"]
+        if name == "train":
+            lTrain.append(pointClass.spaceTimePlane(pList, dList, name))
+        elif name == "pos":
+            lPos.append(pointClass.spaceTimePlane(pList, dList, name))
+        elif name == "neg":
+            lNeg.append(pointClass.spaceTimePlane(pList, dList, name))
+        else:
+            print "Polygon name does not follow correct scheme, (train, pos, neg)"
+    return (lTrain, lPos, lNeg)
 
 
 def readInShapeFile(fileName):
