@@ -1,6 +1,6 @@
 {
   "name": "LoopBackServer",
-  "version": "0.1.0",
+  "version": "0.1.1-dev",
   "main": "server/server.js",
   "scripts": {
     "pretest": "jshint ."

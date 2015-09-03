@@ -1,4 +1,4 @@
-# GEQE - Geo Event Query by Example  VERSION 0.1.0 - public beta
+# GEQE - Geo Event Query by Example  VERSION 0.1.1-dev - public beta
 
 The GEQE tool (pronounced "Jeh Key") is aimed at leveraging geo-located temporal text data in order to identify locations or events of similar nature.   This repository is organized as follows
 

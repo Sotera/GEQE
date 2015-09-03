@@ -1,4 +1,4 @@
-## GEQE WebServer VERSION 0.1.0 - public beta
+## GEQE WebServer VERSION 0.1.1-dev - public beta
 
 # NodeWebBase
 NodeJS, StrongLoop, Bowerized Angular/Jade

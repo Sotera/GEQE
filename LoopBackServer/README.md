@@ -1,4 +1,4 @@
-## Geqe Loop back server  VERSION 0.1.0 - public beta
+## Geqe Loop back server  VERSION 0.1.1-dev - public beta
 
 # NodeWebBase
 NodeJS, StrongLoop, Bowerized Angular/Jade

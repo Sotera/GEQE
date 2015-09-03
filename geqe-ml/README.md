@@ -1,4 +1,4 @@
-# geqe-ml  VERSION 0.1.0 - public beta
+# geqe-ml  VERSION 0.1.1-dev - public beta
 
 Analyze geo-located temporal text data to identify locations of a similar nature
 

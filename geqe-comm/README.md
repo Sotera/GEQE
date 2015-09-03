@@ -1,4 +1,4 @@
-## Geqe Web Communication Layer / Utility  VERSION 0.1.0 - public beta
+## Geqe Web Communication Layer / Utility  VERSION 0.1.1-dev - public beta
 
 geqe-comm is a a set of utilities used to connect the Geo Event Query By Example (GEQE) web application to a Spark machine learning backend.
 
