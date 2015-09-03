@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var config = require("../../config.json")
 
 var checkTwitter = function(req,res,username){
 
@@ -27,13 +28,15 @@ var checkTwitter = function(req,res,username){
 };
 
 var getTwitterUserData = function(req,res,username){
+    if (!config.twitter) return;
+
     var Twitter = require("twitter");
 
     var client = new Twitter({
-        consumer_key: 'hl0yqdyod64vsZ6nGolhR4IW2',
-        consumer_secret: 'Ii1DIbQWE75M2pF7Ch4oIpDS63MXzT0kgKtqOGbzVIK0LbLKUz',
-        access_token_key: '3179892536-EAj5iPHmfFiaQhNxarMz82wn8z8q5hrUddGFrYl',
-        access_token_secret: 'KOWtnyb5FH4ApjbySOwR8uY2QLeSUEwDuv3kBJgxLdZr6'
+        consumer_key: config.twitter.consumer_key,
+        consumer_secret: config.twitter.consumer_secret,
+        access_token_key: config.twitter.access_token_key,
+        access_token_secret: config.twitter.access_token_secret
     });
 
     var params = {screen_name: username};
