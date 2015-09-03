@@ -22,7 +22,7 @@ import fspLib
 import plotting
 import time
 
-def locationTest(sc, sqlContext, records, lPolygon):
+def locationTest(sc, sqlContext, lPolygon, lStop):
     #Partition data into 4 parts: train (positive examples), train (negative examples), test (pos), test (neg)
     t1 = time.time()
     lAllPoly = lPolygon[0]
@@ -33,10 +33,52 @@ def locationTest(sc, sqlContext, records, lPolygon):
     bc_PosTestPoly  = sc.broadcast(lPolygon[1])
     bc_NegTestPoly  = sc.broadcast(lPolygon[2])
     sqlContext.registerFunction("posTrain", lambda lat, lon: fspLib.inROI(lat, lon, bc_PosTrainPoly), returnType=BooleanType())
-    sqlContext.registerFunction("negTrain", lambda lat, lon: fspLib.)
+    sqlContext.registerFunction("negTrain", lambda lat, lon: fspLib.inROI(lat, lon, bc_AllPoly), returnType=BooleanType())
+    sqlContext.registerFunction("posTest",  lambda lat, lon: fspLib.inROI(lat, lon, bc_PosTestPoly), returnType=BooleanType())
+    sqlContext.registerFunction("negTest",  lambda lat, lon: fspLib.inROI(lat, lon, bc_NegTestPoly), returnType=BooleanType())
+    df1  = sqlContext.sql("SELECT * FROM records WHERE posTrain(records.lat, records.lon)").cache()
+    dfn1 = sqlContext.sql("SELECT * FROM records WHERE NOT negTrain(records.lat, records.lon)").cache()
+    dap  = sqlContext.sql("SELECT * FROM records WHERE posTest(records.lat, records.lon").cache()
+    dan  = sqlContext.sql("SELECT * FROM records WHERE negTest(records.lat, records.lon").cache()
+    nInTrain = df1.count()
+    nOutTrain = dfn1.count()
+    nInApply = dap.count()
+    nOutApply = dan.count()
+    diff = time.time() - t1
+    print "GEQE: Time to partition data by region", diff
+    print "GEQE: Positive training points:", nInTrain, ".  Negative training points:", nOutTrain
+    print "GEQE: Positive test points:", nInApply, ".  Negative test points:", nOutApply
 
+    #Map data for training
+    t1 = time.time()
+    trainIn  = df1.map(lambda x: (x.key, [LabeledPoint(1.0, x.vector), x.lat, x.lon, x.size, x.binSize])).cache()
+    trainOut = dfn1.map(lambda x: (x.key, [LabeledPoint(-1.0, x.vector), x.lat, x.lon, x.size, x.binSize])).cache()
+    scaleFactor = (10.*nInTrain)/float(nOutTrain)
+    mlTrain = trainIn.union(trainOut.sample(False, scaleFactor))
+    if len(lStop) != 0:
+        mlTrain = mlTrain.map(lambda x: aggregatedComparison.removeStopWords(x, lStop))
+    mlTrain.cache()
+    applyPos = dap.map(lambda x: LabeledPoint(1.0, x.vector)).cache()
+    applyNeg = dan.map(lambda x: LabeledPoint(-1.0, x.vector)).cache()
+    mlApply = applyPos.union(applyNeg)
+    diff = time.time() - t1
+    print "GEQE: Time to prepare training data", diff
 
-def generateCurve(jobNm, sc, sqlContext, inputFile, lPolygon, dictFile,
+    #train model
+    t1 = time.time()
+    model_Tree = RandomForest.trainRegressor(mlTrain.map(lambda x: x[1][0]), categoricalFeaturesInfo={}, numTrees=2000, featureSubsetStrategy="auto", impurity="variance", maxDepth=4, maxBins=32)
+    diff = time.time() - t1
+    print "GEQE: Time to train model", diff
+
+    #apply model
+    t1 = time.time()
+    predictions_Tree = model_Tree.predict(mlApply.map(lambda x: x.features))
+    tAndP = mlApply.map(lambda x: x.label).zip(predictions_Tree)
+    diff = time.time() - t1
+    print "GEQE: Time to apply model", diff
+    return (tAndP.collect(), nInApply, nOutApply)
+
+def run(jobNm, sc, sqlContext, inputFile, lPolygon, dictFile,
         inputPartitions=-1,
         writeFileOutput=True,
         bByDate=False,
@@ -71,19 +113,22 @@ def generateCurve(jobNm, sc, sqlContext, inputFile, lPolygon, dictFile,
     diff = time.time() - t1
     print "GEQE: Time to read in dict:", diff
 
-    scoresSet = None
+    tAndP, nInApply, nOutApply = None, 0, 0
     if bByDate == True:
         print "GEQE: Generating event model"
 
     else:
         print "GEQE: Generating location model"
-        locationTest(sc, sqlContext, records, lPolygon)
+        tAndP = locationTest(sc, sqlContext, records, lPolygon, lStop)
 
-
-
+    t1 = time.time()
+    print "GEQE: Generating ROC from Truth and predictions"
+    plotting.generateROCCurve(tAndP)
+    diff = time.time() - t1
+    print "GEQE: Time to make ROC:", diff
 
 if __name__ == "__main__":
-        parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser()
     parser.add_argument("inputFile", help="Directory or file name (e.g. 'hdfs://domain.here.dev:/pathToData/")
     parser.add_argument("polygonShapeFile", help="csv file specifying the bounding box for areas of interest")
     parser.add_argument("jobNm", help="Application name, default = 'Find Similar Events'",default='findEvents')
@@ -103,7 +148,7 @@ if __name__ == "__main__":
     sc = SparkContext(conf=conf)
     sqlContext = SQLContext(sc)
 
-    generateCurve(jobNm, sc, sqlContext, args.inputFile, lPolygon, args.dictFile,
+    run(jobNm, sc, sqlContext, args.inputFile, lPolygon, args.dictFile,
                     nDataType = args.datTyp,
                     inputPartitions = args.partitions,
                     bByDate = args.bByDate,
