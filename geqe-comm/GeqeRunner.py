@@ -3,6 +3,7 @@ from pyspark.sql import SQLContext
 import sys
 sys.path.append('.')
 sys.path.append('lib')
+sys.path.append('geqe-ml/lib')
 import argparse
 import GeqeAPI
 import shapeReader
