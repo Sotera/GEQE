@@ -25,5 +25,5 @@ $> cd GEQE
 $> cd nodegeqe/LoopBackServer  
 $> sudo npm install -g loopback  
 $> npm install  
-$> slc start
+$> slc run
 ```  
