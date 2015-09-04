@@ -18,7 +18,6 @@ angular.module('NodeWebBase')
                 $scope.dataSetSelected = val;
         });
 
-
         $scope.run = {
             sTopN: "300",
             sFileName: "",
@@ -33,6 +32,11 @@ angular.module('NodeWebBase')
             fileName: ""
         };
 
+        $scope.$watch("againstASavedModel", function(bool){
+            if(bool){
+                $scope.populateModelSelect();
+            }
+        });
 
         /**
          * Save the site list (polygon)
@@ -174,7 +178,6 @@ angular.module('NodeWebBase')
         //INIT
         var watchRemoval = $scope.$watch($rootScope.isAppConfigured, function (newVal, oldVal) {
             if (newVal) {  // Don't do anything if Undefined.
-                $scope.populateModelSelect();
                 watchRemoval();
             }
         })
