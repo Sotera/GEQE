@@ -1,3 +1,5 @@
+## Geqe Loop back server  VERSION 0.1.1-dev - public beta
+
 # NodeWebBase
 NodeJS, StrongLoop, Bowerized Angular/Jade
 
@@ -23,5 +25,5 @@ $> cd GEQE
 $> cd nodegeqe/LoopBackServer  
 $> sudo npm install -g loopback  
 $> npm install  
-$> slc start
+$> slc run
 ```  

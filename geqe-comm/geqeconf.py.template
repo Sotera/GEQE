@@ -5,6 +5,8 @@ All settings required to operate the GeqeConsumer and GeqeRunner
 to execute jobs on behalf of the geqe-webserver
 """
 
+GEQE_VERSION= "0.1.0"
+
 # Used by MockGeqeConsumer.py to server canned results for UI testing / development
 MOCK_DATA_PATH = {
     "location": "geqe-comm/MOCK_JOB_DATA/locationResult.json",

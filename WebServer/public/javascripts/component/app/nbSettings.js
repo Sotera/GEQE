@@ -18,6 +18,7 @@ angular.module('nbSettings', ['ngCookies','ngDialog'])
                             $scope.data = res;
                             $scope.themes = $rootScope.themes;
                             $scope.currentTheme = !$scope.data.themeName?$scope.themes[0].name:$scope.data.themeName;
+                            $scope.version = $scope.data.version;
 
                             $scope.cancel = function(){
                                 $scope.closeThisDialog(null);

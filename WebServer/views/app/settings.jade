@@ -1,5 +1,10 @@
 .modal-header
     h3 Settings
+        span.pull-right
+            strong
+                small
+                    | Version
+                    | {{data.version}}
 .modal-body
     div.container-fluid
         form(novalidate)#signup-form.well.span4
@@ -66,6 +71,7 @@
                         .controls
                             div.form-group.form-group-sm
                                 input#servicePortTextBox.form-control(type='text', ng-model='data.userLoggingUrl')
+
 div.modal-footer
     button.btn.btn-primary(ng-click="save()")
         | Save

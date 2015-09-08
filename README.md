@@ -1,6 +1,6 @@
-# GEQE - Geo Event Query by Example
+# GEQE - Geo Event Query by Example  VERSION 0.1.1-dev - public beta
 
-The GEQE tool (pronounced "Jeh Key") is aimed at leveraging geo-located temporal text data in order to identify locations or events of similar nature.   This repository is organized as follows
+The GEQE tool (pronounced "Jeh Key") is aimed at leveraging geo-located temporal text data in order to identify locations or events of similar nature.   For more detailed information about our machine learning methods [read the white paper](https://github.com/Sotera/GEQE/blob/master/geqe-ml/docs/geqe-white-paper.pdf). This repository is organized as follows
 
 1.  geqe-ml:  Apache Spark machine learning scripts.  Can be used as a standalone project via command line interface with an Apache Spark Cluster, or as the back end to the geqe web application.
 

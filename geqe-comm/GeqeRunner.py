@@ -3,6 +3,7 @@ from pyspark.sql import SQLContext
 import sys
 sys.path.append('.')
 sys.path.append('lib')
+sys.path.append('geqe-ml/lib')
 import argparse
 import GeqeAPI
 import shapeReader
@@ -57,7 +58,7 @@ def executeJob(dataConnector,elaticsearchConnetor,job,dataset,sitelist):
     sqlContext = SQLContext(sc)
 
     #Create polygon list and broadcast variable based on it
-    lPolygon = shapeReader.readInShaeDocument(sitelist) if sitelist is not None else None
+    lPolygon = shapeReader.readInShapeDocument(sitelist) if sitelist is not None else None
 
     queryType = job['queryType']
 
