@@ -58,7 +58,7 @@ def executeJob(dataConnector,elaticsearchConnetor,job,dataset,sitelist):
     sqlContext = SQLContext(sc)
 
     #Create polygon list and broadcast variable based on it
-    lPolygon = shapeReader.readInShaeDocument(sitelist) if sitelist is not None else None
+    lPolygon = shapeReader.readInShapeDocument(sitelist) if sitelist is not None else None
 
     queryType = job['queryType']
 
