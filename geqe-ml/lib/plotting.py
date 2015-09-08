@@ -18,6 +18,8 @@ def generateROCCurve(tAndP, nPos, nNeg, jobNm):
     print "Positive Points:", nPos, "\tNegative Points:", nNeg
     tpr = []
     fpr = []
+    f_out = open('scoreFiles/'+jobNm, 'w')
+    f_out.write("nPos: " + str(nPos) + ", nNeg: " + str(nNeg) + "\n")
     for thresh in map(lambda x: (10.-1.*x)/10.,range(21)):
         # tp -> condition positive, predicted positive
         # fp -> condition negative, predicted positive
@@ -36,12 +38,13 @@ def generateROCCurve(tAndP, nPos, nNeg, jobNm):
                 false_positive = false_positive + 1
             elif point[0] == -1. and point[1] < thresh:
                 true_negative = true_negative + 1
-        print "\tThreshold: ",thresh
-        print "\t\tTP:", true_positive, "FP", false_positive, "FN", false_negative, "TN", true_negative
+        f_out.write("\tThreshold: " + str(thresh) + "\n")
+        f_out.write("\t\tTP: " + str(true_positive) + ", FP: " + str(false_positive) + ", FN: " + str(false_negative) + ", TN: " + str(true_negative) + "\n")
         tpr.append((1.*true_positive)/(1.*nPos))
         fpr.append((1.*false_positive)/(1.*nNeg))
 
     plt.xlabel("False Positive Rate (1-Specificity)")
     plt.ylabel("True Positive Rate (Sensitivity)")
     plt.plot(fpr, tpr, label="ROC for job:"+jobNm)
+    plt.plot([0,1],[0,1], 'r--')
     plt.savefig("monitorFiles/"+jobNm+".png")

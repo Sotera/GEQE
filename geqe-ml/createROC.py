@@ -27,7 +27,7 @@ def locationTest(sc, sqlContext, lPolygon, lStop):
     t1 = time.time()
     lAllPoly = lPolygon[0]
     lAllPoly.extend(lPolygon[1])
-    lAllPoly.extend(lAllPoly[2])
+    lAllPoly.extend(lPolygon[2])
     bc_AllPoly = sc.broadcast(lAllPoly)
     bc_PosTrainPoly = sc.broadcast(lPolygon[0])
     bc_PosTestPoly  = sc.broadcast(lPolygon[1])
@@ -38,8 +38,8 @@ def locationTest(sc, sqlContext, lPolygon, lStop):
     sqlContext.registerFunction("negTest",  lambda lat, lon: fspLib.inROI(lat, lon, bc_NegTestPoly), returnType=BooleanType())
     df1  = sqlContext.sql("SELECT * FROM records WHERE posTrain(records.lat, records.lon)").cache()
     dfn1 = sqlContext.sql("SELECT * FROM records WHERE NOT negTrain(records.lat, records.lon)").cache()
-    dap  = sqlContext.sql("SELECT * FROM records WHERE posTest(records.lat, records.lon").cache()
-    dan  = sqlContext.sql("SELECT * FROM records WHERE negTest(records.lat, records.lon").cache()
+    dap  = sqlContext.sql("SELECT * FROM records WHERE posTest(records.lat, records.lon)").cache()
+    dan  = sqlContext.sql("SELECT * FROM records WHERE negTest(records.lat, records.lon)").cache()
     nInTrain = df1.count()
     nOutTrain = dfn1.count()
     nInApply = dap.count()
@@ -119,11 +119,11 @@ def run(jobNm, sc, sqlContext, inputFile, lPolygon, dictFile,
 
     else:
         print "GEQE: Generating location model"
-        tAndP = locationTest(sc, sqlContext, records, lPolygon, lStop)
+        (tAndP, nInApply, nOutApply) = locationTest(sc, sqlContext, lPolygon, lStop)
 
     t1 = time.time()
     print "GEQE: Generating ROC from Truth and predictions"
-    plotting.generateROCCurve(tAndP)
+    plotting.generateROCCurve(tAndP, nInApply, nOutApply, jobNm)
     diff = time.time() - t1
     print "GEQE: Time to make ROC:", diff
 
@@ -133,7 +133,6 @@ if __name__ == "__main__":
     parser.add_argument("polygonShapeFile", help="csv file specifying the bounding box for areas of interest")
     parser.add_argument("jobNm", help="Application name, default = 'Find Similar Events'",default='findEvents')
     parser.add_argument("-dictFile", help="Dictionary file to read in", default="dictFiles/dict_combinedIDF")
-    parser.add_argument("-datTyp", type=int, help="Data type, 0-parquent, 1=instagram, 2=twitter.  Default = 0",default=0)
     parser.add_argument("-partitions", help="repartition the input data set before processing.",type=int,default=-1)
     parser.add_argument("-bByDate", help="Bool to switch on date partitioning", default=False)
     parser.add_argument("-strStop", help="Comma delimited list of stop words to be removed from training", default="")
@@ -142,14 +141,13 @@ if __name__ == "__main__":
     jobNm = args.jobNm
 
     #create a tuple of polygon lists
-    lPolygon = shapeReader.createTestSiteLists(args.polygonShapeFile)
+    lPolygon = shapeReader.createTestSiteList(args.polygonShapeFile)
 
     conf = SparkConf().setAppName(jobNm)
     sc = SparkContext(conf=conf)
     sqlContext = SQLContext(sc)
 
     run(jobNm, sc, sqlContext, args.inputFile, lPolygon, args.dictFile,
-                    nDataType = args.datTyp,
                     inputPartitions = args.partitions,
                     bByDate = args.bByDate,
                     strStop = args.strStop
