@@ -124,7 +124,11 @@ def wordBreak(caption, bUseStopFilter, bc_lStopWords):
     caption = re.sub('[^\w\s]','',caption)
     allWords = caption.strip().split(' ')
     filteredList = []
-    stopwords = bc_lStopWords.value
+    stopwords = None
+    if type(bc_lStopWords) == type(True):
+        stopwords = bc_lStopWords
+    else:
+        stopwords = bc_lStopWords.value
     stemmer = StemmerI()
     for word in allWords:
         if scorableWord(word, bUseStopFilter, stopwords):
@@ -134,7 +138,7 @@ def wordBreak(caption, bUseStopFilter, bc_lStopWords):
 def scorableWord(word, bUseStopFilter, stopwords):
     if word == "":
         return False
-    if (word.find("http")!=-1) or (word.find(".com")!=-1) or (word.find("www.")!=-1):
+    if (word.find("http")!=-1) or (word.find("www")!=-1):
         return False
     if bUseStopFilter and (word in stopwords):
         return False
@@ -184,17 +188,12 @@ def inUOI(username, bc_lTrainUsr):
     return username in bc_lTrainUsr.value
 
 def placeToLP(record, bInRegion, bc_dArrPos):
-    lat = record.lat
-    lon = record.lon
-    recordPoint = pointClass.Point(lon,lat)
     caption = record.text
-    s1 = caption.split(' ')
     sTPos = set()
     dArrPos = bc_dArrPos.value
-    for term in s1:
-        mod = scrubWord(term)
-        if mod in dArrPos:
-            sTPos.add(dArrPos[mod])
+    for term in uniqueWords(caption, False, []):
+        if term in dArrPos:
+            sTPos.add(dArrPos[term])
     featureVector = SparseVector(len(dArrPos), sorted(list(sTPos)), [1.]*len(sTPos))
     return (LabeledPoint(bInRegion, featureVector),record)
 
