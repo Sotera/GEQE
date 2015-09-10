@@ -1,5 +1,5 @@
 from operator import add
-from nltk.stem.api import StemmerI
+from nltk.stem.lancaster import LancasterStemmer
 from datetime import date, timedelta, datetime
 from math import sqrt, log10
 from pyspark.mllib.linalg import SparseVector
@@ -120,16 +120,12 @@ def uniqueWords(caption, bUseStopFilter, bc_lStopWords):
     return set(wordBreak(caption, bUseStopFilter, bc_lStopWords))
 
 def wordBreak(caption, bUseStopFilter, bc_lStopWords):
-    caption = re.sub('[\s#]',' ',caption.lower(),flags=re.UNICODE)
-    caption = re.sub('[^\w\s]','',caption)
+    caption = re.sub('[\s#]',' ',caption.lower(),flags=re.UNICODE)  # replace all white space charactes (tabs newlines,etc) and the hashtag with a space
+    caption = re.sub('[^\w\s@]','',caption,flags=re.UNICODE) #remove non aplhpa numeric except for '@' (so we can filter out emails and usernames)
     allWords = caption.strip().split(' ')
     filteredList = []
-    stopwords = None
-    if type(bc_lStopWords) == type(True):
-        stopwords = bc_lStopWords
-    else:
-        stopwords = bc_lStopWords.value
-    stemmer = StemmerI()
+    stopwords = bc_lStopWords.value
+    stemmer = LancasterStemmer()
     for word in allWords:
         if scorableWord(word, bUseStopFilter, stopwords):
             filteredList.append(stemmer.stem(word))
@@ -138,28 +134,28 @@ def wordBreak(caption, bUseStopFilter, bc_lStopWords):
 def scorableWord(word, bUseStopFilter, stopwords):
     if word == "":
         return False
-    if (word.find("http")!=-1) or (word.find("www")!=-1):
+    if '@' in word: return False
+    if word[:4] == 'href' or word[:4] == 'http' or word[:3] == 'www':
         return False
     if bUseStopFilter and (word in stopwords):
         return False
+    if word.isdigit(): return False
+    if len(word) < 2: return False
     return True
 
 def badData(record, bUseStopFilter, bc_lStopWords):
-    stopwords = bc_lStopWords.value
     try:
         lat = float(record.lat)
         lon = float(record.lon)
         if (lat>90.34) or (lat<-90.27) or (lon>180.62) or (lon<-180.32):
             return False
-        terms = record.text.replace("="," ").split(' ')
-        for word in terms:
-            if scorableWord(word,bUseStopFilter, stopwords):
-                return True
+        terms = wordBreak(record.text,bUseStopFilter,bc_lStopWords)
+        return len(terms) > 0
     except:
         #if type(record['longitude'])==type("") and type(record['latitude'])==type(""):
         #    print "JOELOG removeLat: " + record['latitude'] + ", lon: " + record['longitude'] + "\n"
         return False
-    return False
+
 
 def inROI(lat, lon, bc_lTargetPolygons):
     recordPoint = pointClass.Point(lon,lat)

@@ -11,18 +11,57 @@ from pyspark.sql import SQLContext
 from pyspark.sql.types import BooleanType
 from pyspark.mllib.regression import LabeledPoint
 from pyspark.mllib.tree import RandomForest
+from pyspark.mllib.classification import SVMWithSGD, SVMModel
 import sys
 import argparse
 import json
 import codecs
 sys.path.insert(0, './lib/')
+sys.path.insert(0, 'geqe-ml/lib/')
 import aggregatedComparison
 import shapeReader
 import fspLib
 import plotting
 import time
 
-def locationTest(sc, sqlContext, lPolygon, lStop):
+
+def trainRandomForestModel(data):
+    """
+    Train a random forest regression model and return it
+    :param data: RDD[LabeledPoint]
+    :return: random forest regression model
+    """
+    model = RandomForest.trainRegressor(data, categoricalFeaturesInfo={}, numTrees=2000, featureSubsetStrategy="auto", impurity="variance", maxDepth=4, maxBins=32)
+    return model
+
+
+def trainSVMModel(data):
+    """
+    Train an SVM model and return it
+    :param data: RDD[LabeledPoint]
+    :return: svm classification model
+    """
+    # SVM model does not allow negative labels, so move -1 to 0
+    def reLabel(vec):
+        if vec.label == -1:
+            vec.label = 0.0
+        return vec
+    model = SVMWithSGD.train(data.map(reLabel), iterations=100)
+    return model
+
+
+def getTrainModelFunc(modelName):
+    training_functions = {
+        'random forest' : trainRandomForestModel,
+        'svm' : trainSVMModel
+    }
+    if modelName not in training_functions:
+        raise ValueError("Invalid modelName: "+modelName+" supported options are: "+str(training_functions.keys()))
+    return training_functions[modelName]
+
+
+
+def locationTest(sc, sqlContext, lPolygon, lStop,modelName='random forest'):
     #Partition data into 4 parts: train (positive examples), train (negative examples), test (pos), test (neg)
     t1 = time.time()
     lAllPoly = lPolygon[0]
@@ -66,21 +105,15 @@ def locationTest(sc, sqlContext, lPolygon, lStop):
 
     #train model
     t1 = time.time()
-    model_Tree = RandomForest.trainRegressor(
-        mlTrain.map(lambda x: x[1][0]),
-        categoricalFeaturesInfo={},
-        numTrees=1000,
-        featureSubsetStrategy="auto",
-        impurity="variance",
-        maxDepth=4,
-        maxBins=32
-    )
+    trainingData = mlTrain.map(lambda x: x[1][0])
+    trainingFunction = getTrainModelFunc(modelName)
+    model = trainingFunction(trainingData)
     diff = time.time() - t1
     print "GEQE: Time to train model", diff
 
     #apply model
     t1 = time.time()
-    predictions_Tree = model_Tree.predict(mlApply.map(lambda x: x.features))
+    predictions_Tree = model.predict(mlApply.map(lambda x: x.features))
     tAndP = mlApply.map(lambda x: x.label).zip(predictions_Tree)
     diff = time.time() - t1
     print "GEQE: Time to apply model", diff
@@ -90,7 +123,8 @@ def run(jobNm, sc, sqlContext, inputFile, lPolygon, dictFile,
         inputPartitions=-1,
         writeFileOutput=True,
         bByDate=False,
-        strStop=''):
+        strStop='',
+        modelName='random forest'):
 
     stopSet = set(strStop.split(',')) if strStop !='' else set()
     t0 = time.time()
@@ -127,11 +161,12 @@ def run(jobNm, sc, sqlContext, inputFile, lPolygon, dictFile,
 
     else:
         print "GEQE: Generating location model"
-        (tAndP, nInApply, nOutApply) = locationTest(sc, sqlContext, lPolygon, lStop)
+        (tAndP, nInApply, nOutApply) =  locationTest(sc, sqlContext, lPolygon, lStop,modelName=modelName)
 
     t1 = time.time()
     print "GEQE: Generating ROC from Truth and predictions"
-    plotting.generateROCCurve(tAndP, nInApply, nOutApply, jobNm)
+    plotting.generateROCCurve(tAndP,nInApply,nOutApply,jobNm)
+
     diff = time.time() - t1
     print "GEQE: Time to make ROC:", diff
 
@@ -144,6 +179,7 @@ if __name__ == "__main__":
     parser.add_argument("-partitions", help="repartition the input data set before processing.",type=int,default=-1)
     parser.add_argument("-bByDate", help="Bool to switch on date partitioning", default=False)
     parser.add_argument("-strStop", help="Comma delimited list of stop words to be removed from training", default="")
+    parser.add_argument("-modelName", help="ml model to use 'random forest' or 'svm' default='random forest", default="random forest")
     args = parser.parse_args()
 
     jobNm = args.jobNm
@@ -158,5 +194,6 @@ if __name__ == "__main__":
     run(jobNm, sc, sqlContext, args.inputFile, lPolygon, args.dictFile,
                     inputPartitions = args.partitions,
                     bByDate = args.bByDate,
-                    strStop = args.strStop
+                    strStop = args.strStop,
+                    modelName=args.modelName
                 )
