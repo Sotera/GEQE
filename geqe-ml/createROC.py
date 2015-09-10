@@ -66,7 +66,15 @@ def locationTest(sc, sqlContext, lPolygon, lStop):
 
     #train model
     t1 = time.time()
-    model_Tree = RandomForest.trainRegressor(mlTrain.map(lambda x: x[1][0]), categoricalFeaturesInfo={}, numTrees=2000, featureSubsetStrategy="auto", impurity="variance", maxDepth=4, maxBins=32)
+    model_Tree = RandomForest.trainRegressor(
+        mlTrain.map(lambda x: x[1][0]),
+        categoricalFeaturesInfo={},
+        numTrees=1000,
+        featureSubsetStrategy="auto",
+        impurity="variance",
+        maxDepth=4,
+        maxBins=32
+    )
     diff = time.time() - t1
     print "GEQE: Time to train model", diff
 
