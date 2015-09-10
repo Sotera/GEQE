@@ -40,7 +40,7 @@ def readInShapeJson(fileName):
     return readInShapeDocument(data)
 
 def createTestSiteList(fileName):
-    data = json.loads(open(fileName)).read()
+    data = json.loads(open(fileName).read())
     return testListFromData(data)
 
 def testListFromData(data):

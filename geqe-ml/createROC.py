@@ -166,6 +166,7 @@ def run(jobNm, sc, sqlContext, inputFile, lPolygon, dictFile,
     t1 = time.time()
     print "GEQE: Generating ROC from Truth and predictions"
     plotting.generateROCCurve(tAndP,nInApply,nOutApply,jobNm)
+
     diff = time.time() - t1
     print "GEQE: Time to make ROC:", diff
 
@@ -175,7 +176,6 @@ if __name__ == "__main__":
     parser.add_argument("polygonShapeFile", help="csv file specifying the bounding box for areas of interest")
     parser.add_argument("jobNm", help="Application name, default = 'Find Similar Events'",default='findEvents')
     parser.add_argument("-dictFile", help="Dictionary file to read in", default="dictFiles/dict_combinedIDF")
-    parser.add_argument("-datTyp", type=int, help="Data type, 0-parquent, 1=instagram, 2=twitter.  Default = 0",default=0)
     parser.add_argument("-partitions", help="repartition the input data set before processing.",type=int,default=-1)
     parser.add_argument("-bByDate", help="Bool to switch on date partitioning", default=False)
     parser.add_argument("-strStop", help="Comma delimited list of stop words to be removed from training", default="")

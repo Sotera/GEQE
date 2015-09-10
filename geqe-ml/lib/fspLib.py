@@ -184,17 +184,12 @@ def inUOI(username, bc_lTrainUsr):
     return username in bc_lTrainUsr.value
 
 def placeToLP(record, bInRegion, bc_dArrPos):
-    lat = record.lat
-    lon = record.lon
-    recordPoint = pointClass.Point(lon,lat)
     caption = record.text
-    s1 = caption.split(' ')
     sTPos = set()
     dArrPos = bc_dArrPos.value
-    for term in s1:
-        mod = scrubWord(term)
-        if mod in dArrPos:
-            sTPos.add(dArrPos[mod])
+    for term in uniqueWords(caption, False, []):
+        if term in dArrPos:
+            sTPos.add(dArrPos[term])
     featureVector = SparseVector(len(dArrPos), sorted(list(sTPos)), [1.]*len(sTPos))
     return (LabeledPoint(bInRegion, featureVector),record)
 
