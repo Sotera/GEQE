@@ -50,7 +50,7 @@ router.post('/save', function (req, res) {
             res.status(resultObject.error.status).send(resultObject.error.message);
             return;
         }
-        res.status(200).send("OK");
+        res.status(200).send(resultObject);
     })
 
 });

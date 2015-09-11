@@ -130,34 +130,30 @@ angular.module('NodeWebBase')
                 });
         };
         $scope.saveNewItem = function saveNewItem(item) {
-            $rootScope.$emit("getShapesText",
-                {
-                    "scope":this,
-                    "callback":function(resultsText){
-                        if(!$rootScope.isAppConfigured())
-                            return;
-                        var pName = $scope.newPolySetName;
-                        var siteList = JSON.parse(resultsText);
-                        siteList.name = pName;
-                        siteList.username = $rootScope.username;
-                        var modelId = null;
-                        if (modelId) siteList.id = modelId;
+                var pName = $scope.newPolySetName;
+                if(!$rootScope.isAppConfigured() || !pName)
+                    return;
 
-                        $http({
-                            method:"POST",
-                            url: "app/sitelists/save",
-                            params: {
-                                siteList: siteList
-                            }}).success(function (response) {
-                            //RESET
-                            $("#newPolySet").toggleClass("in");
-                            $("#newPolySetInput").val("");
-                            $("#resultsText").text(pName + " written");
-                            $scope.populatePolygonSelect(); // refresh the polygon list to get the new id
-                        }).error($rootScope.showError)
-                    }
-                });
+                var siteList = {};
+                    siteList.name = pName;
+                    siteList.username = $rootScope.username;
+
+                $http({
+                    method:"POST",
+                    url: "app/sitelists/save",
+                    params: {
+                        siteList: siteList
+                    }}).success(function (response) {
+                    //RESET
+                    $("#newPolySet").toggleClass("in");
+                    $("#newPolySetInput").val("");
+                    $("#resultsText").text(pName + " written");
+                    $scope.polygonFiles.push({id:response.id, name:response.name});
+                    $scope.polygonSetSelected= $scope.polygonFiles[$scope.polygonFiles.length-1];
+                    $scope.showEditingTools();
+                }).error($rootScope.showError)
         };
+
         $scope.saveItem = function saveItem(item) {
             $rootScope.$emit("getShapesText",
                 {
