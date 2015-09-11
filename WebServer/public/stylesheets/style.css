@@ -157,3 +157,12 @@ button i {
 .mapHighlight{
     border:5px solid yellow;
 }
+
+.ngdialog.ngdialog-theme-default {
+    padding-bottom: 50px;
+    padding-top: 50px;
+}
+
+.ngdialog.ngdialog-theme-default .ngdialog-content{
+    margin-top:0!important;
+}

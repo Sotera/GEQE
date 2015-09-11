@@ -263,13 +263,14 @@ angular.module('NodeWebBase')
         };
 
         me.clearCurrentShapes = function (shapeTypes) {
-            angular.forEach(shapeTypes, function(shapeType){
-                angular.forEach(me.shapes[shapeType], function (shape) {
-                    shape.setMap(null);
+            if(!me.editing || ( window.confirm("Clear polygon set. \n\n Warning: \n When editing a polygon set all of the polygons will be deleted.") )){
+                angular.forEach(shapeTypes, function(shapeType){
+                    angular.forEach(me.shapes[shapeType], function (shape) {
+                        shape.setMap(null);
+                    });
+                    me.shapes[shapeType].length=0;
                 });
-                me.shapes[shapeType].length=0;
-            });
-
+            }
         };
 
         me.addShapeClickListener = function(shape) {
