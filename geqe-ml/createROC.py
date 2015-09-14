@@ -40,7 +40,7 @@ def trainSVMModel(data):
     :return: svm classification model
     """
     from pyspark.mllib.classification import SVMWithSGD, SVMModel
-    model = SVMWithSGD.train(data.map(data, iterations=100))
+    model = SVMWithSGD.train(data, iterations=100)
     return model
 
 
