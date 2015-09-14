@@ -17,6 +17,7 @@ import sys
 import argparse
 import codecs
 sys.path.insert(0, './lib/')
+sys.path.insert(0, 'geqe-ml/lib/')
 import aggregatedComparison
 import fspLib
 import time

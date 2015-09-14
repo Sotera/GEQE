@@ -12,6 +12,7 @@ from pyspark.sql.types import BooleanType
 from pyspark.mllib.regression import LabeledPoint
 from pyspark.mllib.tree import RandomForest
 from pyspark.mllib.classification import SVMWithSGD, SVMModel
+from pyspark.mllib.feature import ChiSqSelector
 import sys
 import argparse
 import json
@@ -61,7 +62,7 @@ def getTrainModelFunc(modelName):
 
 
 
-def locationTest(sc, sqlContext, lPolygon, lStop,modelName='random forest'):
+def locationTest(sc, sqlContext, lPolygon, lStop,modelName='random forest',num_features=-1):
     #Partition data into 4 parts: train (positive examples), train (negative examples), test (pos), test (neg)
     t1 = time.time()
     lAllPoly = lPolygon[0]
@@ -99,13 +100,35 @@ def locationTest(sc, sqlContext, lPolygon, lStop,modelName='random forest'):
     mlTrain.cache()
     applyPos = dap.map(lambda x: LabeledPoint(1.0, x.vector)).cache()
     applyNeg = dan.map(lambda x: LabeledPoint(-1.0, x.vector)).cache()
-    mlApply = applyPos.union(applyNeg)
     diff = time.time() - t1
     print "GEQE: Time to prepare training data", diff
 
+    # feature selection  if num_features > 0
+    # use chi sq test to find most relevant features
+    trainingData,applyData = None, None
+    if num_features < 1:
+        trainingData = mlTrain.map(lambda x: x[1][0])
+        applyData = applyPos.union(applyNeg)
+    else:
+        # use chi sq feature selection
+        print 'Selecting top ',num_features,' features...'
+        featureSelectionModel = ChiSqSelector(num_features).fit(mlTrain.map(lambda x: x[1][0]))
+        print 'Features selected.  Transforming training data'
+        posTrain = mlTrain.filter(lambda x: x[1][0].label == 1.0).map(lambda x: x[1][0].features)
+        posTrain = featureSelectionModel.transform( posTrain ).map( lambda x: LabeledPoint(1.0,x) )
+        negTrain = mlTrain.filter(lambda x: x[1][0].label == -1.0).map(lambda x: x[1][0].features)
+        negTrain = featureSelectionModel.transform( negTrain ).map( lambda x: LabeledPoint(-1.0,x) )
+        trainingData = posTrain.union(negTrain)
+
+        # transform apply data
+        print 'Transforming apply data'
+        applyPos = featureSelectionModel.transform( applyPos.map(lambda x: x.features) ).map(lambda x: LabeledPoint(1.0,x))
+        applyNeg = featureSelectionModel.transform( applyNeg.map(lambda x: x.features) ).map(lambda x: LabeledPoint(-1.0,x))
+        applyData = applyPos.union(applyNeg)
+
+
     #train model
     t1 = time.time()
-    trainingData = mlTrain.map(lambda x: x[1][0])
     trainingFunction = getTrainModelFunc(modelName)
     model = trainingFunction(trainingData)
     diff = time.time() - t1
@@ -113,18 +136,22 @@ def locationTest(sc, sqlContext, lPolygon, lStop,modelName='random forest'):
 
     #apply model
     t1 = time.time()
-    predictions_Tree = model.predict(mlApply.map(lambda x: x.features))
-    tAndP = mlApply.map(lambda x: x.label).zip(predictions_Tree)
+    predictions_Tree = model.predict(applyData.map(lambda x: x.features))
+    tAndP = applyData.map(lambda x: x.label).zip(predictions_Tree)
     diff = time.time() - t1
+    results = tAndP.collect()
     print "GEQE: Time to apply model", diff
-    return (tAndP.collect(), nInApply, nOutApply)
+    return (results, nInApply, nOutApply)
+
+
 
 def run(jobNm, sc, sqlContext, inputFile, lPolygon, dictFile,
         inputPartitions=-1,
         writeFileOutput=True,
         bByDate=False,
         strStop='',
-        modelName='random forest'):
+        modelName='random forest',
+        num_features=-1):
 
     stopSet = set(strStop.split(',')) if strStop !='' else set()
     t0 = time.time()
@@ -161,7 +188,7 @@ def run(jobNm, sc, sqlContext, inputFile, lPolygon, dictFile,
 
     else:
         print "GEQE: Generating location model"
-        (tAndP, nInApply, nOutApply) =  locationTest(sc, sqlContext, lPolygon, lStop,modelName=modelName)
+        (tAndP, nInApply, nOutApply) =  locationTest(sc, sqlContext, lPolygon, lStop,modelName=modelName,num_features=num_features)
 
     t1 = time.time()
     print "GEQE: Generating ROC from Truth and predictions"
@@ -180,6 +207,7 @@ if __name__ == "__main__":
     parser.add_argument("-bByDate", help="Bool to switch on date partitioning", default=False)
     parser.add_argument("-strStop", help="Comma delimited list of stop words to be removed from training", default="")
     parser.add_argument("-modelName", help="ml model to use 'random forest' or 'svm' default='random forest", default="random forest")
+    parser.add_argument("-numFeatures",help='number of features to select with chi sq test. default -1 (use all features)',type=int,default=-1)
     args = parser.parse_args()
 
     jobNm = args.jobNm
@@ -195,5 +223,6 @@ if __name__ == "__main__":
                     inputPartitions = args.partitions,
                     bByDate = args.bByDate,
                     strStop = args.strStop,
-                    modelName=args.modelName
+                    modelName=args.modelName,
+                    num_features=args.numFeatures
                 )
