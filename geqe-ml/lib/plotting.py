@@ -34,9 +34,9 @@ def generateROCCurve(tAndP, nPos, nNeg, jobNm):
                 true_positive = true_positive + 1
             elif point[0] == 1. and point[1] < thresh:
                 false_negative = false_negative + 1
-            elif point[0] == -1. and point[1] >= thresh:
+            elif point[0] == 0. and point[1] >= thresh:
                 false_positive = false_positive + 1
-            elif point[0] == -1. and point[1] < thresh:
+            elif point[0] == 0. and point[1] < thresh:
                 true_negative = true_negative + 1
         f_out.write("\tThreshold: " + str(thresh) + "\n")
         f_out.write("\t\tTP: " + str(true_positive) + ", FP: " + str(false_positive) + ", FN: " + str(false_negative) + ", TN: " + str(true_negative) + "\n")

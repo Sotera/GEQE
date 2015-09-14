@@ -10,13 +10,9 @@ from pyspark import SparkConf, SparkContext
 from pyspark.sql import SQLContext
 from pyspark.sql.types import BooleanType
 from pyspark.mllib.regression import LabeledPoint
-from pyspark.mllib.tree import RandomForest
-from pyspark.mllib.classification import SVMWithSGD, SVMModel
 from pyspark.mllib.feature import ChiSqSelector
 import sys
 import argparse
-import json
-import codecs
 sys.path.insert(0, './lib/')
 sys.path.insert(0, 'geqe-ml/lib/')
 import aggregatedComparison
@@ -32,6 +28,7 @@ def trainRandomForestModel(data):
     :param data: RDD[LabeledPoint]
     :return: random forest regression model
     """
+    from pyspark.mllib.tree import RandomForest
     model = RandomForest.trainRegressor(data, categoricalFeaturesInfo={}, numTrees=2000, featureSubsetStrategy="auto", impurity="variance", maxDepth=4, maxBins=32)
     return model
 
@@ -42,19 +39,27 @@ def trainSVMModel(data):
     :param data: RDD[LabeledPoint]
     :return: svm classification model
     """
-    # SVM model does not allow negative labels, so move -1 to 0
-    def reLabel(vec):
-        if vec.label == -1:
-            vec.label = 0.0
-        return vec
-    model = SVMWithSGD.train(data.map(reLabel), iterations=100)
+    from pyspark.mllib.classification import SVMWithSGD, SVMModel
+    model = SVMWithSGD.train(data.map(data, iterations=100))
     return model
 
+
+def trainLogisticRegressionModel(data):
+    from pyspark.mllib.classification import LogisticRegressionWithLBFGS, LogisticRegressionModel
+    model = LogisticRegressionWithLBFGS.train(data)
+    return model
+
+def trainNaiveBayesModel(data):
+    from pyspark.mllib.classification import NaiveBayes, NaiveBayesModel
+    model = NaiveBayes.train(data, 1.0)
+    return model
 
 def getTrainModelFunc(modelName):
     training_functions = {
         'random forest' : trainRandomForestModel,
-        'svm' : trainSVMModel
+        'svm' : trainSVMModel,
+        'logit': trainLogisticRegressionModel,
+        'bayes': trainNaiveBayesModel
     }
     if modelName not in training_functions:
         raise ValueError("Invalid modelName: "+modelName+" supported options are: "+str(training_functions.keys()))
@@ -92,14 +97,14 @@ def locationTest(sc, sqlContext, lPolygon, lStop,modelName='random forest',num_f
     #Map data for training
     t1 = time.time()
     trainIn  = df1.map(lambda x: (x.key, [LabeledPoint(1.0, x.vector), x.lat, x.lon, x.size, x.binSize])).cache()
-    trainOut = dfn1.map(lambda x: (x.key, [LabeledPoint(-1.0, x.vector), x.lat, x.lon, x.size, x.binSize])).cache()
+    trainOut = dfn1.map(lambda x: (x.key, [LabeledPoint(0.0, x.vector), x.lat, x.lon, x.size, x.binSize])).cache()
     scaleFactor = (10.*nInTrain)/float(nOutTrain)
     mlTrain = trainIn.union(trainOut.sample(False, scaleFactor))
     if len(lStop) != 0:
         mlTrain = mlTrain.map(lambda x: aggregatedComparison.removeStopWords(x, lStop))
     mlTrain.cache()
     applyPos = dap.map(lambda x: LabeledPoint(1.0, x.vector)).cache()
-    applyNeg = dan.map(lambda x: LabeledPoint(-1.0, x.vector)).cache()
+    applyNeg = dan.map(lambda x: LabeledPoint(0.0, x.vector)).cache()
     diff = time.time() - t1
     print "GEQE: Time to prepare training data", diff
 
@@ -116,14 +121,14 @@ def locationTest(sc, sqlContext, lPolygon, lStop,modelName='random forest',num_f
         print 'Features selected.  Transforming training data'
         posTrain = mlTrain.filter(lambda x: x[1][0].label == 1.0).map(lambda x: x[1][0].features)
         posTrain = featureSelectionModel.transform( posTrain ).map( lambda x: LabeledPoint(1.0,x) )
-        negTrain = mlTrain.filter(lambda x: x[1][0].label == -1.0).map(lambda x: x[1][0].features)
-        negTrain = featureSelectionModel.transform( negTrain ).map( lambda x: LabeledPoint(-1.0,x) )
+        negTrain = mlTrain.filter(lambda x: x[1][0].label == 0.0).map(lambda x: x[1][0].features)
+        negTrain = featureSelectionModel.transform( negTrain ).map( lambda x: LabeledPoint(0.0,x) )
         trainingData = posTrain.union(negTrain)
 
         # transform apply data
         print 'Transforming apply data'
         applyPos = featureSelectionModel.transform( applyPos.map(lambda x: x.features) ).map(lambda x: LabeledPoint(1.0,x))
-        applyNeg = featureSelectionModel.transform( applyNeg.map(lambda x: x.features) ).map(lambda x: LabeledPoint(-1.0,x))
+        applyNeg = featureSelectionModel.transform( applyNeg.map(lambda x: x.features) ).map(lambda x: LabeledPoint(0.0,x))
         applyData = applyPos.union(applyNeg)
 
 
@@ -220,9 +225,9 @@ if __name__ == "__main__":
     sqlContext = SQLContext(sc)
 
     run(jobNm, sc, sqlContext, args.inputFile, lPolygon, args.dictFile,
-                    inputPartitions = args.partitions,
-                    bByDate = args.bByDate,
-                    strStop = args.strStop,
-                    modelName=args.modelName,
-                    num_features=args.numFeatures
-                )
+        inputPartitions = args.partitions,
+        bByDate = args.bByDate,
+        strStop = args.strStop,
+        modelName=args.modelName,
+        num_features=args.numFeatures
+    )
