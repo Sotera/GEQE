@@ -90,7 +90,7 @@ def megaVector(ittRec, bc_dIDF, bUserStopFilter, bc_lStopWords, nTot):
     return SparseVector(len(dUsableWords.keys()), list(lPos), list(lVal))
 
 def loadPoint(sc, sqlContext, inputFile, inputPartitions):
-    records = sqlContext.parquetFile(inputFile)
+    records = sqlContext.read.parquet(inputFile)
     if inputPartitions != -1:
         records = records.repartition(inputPartitions)
     records.cache()
