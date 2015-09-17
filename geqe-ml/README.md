@@ -3,7 +3,7 @@
 Analyze geo-located temporal text data to identify locations of a similar nature
 
 ## Structure
-You can find a white paper at the root of this project to explain the design concept,
+You can find a white paper in the docs folder to explain the design concept,
 scenarios in which the tool is expected to perform well (and where it will
 struggle) and a description of scenarios where various parts of the tool
 ought be used.  
