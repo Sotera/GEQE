@@ -11,7 +11,7 @@ from to_parquet import csvToDataFrame
 import fspLib
 
 def initialFilter(sc, sqlContext, inputFile, nDataType, inputPartitions, bUseStopFilter, bc_lStopWords):
-    records = sqlContext.parquetFile(inputFile) if 0 == nDataType else csvToDataFrame(sc, sqlContext, inputFile, nDataType)
+    records = sqlContext.read.parquet(inputFile) if 0 == nDataType else csvToDataFrame(sc, sqlContext, inputFile, nDataType)
     if inputPartitions != -1:
         records = records.repartition(inputPartitions)
     records.cache()
@@ -59,8 +59,6 @@ def exemplarDict(rddIn, revLookup):
                 .collect()
 
     return map(lambda x: revLookup[x[0]], sorted(vecs, key=lambda x: x[1], reverse=True)[:25])
-
-
                          
 def groupString(record, bUseDate, binSize):
     strRet = ''
