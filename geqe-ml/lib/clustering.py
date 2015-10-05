@@ -376,6 +376,7 @@ def locationBasedOutputV2(bByDate, jobNm, vecAndPredictions, sNum, revLookup, wr
     if sNum>1.:
         nToTake=int(sNum)
     outCol = vecAndPredictions.sortBy(lambda x: x[1], False).take(nToTake)
+    print "DEBUG - func",bByDate
     if bByDate == True:
         datesJson = {}
         for point in outCol:
@@ -402,7 +403,9 @@ def locationBasedOutputV2(bByDate, jobNm, vecAndPredictions, sNum, revLookup, wr
             thisCluster["poly"] = [[lat+offset,lon+offset],[lat+offset,lon-offset],[lat-offset,lon-offset],[lat-offset,lon+offset]]
             datesJson[sdate]["clusters"].append(thisCluster)
         retDict = {"type":"event", "dates":datesJson, "modelDict": exempDict}
+
     else:
+        print "DEBUG - func bad"
         clusterList = []
         for point in outCol:
             record = point[0][1]
@@ -424,7 +427,6 @@ def locationBasedOutputV2(bByDate, jobNm, vecAndPredictions, sNum, revLookup, wr
             thisCluster["dict"] = list(thisDict)
             thisCluster["poly"] = [[lat+offset,lon+offset],[lat+offset,lon-offset],[lat-offset,lon-offset],[lat-offset,lon+offset]]
             clusterList.append(thisCluster)
-
         retDict = {"type":"place", "clusters":clusterList, "modelDict": exempDict}
 
     if writeFileOutput:
