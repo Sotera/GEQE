@@ -28,8 +28,8 @@ def run(jobNm, sc, sqlContext, inputFile, dictFile,
         writeFileOutput=False):
 
     # import monitoring if needed
-    if bWriteMonitor:
-        import  plotting
+    if bWriteMonitor==True:
+        import plotting
 
     #Create monitoring plot and associated vectors
     mPX = range(8)
@@ -148,7 +148,7 @@ if __name__ == "__main__":
     parser.add_argument("-dictFile", help="Dictionary file to read in", default="dictFiles/dict_combinedIDF")
     parser.add_argument("-sThresh", type=float, help="ordered percentage describing the number of scored entries to return. default=1.0",default=30)
     parser.add_argument("-partitions", help="repartition the input data set before processing.",type=int,default=-1)
-    parser.add_argument("-bByDate", help="Bool to switch on date partitioning", default=False)
+    parser.add_argument("-bByDate", help="Bool to switch on date partitioning", type=bool, default=False)
     parser.add_argument("-bWriteMonitor", help="Write monitoring histogram(s)", type=bool, default=False)
     args = parser.parse_args()
 
@@ -156,7 +156,6 @@ if __name__ == "__main__":
     modelPath = args.modelSavePath
     jobNm = args.jobNm
     dictFile = args.dictFile
-    nDataType = args.datTyp
     sNum = args.sThresh
     inputPartitions = args.partitions
     bByDate = args.bByDate
@@ -167,9 +166,9 @@ if __name__ == "__main__":
     sqlContext = SQLContext(sc)
 
     run(jobNm, sc, sqlContext, inputFile, dictFile,
+        bByDate = bByDate,
         inputPartitions=inputPartitions,
         sNum=sNum,
         modelPath=modelPath,
         bWriteMonitor=bWriteMonitor,
-        bByDate = bByDate,
         writeFileOutput=True)

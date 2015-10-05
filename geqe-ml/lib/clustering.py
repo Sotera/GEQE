@@ -376,8 +376,7 @@ def locationBasedOutputV2(bByDate, jobNm, vecAndPredictions, sNum, revLookup, wr
     if sNum>1.:
         nToTake=int(sNum)
     outCol = vecAndPredictions.sortBy(lambda x: x[1], False).take(nToTake)
-    print "DEBUG - func",bByDate
-    if bByDate == True:
+    if bByDate:
         datesJson = {}
         for point in outCol:
             record = point[0][1]
@@ -405,7 +404,6 @@ def locationBasedOutputV2(bByDate, jobNm, vecAndPredictions, sNum, revLookup, wr
         retDict = {"type":"event", "dates":datesJson, "modelDict": exempDict}
 
     else:
-        print "DEBUG - func bad"
         clusterList = []
         for point in outCol:
             record = point[0][1]
