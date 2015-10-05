@@ -1,0 +1,129 @@
+
+### VIEW, DELETE, CREATE, an index ###
+
+# view all indexes
+http://<es host name>:9200/_cat/indices?v%27
+
+
+# delete an index
+curl -XDELETE 'http://<es host name>:9200/geqe/'
+
+
+
+# create an index
+curl -XPUT 'http://<es host name>:9200/geqe/' -d '{
+      "settings" : {
+          "index" : {
+              "number_of_shards" : 25,
+              "number_of_replicas" : 1
+          }
+      }
+  }'
+
+
+
+ # get an index
+ curl -XGET 'http://<es host name>:9200/geqe/'
+
+
+
+ # put mapping
+curl -XPUT 'http://<es host name>:9200/geqe/_mapping/post' -d '
+ {
+
+     "post" : {
+         "properties" : {
+             "source" : {"type" : "string", "index" : "not_analyzed"},
+             "user" : {"type" : "string", "index" : "not_analyzed"},
+             "imageUrl" : {"type" : "string", "index" : "not_analyzed"},
+             "message" : {"type" : "string", "null_value" : "na"},
+             "post_date" : {"type" : "date"},
+             "indexedDate" : {"type" : "date"},
+             "dataset": {"type": "string", "null_value": "unknown","index" : "not_analyzed"},
+              "location": {
+                         "type": "geo_shape",
+                         "tree": "quadtree",
+                         "precision": "1m"
+                     }
+     }
+    }
+}'
+
+
+
+
+
+####   SAMPLE QUERIES  ###
+
+
+# get all posts
+http://<es host name>:9200/geqe/post/_search/?size=10&pretty=1
+
+
+
+# sample geo bounding box query
+
+curl -XPOST 'http://<es host name>:9200/geqe/post/_search' -d '
+{
+    "query":{
+        "filtered": {
+            "query": {
+                "match_all": {}
+            },
+            "filter": {
+                "bool":{
+                    "must":{
+                         "geo_shape": {
+                            "location": {
+                                "shape": {
+                                    "type": "envelope",
+                                    "coordinates" : [[-81.75, 41.425], [-81.61, 41.475]]
+                                }
+                            }
+                         }
+                    },
+                    "should" :[
+                        {
+                          "range": {
+                            "post_date":{
+                                "gte" : "2014-07-22",
+                                "lte" : "2014-07-22"
+                            }
+                          }
+                        },
+                        {
+                            "range": {
+                                "post_date":{
+                                    "gte" : "2014-10-01",
+                                    "lte" : "2014-10-31"
+                                 }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}'
+
+
+
+#basic match query
+# can be used to pull queries with significant terms or a full text search
+# from the user
+curl -XPOST 'http://<es host name>:9200/geqe/post/_search' -d '
+{
+    "query":{
+        "match" : {
+               "message" : {
+                   "query" : "Askerlik",
+                   "operator" : "or"
+               }
+           }
+    }
+}'
+
+
+
+
+
