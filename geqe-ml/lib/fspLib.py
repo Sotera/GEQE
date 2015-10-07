@@ -116,10 +116,10 @@ def hasScorableWord(text,bUseStopFilter, bc_lStopWords):
         return True
     return False
 
-def uniqueWords(caption, bUseStopFilter, bc_lStopWords):
-    return set(wordBreak(caption, bUseStopFilter, bc_lStopWords))
+def uniqueWords(caption, bUseStopFilter, bc_lStopWords, bUseStemmer=True):
+    return set(wordBreak(caption, bUseStopFilter, bc_lStopWords, bUseStemmer))
 
-def wordBreak(caption, bUseStopFilter, bc_lStopWords):
+def wordBreak(caption, bUseStopFilter, bc_lStopWords, bUseStemmer=True):
     caption = re.sub('[\s#]',' ',caption.lower(),flags=re.UNICODE)  # replace all white space charactes (tabs newlines,etc) and the hashtag with a space
     caption = re.sub('[^\w\s@]','',caption,flags=re.UNICODE) #remove non aplhpa numeric except for '@' (so we can filter out emails and usernames)
     allWords = caption.strip().split(' ')
@@ -128,7 +128,10 @@ def wordBreak(caption, bUseStopFilter, bc_lStopWords):
     stemmer = LancasterStemmer()
     for word in allWords:
         if scorableWord(word, bUseStopFilter, stopwords):
-            filteredList.append(stemmer.stem(word))
+            if bUseStemmer:
+                filteredList.append(stemmer.stem(word))
+            else:
+                filteredList.append(word)
     return filteredList
 
 def scorableWord(word, bUseStopFilter, stopwords):

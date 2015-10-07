@@ -164,8 +164,6 @@ class spaceTimePlane:
                     self.dates.append((pair[0],pair[1]))
             self.name = name
 
-
-
     def __str__(self):
         strRet = "Site name: " + self.name + "\n"
         for pair in self.dates:

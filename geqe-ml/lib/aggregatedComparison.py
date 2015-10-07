@@ -38,10 +38,18 @@ def createLargeScaleFeatureVector(records, bUseStopFilter, bc_lStopWords, nGoodT
         pos = pos + 1
     return wordVec, revLookup
 
+def hasMinUsers(row_itterable, min_users):
+    users = set()
+    for row in row_itterable:
+        users.add(row.user)
+        if len(users) > min_users:
+            return True
+    return False
+
 def createAggregatedLabledPoint(rddIn, bUseDate, binSize, bc_dIDF, bUserStopFilter, bc_lStopWords, nTot, lpVal, nMin):
     grouped = rddIn.map(lambda x: (groupString(x,bUseDate,binSize), x))\
         .groupByKey()\
-        .filter(lambda x: len(x[1])>nMin)
+        .filter(lambda x: hasMinUsers(x[1],nMin))
     return grouped.map(lambda x: (LabeledPoint(lpVal, megaVector(x[1], bc_dIDF, bUserStopFilter, bc_lStopWords, nTot)),x))
 
 def sparseToKV(sv):
