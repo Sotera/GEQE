@@ -1,6 +1,6 @@
 ### GEQE Elastic Search Scripts 
 
-In the geqe application elastic earch is used to provide real time geo queries of underlying data.  THis enhances the UI by allowing users to see the underlying data, while simplifying the machine learning backend by allowing it to only work on aggregated vectors.
+In the geqe application elastic search is used to provide real time geo queries of underlying data.  This enhances the UI by allowing users to see the underlying data, while simplifying the machine learning backend by allowing it to only work on aggregated vectors.
 
 #### Pre-reqs
 
