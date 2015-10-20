@@ -2,8 +2,16 @@
   "name": "LoopBackServer",
   "version": "0.1.1-dev",
   "main": "server/server.js",
+  "private": true,
+  "engines": {
+    "node": "0.12.7",
+    "npm": "~2.11.3"
+  },
   "scripts": {
-    "pretest": "jshint ."
+    "predev": "jshint .",
+    "dev": "node-dev .",
+    "pretest": "jshint .",
+    "start": "slc run"
   },
   "dependencies": {
     "compression": "^1.0.3",
