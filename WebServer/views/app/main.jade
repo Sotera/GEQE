@@ -1,4 +1,4 @@
-div.container-fluid(ng-controller='mainController')
+.container-fluid(ng-controller='mainController')
     div(ui-layout="{'flow':'column'}")
         div(ui-layout-container, max-size="250px", size="250px")
             div(ng-include="'views/app/controlBox'")
@@ -10,4 +10,5 @@ div.container-fluid(ng-controller='mainController')
                     div(ng-include="'views/app/tableTabs'")
         div(ui-layout-container, max-size="350px", size="350px")
             div(ng-include="'views/app/details'")
-            div(ng-include="'views/app/resultsBox'")
+            //
+                div(ng-include="'views/app/resultsBox'")
