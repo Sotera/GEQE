@@ -4,53 +4,6 @@ body {
     height: 100%;
 }
 
-#login-container {
-    width: 340px;
-    margin: 160px auto;
-}
-
-#login-container label {
-    margin: 15px 0 5px 5px;
-}
-
-#login-container button {
-    width: 150px;
-    padding: 6px 40px 6px 40px;
-    float: left;
-    margin-top: 15px;
-}
-
-#rememberMeCheckbox {
-    padding: 0;
-    vertical-align: bottom;
-    position: relative;
-    top: -2px;
-    left: -4px;
-    *overflow: hidden;
-}
-
-#rememberMeLabel {
-    display: inline;
-    float: right;
-    padding-top: 6px;
-    padding-right: 6px;
-}
-
-#login-container .btm-links {
-    text-align: center;
-    margin-top: 10px;
-}
-
-#login-container #create-account {
-    float: right;
-    margin-right: 13px;
-}
-
-#login-container #forgot-password {
-    float: left;
-    margin-left: 10px;
-}
-
 #account-form-container {
     width: 460px;
     margin: 100px auto;
