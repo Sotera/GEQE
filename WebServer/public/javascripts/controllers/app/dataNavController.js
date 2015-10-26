@@ -1,5 +1,5 @@
 angular.module('NodeWebBase')
-    .controller('dataNavController', ['$scope','$rootScope', function ($scope, $rootScope) {
+    .controller('dataNavController', ['$scope','$rootScope', '$filter', function ($scope, $rootScope, $filter) {
         $scope.scopeName = 'dataNavController';
         $scope.catalog = [];
         $scope.chartModel  = null;
@@ -131,6 +131,8 @@ angular.module('NodeWebBase')
             $scope.catalog = [];
             var minPosts = -1;
             var maxPosts = 0;
+
+            data = $filter('orderBy')(data, 'day');
 
             angular.forEach(data,function(group,idx){
                 if(!group.day)
