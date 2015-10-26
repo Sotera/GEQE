@@ -1,35 +1,35 @@
 extends layout
 
 block content
-	#login-container
-		form(ng-controller='signupController' novalidate)#signup-form.well.span4
-			h1= title
-			p.subheading Please tell us a little about yourself.
-			hr
-			fieldset
-				.control-group
-					label.control-label(for='nameTextBox', required) Name
-					.controls
-						input#nameTextBox.input-xlarge(type='text', ng-model='data.fullname', required)
-				.control-group
-					label.control-label(for='emailTextBox') Email
-					.controls
-						input#emailTextBox.input-xlarge(type='text', ng-model='data.email')
-				hr
-				p.subheading Choose a Username and Password
-				.control-group
-					label.control-label(for='usernameTextBox') Username
-					.controls
-						input#usernameTextBox.input-xlarge.disabled(type='text', ng-model='data.username', required)
-				.control-group
-					label.control-label(for='passwordTextBox') Password
-					.controls
-						input#passwordTextBox.input-xlarge(type='password', ng-model='data.password', required)
-				.control-group
-					button.btn.btn-primary(ng-click='createAccount()')
-						| Create
-					button.btn(ng-click='cancelSignup()')
-						| Cancel
+  .container
+    .row
+      .col-md-3
+      .col-md-6
+        h1= title
+        .well
+          form(name='signupForm' ng-controller='signupController' novalidate ng-submit='signupForm.$valid && createAccount()')
+            .alert.alert-info.
+              To sign up, fill in the required (**) fields below.
+              Already have an account? #[a(href='/login') Login here]
+            .alert.alert-danger(ng-show='authenticationError').
+              {{ authenticationError }}
+            .form-group
+              label Name **
+              input.form-control(ng-model='data.fullname' required)
+            .form-group
+              label Email **
+              input.form-control(ng-model='data.email' required)
+            .form-group
+              label Username **
+              input.form-control(ng-model='data.username' required)
+            .form-group
+              label Password **
+              input.form-control(type='password' ng-model='data.password' required)
+            .form-group
+              button.btn.btn-lg.btn-primary(ng-class="{disabled : signupForm.$invalid}")
+                | Sign Up
+              a.btn.btn-link(ng-click='cancelSignup()')
+                | Cancel
 
 block scripts
-	script(src='/javascripts/controllers/signupController.js')
+  script(src='/javascripts/controllers/signupController.js')

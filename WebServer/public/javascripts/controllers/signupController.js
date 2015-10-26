@@ -1,7 +1,7 @@
 angular.module('NodeWebBase')
   .constant('signupUrl', '/login/signup')
-  .controller('signupController', ['$scope', '$http', '$window', '$cookies', 'signupUrl', 'ngDialog', 'authService',
-    function ($scope, $http, $window, $cookies, signupUrl, ngDialog, authService) {
+  .controller('signupController', ['$scope', '$http', '$window', '$cookies', 'signupUrl', 'authService',
+    function ($scope, $http, $window, $cookies, signupUrl, authService) {
       $scope.data = {};
 
       $scope.cancelSignup = function() {
@@ -19,15 +19,6 @@ angular.module('NodeWebBase')
           })
           .error(function (error) {
             $scope.authenticationError = error;
-            console.log("Failed: " , error);
-
-            if(error.indexOf("password")>=0){
-
-            };
-
-            if(error.indexOf("email")>=0){
-
-            };
 
           });
       }
