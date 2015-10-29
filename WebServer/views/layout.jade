@@ -3,7 +3,7 @@ html(ng-app="NodeWebBase" ,ng-controller="layoutController", lang='en')
     head
         title= title
         base(href='/')
-        meta(charset='uft-8')
+        meta(charset='utf-8')
         meta(name='viewport' content='width=device-width, initial-scale=1')
 
         script(src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true&libraries=drawing")
@@ -42,6 +42,7 @@ html(ng-app="NodeWebBase" ,ng-controller="layoutController", lang='en')
         script(src='/javascripts/component/app/nbSettings.js')
 
         script(src='/javascripts/userale/userale.js')
+        script(src='/javascripts/app.js')
 
         link(rel="stylesheet" ng-href="/{{theme.bootstrapCss}}/bootstrap.min.css")
 
