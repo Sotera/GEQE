@@ -4,6 +4,14 @@ body {
     height: 100%;
 }
 
+/*
+ui-layout has a bug when browser is resized after panel expansion.
+for now, hide the arrows.
+*/
+span.ui-splitbar-icon {
+  display:none;
+}
+
 #account-form-container {
     width: 460px;
     margin: 100px auto;

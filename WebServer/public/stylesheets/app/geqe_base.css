@@ -5,9 +5,6 @@ html{
     height:100%;
 }
 
-body{
-}
-
 .highlight{
     background-color: rgba(255, 106, 12, 0.69);
 }
@@ -202,22 +199,6 @@ div[class^="col-"]{
 span.btn-lg{
     padding-left: 16px;
     padding-right: 16px;
-}
-
-.ui-layout-column > .ui-splitbar > a,
-.ui-layout-row > .ui-splitbar > a {
-    color: #000;
-    cursor: pointer;
-    font-size: 9px;
-}
-
-.ui-splitbar{
-    background-color: lightgray;
-}
-
-
-.ui-splitbar {
-    background-color: #D3D3D3;
 }
 
 #cloud { width: 100%; height: 100% }

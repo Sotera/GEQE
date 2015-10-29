@@ -6,5 +6,5 @@
 setTimeout(hideLeftSplitbar, 500);
 
 function hideLeftSplitbar() {
-  $($('div.ui-splitbar a')[2]).trigger('click')
+  $($('div.ui-splitbar .ui-splitbar-icon-left')[0]).trigger('click');
 }
