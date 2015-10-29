@@ -1,10 +1,7 @@
-
-LoopBackServer/node_modules
-WebServer/node_modules
-WebServer/public/javascripts/vendor
 node_modules
 *.pyc
 *.log
 *.idea
 *.iml
+*.pid
 .DS_Store
