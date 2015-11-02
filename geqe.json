@@ -1,0 +1,110 @@
+[
+  {
+    "name": "data-container",
+    "Image": "jreeme/data-container:1.1",
+    "DockerFilePath": "docker/data-container",
+    "Hostname": "data-container"
+  },
+  {
+    "name": "mongo",
+    "Image": "jreeme/mongo:2.6",
+    "DockerFilePath": "docker/mongo/2.6",
+    "Hostname": "mongo",
+    "HostConfig": {
+      "VolumesFrom": [
+        "data-container"
+      ]
+    }
+  },
+  {
+    "name": "GEQEDataService",
+    "Image": "jreeme/strongloop:10",
+    "DockerFilePath": "docker/strong-pm",
+    "Hostname": "GEQEDataService",
+    "ExposedPorts": {
+      "3001/tcp": {}
+    },
+    "HostConfig": {
+      "Links": [
+        "mongo:mongo"
+      ],
+      "PortBindings": {
+        "3001/tcp": [
+          {
+            "HostPort": "3001"
+          }
+        ],
+        "8701/tcp": [
+          {
+            "HostPort": "8701"
+          }
+        ]
+      }
+    },
+    "ExpressApps": [
+      {
+        "GitUrl": "git@github.com:sotera/GEQEDataService",
+        "GitSrcBranchName": "master",
+        "StrongLoopBranchName": "deploy",
+        "StrongLoopServerUrl": "http://localhost:8701",
+        "ServiceName": "GEQEDataService"
+      }
+    ]
+  },
+  {
+    "name": "GEQEWebApp",
+    "Image": "jreeme/strongloop:10",
+    "DockerFilePath": "docker/strong-pm",
+    "Hostname": "GEQEWebApp",
+    "ExposedPorts": {
+      "3001/tcp": {}
+    },
+    "HostConfig": {
+      "Links": [
+        "GEQEDataService:GEQEDataService"
+      ],
+      "VolumesFrom": [
+        "data-container"
+      ],
+      "PortBindings": {
+        "3001/tcp": [
+          {
+            "HostPort": "3002"
+          }
+        ],
+        "8701/tcp": [
+          {
+            "HostPort": "8702"
+          }
+        ]
+      }
+    },
+    "ExpressApps": [
+      {
+        "GitUrl": "git@github.com:sotera/GEQEWebApp",
+        "GitSrcBranchName": "master",
+        "StrongLoopBranchName": "deploy",
+        "StrongLoopServerUrl": "http://localhost:8702",
+        "ServiceName": "GEQEWebApp",
+        "Scripts": [
+          {
+            "RelativeWorkingDir": "./public",
+            "Command": "bower",
+            "Args": [
+              "install",
+              "--config.interactive=false"
+            ]
+          },
+          {
+            "RelativeWorkingDir": ".",
+            "Command": "cp",
+            "Args": [
+              "config.json.template",
+              "config.json"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]
