@@ -1,5 +1,11 @@
 [
   {
+    "name": "elasticsearch-container",
+    "Image": "elasticsearch",
+    "DockerFilePath": "",
+    "Hostname": "elasticsearch"
+  },
+  {
     "name": "data-container",
     "Image": "jreeme/data-container:1.1",
     "DockerFilePath": "docker/data-container",
