@@ -3,7 +3,21 @@
     "name": "elasticsearch-container",
     "Image": "elasticsearch",
     "DockerFilePath": "",
-    "Hostname": "elasticsearch"
+    "Hostname": "elasticsearch",
+    "HostConfig": {
+      "PortBindings": {
+        "9200/tcp": [
+          {
+            "HostPort": "9200"
+          }
+        ],
+        "9300/tcp": [
+          {
+            "HostPort": "9300"
+          }
+        ]
+      }
+    }
   },
   {
     "name": "data-container",
