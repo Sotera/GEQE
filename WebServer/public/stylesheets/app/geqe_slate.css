@@ -1,5 +1,0 @@
-@import url("geqe_base.css");
-
-.ngdialog.ngdialog-theme-default .ngdialog-content{
-    background-color: #4B4F53; /*!important; doesn't do anything needs to be within the ; */
-}
