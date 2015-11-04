@@ -4,19 +4,19 @@ The GEQE tool (pronounced "Jeh Key") is aimed at leveraging geo-located temporal
 
 1.  geqe-ml:  Apache Spark machine learning scripts.  Can be used as a standalone project via command line interface with an Apache Spark Cluster, or as the back end to the geqe web application.
 
-2. geqe-comm:  Communication Layer / Utility, allows front ends to execute spark jobs and contains various data-loaders.
+1. geqe-comm:  Communication Layer / Utility, allows front ends to execute spark jobs and contains various data-loaders.
 
-2.  LoopBackServer: StrongLoop data API server.  Abstracts all database interactions for the webserver into an easy to use and discover REST API.  The loop back server can be used as an integration point between the geqe-ml backend and other front end applications.
+1.  Data service (sotera/GEQEDataService):  Loopback-based data API server.  Abstracts all database interactions for the web app into an easy to use and discover REST API.  The server can be used as an integration point between the geqe-ml backend and other front end applications.
 
-3.  WebServer:  NodeJS server provides a UI for training / applying models and exploring results.  
+1.  Web app (sotera/GEQEWebApp):  NodeJS server provides a UI for training / applying models and exploring results.  
 
 
 ## Getting Started
 
 1. First go to the geqe-ml directory and see the README and docs.  You'll need to setup some data and an Apache Spark Cluster.  For front end development only you can setup a MOCK service in place of an actual geqe-ml backend, see geqe-comm/MockGeqeConsumer.py
 
-2.  Install and setup the LoopBackServer (see LoopBackServer/README.md)
+1.  Install GEQEDataService (see project README)
 
-3.  Install and setup the WebServer (see WebServer/README.md)
+1.  Install GEQEWebApp (see project README)
 
-4.  Run a GeqeConsumer (see geqe-comm) to execute geqe jobs on your spark cluster.
+1.  Run a GeqeConsumer (see geqe-comm) to execute geqe jobs on your spark cluster.
