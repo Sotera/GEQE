@@ -1,0 +1,72 @@
+[
+  {
+    "name": "New York City",
+    "event_path": "hdfs://path_to/nycAll_agg",
+    "location_path": "hdfs://path_to/nycAll_agg_noDate",
+    "dictionaryPath": "hdfs://path_to/boston_nyc_dc_dictionary",
+    "type": "0",
+    "event_partitions": 68,
+    "location_partitions": 34,
+    "description": "New York City, Instagram + Twitter",
+    "count": 14140653,
+    "boundingPoly": [
+      {
+        "lat": 40.902462,
+        "lng": -74.2959814
+      },
+      {
+        "lat": 40.902462,
+        "lng": -73.6998224
+      },
+      {
+        "lat": 40.4778218,
+        "lng": -73.6998224
+      },
+      {
+        "lat": 40.4778218,
+        "lng": -74.2959814
+      }
+    ],
+    "sources": [
+      "Instagram",
+      "Twitter"
+    ],
+    "dateRange": {
+      "min": "2012-07-21T00:00:00.000Z",
+      "max": "2014-12-31T00:00:00.000Z"
+    }
+  },
+  {
+    "name": "Cleveland, OH",
+    "event_path": "hdfs://path_to/Cleveland.parquet_agg",
+    "location_path": "hdfs://path_to/Cleveland.parquet_agg_noDate",
+    "dictionaryPath": "hdfs://path_to/dict_combinedIDF",
+    "type": "0",
+    "event_partitions": 50,
+    "location_partitions": 20,
+    "description": "Greater Cleveland Area",
+    "count": 8931577,
+    "boundingPoly": [
+      {
+        "lat": 41.74977078,
+        "lng": -82.093491
+      },
+      {
+        "lat": 41.74977078,
+        "lng": -81.285997
+      },
+      {
+        "lat": 41.177621,
+        "lng": -81.285997
+      },
+      {
+        "lat": 41.177621,
+        "lng": -82.093491
+      }
+    ]
+    "sources": [
+      "Instagram",
+      "Twitter"
+    ],
+  }
+]
