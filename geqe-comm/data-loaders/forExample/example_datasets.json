@@ -1,6 +1,6 @@
 [
   {
-    "name": "New York City",
+    "_id": "New York City",
     "event_path": "hdfs://path_to/nycAll_agg",
     "location_path": "hdfs://path_to/nycAll_agg_noDate",
     "dictionaryPath": "hdfs://path_to/boston_nyc_dc_dictionary",
@@ -30,14 +30,10 @@
     "sources": [
       "Instagram",
       "Twitter"
-    ],
-    "dateRange": {
-      "min": "2012-07-21T00:00:00.000Z",
-      "max": "2014-12-31T00:00:00.000Z"
-    }
+    ]
   },
   {
-    "name": "Cleveland, OH",
+    "_id": "Cleveland, OH",
     "event_path": "hdfs://path_to/Cleveland.parquet_agg",
     "location_path": "hdfs://path_to/Cleveland.parquet_agg_noDate",
     "dictionaryPath": "hdfs://path_to/dict_combinedIDF",
@@ -63,10 +59,10 @@
         "lat": 41.177621,
         "lng": -82.093491
       }
-    ]
+    ],
     "sources": [
       "Instagram",
       "Twitter"
-    ],
+    ]
   }
 ]
