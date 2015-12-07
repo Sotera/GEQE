@@ -42,9 +42,8 @@ filterData.py
 >& output &
 ```
 
-Once the files are in parquet format, you will need to create an document frequency count for all
-tweets.  To do so, you'll need to add all of your parquet file formatted datasets to the file 'precomputeIDF.py'
-(by appending the DATA_SETS list, see line 49).  We elect to create a single document frequency count which spans
+Once the files are in parquet format, you will need to create a document frequency count for all
+tweets.  To do so, you'll need to run 'precomputeIDF.py' on all of your parquet file formatted datasets. We elect to create a single document frequency count which spans
 all data so that models that are trained on one area can be applied to another.  Once the data is added, this program
 is run by the following:
 
@@ -55,6 +54,7 @@ nohup spark-submit
 [any other spark configurations as you see fit]
 precomputeIDF.py
 [jobNm -> the resulting dictionary file will be dictFiles/dict_jobNm]
+[dataset -> comma separated list of parquet file formatted datasets in hdfs]
 >& output &
 ```
 
