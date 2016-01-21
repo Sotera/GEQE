@@ -9,13 +9,8 @@
 
 from pyspark import SparkConf, SparkContext
 from pyspark.sql import SQLContext, Row
-from pyspark.sql.types import BooleanType
-from operator import add
-from pyspark.mllib.tree import RandomForest, RandomForestModel
-import json
 import sys
 import argparse
-import codecs
 sys.path.insert(0, './lib/')
 sys.path.insert(0, 'geqe-ml/lib/')
 import aggregatedComparison

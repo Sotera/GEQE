@@ -39,7 +39,7 @@ def csvToDataFrame(sc,sqlContext,inputPath,dataType):
     #print 'errors: ',allrows-goodRows
 
     # infer a scheam to create a spark DataFrame
-    df = sqlContext.inferSchema(goodRowsRDD)
+    df = sqlContext.createDataFrame(goodRowsRDD)
     #df.cache()
     #goodRowsRDD.unpersist()
     return df
