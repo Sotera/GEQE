@@ -10,7 +10,10 @@ from math import sqrt
 
 def utc_to_local(utc_dt, tz_info, utc_offset):
     # get integer timestamp to avoid precision lost
-    local_tz = tzoffset(tz_info, utc_offset)
+    if tz_info is not None:
+        local_tz = tzoffset(tz_info, utc_offset)
+    else:
+        local_tz = pytz.timezone('US/Eastern')
     local_dt = utc_dt.replace(tzinfo=pytz.utc).astimezone(local_tz)
     assert utc_dt.resolution >= timedelta(microseconds=1)
     return local_dt.replace(microsecond=utc_dt.microsecond)
