@@ -3,13 +3,14 @@ import pytz
 import re
 import uuid
 from datetime import datetime, timedelta
+from dateutil.tz import tzoffset
 from sklearn.cluster import DBSCAN
 from sklearn.preprocessing import StandardScaler
 from math import sqrt
 
-def utc_to_local(utc_dt):
+def utc_to_local(utc_dt, tz_info, utc_offset):
     # get integer timestamp to avoid precision lost
-    local_tz = pytz.timezone('US/Eastern')
+    local_tz = tzoffset(tz_info, utc_offset)
     local_dt = utc_dt.replace(tzinfo=pytz.utc).astimezone(local_tz)
     assert utc_dt.resolution >= timedelta(microseconds=1)
     return local_dt.replace(microsecond=utc_dt.microsecond)
@@ -63,7 +64,7 @@ class ScoreRecord:
             self.username = record["user"]["screen_name"]
             self.tags = text_to_hashtags(record["text"])
             self.indexed_at = datetime_to_es_format(datetime.now())
-            self.dt = utc_to_local(datetime.strptime(record["created_at"],'%a %b %d %H:%M:%S +0000 %Y'))
+            self.dt = utc_to_local(datetime.strptime(record["created_at"],'%a %b %d %H:%M:%S +0000 %Y'), record["time_zone"], record["utc_offset"])
             self.cluster = -1
             tag_dict = {}
             for tag in self.tags:
