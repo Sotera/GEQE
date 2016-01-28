@@ -64,7 +64,7 @@ class ScoreRecord:
             self.username = record["user"]["screen_name"]
             self.tags = text_to_hashtags(record["text"])
             self.indexed_at = datetime_to_es_format(datetime.now())
-            self.dt = utc_to_local(datetime.strptime(record["created_at"],'%a %b %d %H:%M:%S +0000 %Y'), record["time_zone"], record["utc_offset"])
+            self.dt = utc_to_local(datetime.strptime(record["created_at"],'%a %b %d %H:%M:%S +0000 %Y'), record["user"]["time_zone"], record["user"]["utc_offset"])
             self.cluster = -1
             tag_dict = {}
             for tag in self.tags:
