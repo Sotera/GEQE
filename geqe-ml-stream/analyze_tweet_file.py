@@ -26,28 +26,28 @@ def analyze_recent(tweet_file_path, es_url=None):
 
     #count = es.count(index="jag_hc2_documents", doc_type="post", q="post_date:"+tag)["count"]
     #associate querries with the existing hashtag list
-now = datetime.datetime.now()
-timewindow = now - datetime.timedelta(hours=1)
-res = es.search(\
-   index="jag_geqestream_documents", \
-   doc_type="post", \
-   body={
-       "filter": {
-           "bool":{
-               "must" :[
-                   {
-                       "range": {
-                           "post_date":{
-                                "gte" : datetime_to_es_format(timewindow),
-                                "lte" : datetime_to_es_format(now)
-                             }
-                        }
-                    }
-                ]
-            }
-        }
-    }\
-)
+# now = datetime.datetime.now()
+# timewindow = now - datetime.timedelta(hours=1)
+# res = es.search(\
+#    index="jag_geqestream_documents", \
+#    doc_type="post", \
+#    body={
+#        "filter": {
+#            "bool":{
+#                "must" :[
+#                    {
+#                        "range": {
+#                            "post_date":{
+#                                 "gte" : datetime_to_es_format(timewindow),
+#                                 "lte" : datetime_to_es_format(now)
+#                              }
+#                         }
+#                     }
+#                 ]
+#             }
+#         }
+#     }\
+# )
 
 
 def main():
