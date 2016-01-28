@@ -64,6 +64,7 @@ def stream_data(response, response_open_time):
                 print ".",
         except:
             print "json load error:", sys.exc_info()[0]
+            print line
             continue
 
 def main():
@@ -72,7 +73,7 @@ def main():
     auth_counter = 0
 
     http_method = "GET"
-    url = "https://stream.twitter.com/1.1/statuses/filter.json?stall_warnings=true&locations=-91.71,37.58,-80.54,42.92"
+    url = "https://stream.twitter.com/1.1/statuses/filter.json?stall_warnings=true&locations=-128.704311,22.96,-65.36,49.25"
     print "Using url", url
     pars = []
     response = twitterreq(auth_info[auth_counter][0], auth_info[auth_counter][1], url, http_method, pars)
