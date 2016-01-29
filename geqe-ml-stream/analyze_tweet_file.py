@@ -1,12 +1,26 @@
-import os
 import sys
-import elasticsearch
 import datetime
 import time
-sys.path.insert(0, './lib/')
-from clustering import ScoreRecord, ScoreBin, assign_to_cluster, datetime_to_es_format
 
-def analyze_recent(tweet_file_path, analyze_points, es_url=None):
+import elasticsearch
+
+import os
+
+sys.path.insert(0, './lib/')
+from lib.geqe_models import model_loader
+from clustering import ScoreRecord, ScoreBin
+
+
+def chop_coord(coord, scale=0.005):
+    return float(int(coord/scale))*scale
+
+def rec_to_key(rec):
+    k_la = str(chop_coord(rec.lat))
+    k_lo = str(chop_coord(rec.lon))
+    k_dt = str(rec.dt.date())+"_"+str(rec.dt.hour)
+    return "_".join([k_la, k_lo, k_dt])
+
+def analyze_recent(tweet_file_path, analyze_points, models, es_url=None):
     if es_url == None:
         es = elasticsearch.Elasticsearch()
     else:
@@ -23,38 +37,49 @@ def analyze_recent(tweet_file_path, analyze_points, es_url=None):
             sr.write_to_es("jag_geqestream_documents", "post", es)
         os.rename(tweet_file_path+"/"+file, tweet_file_path+"/analyzed/"+file)
 
+    if analyze_points:
+        return
+
     query = {"filter":{"bool":{"must":[{"range":{"post_date":{"gte":"now-1h"}}}]}}}
     n_hits = es.search(index="jag_geqestream_documents", doc_type="post", body=query, search_type="count")['hits']['total']
     scanResp = es.search(index="jag_geqestream_documents", doc_type="post", body=query, search_type="scan", scroll="10m")
     scrollId= scanResp['_scroll_id']
     response= es.scroll(scroll_id=scrollId, scroll= "10m")
-    hits = []
+    bins = {}
     while n_hits>0:
         n_hits = n_hits - len(response["hits"]["hits"])
         for hit in response["hits"]["hits"]:
-            hits.append(hit)
+            k = rec_to_key(hit)
+            if k in bins.keys():
+                bins[k].add_record(hit)
+            else:
+                bins[k] = ScoreBin(hit)
         if n_hits > 0:
             response= es.scroll(scroll_id=scrollId, scroll= "10m")
 
+    full_bins = map(lambda x: x.users, bins.values())
+    for fb in full bins:
+
+        fb.get
 
 def main():
     file_path = "raw_tweet_data"
     run = True
-    ana_time = datetime.datetime.now() - datetime.timedelta(hours=1)
+    ana_time = datetime.datetime.now()
     analyze_points = False
+    models = model_loader("./models")
     while run:
         try:
-            if datetime.datetime.now() - ana_time > datetime.timedelta(hours=1):
+            if datetime.datetime.now().hour== ana_time.hour:
                 ana_time = datetime.datetime.now()
                 analyze_points = True
             if len(os.listdir(file_path)) > 2:
                 print "file found"
-                analyze_recent(file_path, analyze_points, es_url="http://scc:9200")
+                analyze_recent(file_path, analyze_points, models, es_url="http://scc:9200")
                 analyze_points = False
             else:
                 time.sleep(30)
         except:
-
             continue
 
 if __name__ == '__main__':
