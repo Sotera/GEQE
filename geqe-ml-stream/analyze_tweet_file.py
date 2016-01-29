@@ -58,9 +58,9 @@ def analyze_recent(tweet_file_path, analyze_points, models, es_url=None):
             response= es.scroll(scroll_id=scrollId, scroll= "10m")
 
     full_bins = map(lambda x: x.users, bins.values())
-    for fb in full bins:
-
-        fb.get
+    for fb in full_bins:
+        for k, v in models.iteritems():
+            fb.apply_model(k, v)
 
 def main():
     file_path = "raw_tweet_data"
