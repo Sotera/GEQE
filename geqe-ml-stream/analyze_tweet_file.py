@@ -1,13 +1,10 @@
 import sys
 import datetime
 import time
-
 import elasticsearch
-
 import os
-
 sys.path.insert(0, './lib/')
-from lib.geqe_models import model_loader
+from geqe_models import model_loader
 from clustering import ScoreRecord, ScoreBin
 
 
@@ -57,10 +54,12 @@ def analyze_recent(tweet_file_path, analyze_points, models, es_url=None):
         if n_hits > 0:
             response= es.scroll(scroll_id=scrollId, scroll= "10m")
 
-    full_bins = map(lambda x: x.users, bins.values())
+    full_bins = filter(lambda x: x.users>5, bins.values())
     for fb in full_bins:
         for k, v in models.iteritems():
             fb.apply_model(k, v)
+        if len(fb.model_scores.keys()) > 0:
+            fb.save_score(es, "jag_geqestream_points", "post")
 
 def main():
     file_path = "raw_tweet_data"

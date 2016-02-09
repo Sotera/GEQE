@@ -11,7 +11,7 @@ curl -XDELETE 'http://<es host name>:9200/geqe/'
 
 
 # create an index
-curl -XPUT 'http://<es host name>:9200/geqe/' -d '{
+curl -XPUT 'http://localhost:9200/geqe/' -d '{
       "settings" : {
           "index" : {
               "number_of_shards" : 25,
@@ -23,12 +23,12 @@ curl -XPUT 'http://<es host name>:9200/geqe/' -d '{
 
 
  # get an index
- curl -XGET 'http://<es host name>:9200/geqe/'
+ curl -XGET 'http://localhost:9200/geqe/'
 
 
 
  # put mapping
-curl -XPUT 'http://<es host name>:9200/geqe/_mapping/post' -d '
+curl -XPUT 'http://localhost:9200/geqe/_mapping/post' -d '
  {
 
      "post" : {

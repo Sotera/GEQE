@@ -120,10 +120,12 @@ class ScoreBin:
         self.users = set([])
         self.captions = []
         self.key = key
-        self.models = {}
+        self.model_scores = {}
+        self.dt = datetime.now()
         if record is not None:
             self.captions.append(record.text)
             self.users.add(record.username)
+            self.dt = record.indexed_at
 
     def add_record(self, record):
         self.captions.append(record.text)
@@ -133,91 +135,19 @@ class ScoreBin:
         return {
             'nUnique': len(self.users),
             'nTotal': len(self.captions),
-            'key': self.key
+            'key': self.key,
+            'model_scores': self.model_scores,
+            'date': datetime_to_es_format(self.dt)
         }
 
     def apply_model(self, model_name, model_dict):
+        tfidf = model_dict['tf-idf']
+        bag_of_words = ''
+        for cap in self.captions:
+            bag_of_words = bag_of_words + " " + cap
+        X = tfidf.transform([bag_of_words])
+        rf_model = model_dict['rfm']
+        self.model_scores[model_name] = rf_model.predict(X)[0]
 
-
-    # def cluster_and_write_to_es(self, epsilon, n_min, n_min_users, es_obj, es_doc_index, es_doc_type, es_clust_index, es_clust_type):
-    #     print "Clustering tag:", self.tag
-    #     assign_to_cluster(self.records, epsilon, n_min)
-    #     for no_clust in filter(lambda x: x.cluster == -1, self.records):
-    #         no_clust.write_to_es(es_doc_index, es_doc_type, es_obj)
-    #
-    #     clusters_nums = set(map(lambda x: x.cluster, filter(lambda x: x.cluster != -1, self.records)))
-    #     self.n_clusters = len(clusters_nums)
-    #     for num in clusters_nums:
-    #         clustered_recs = sorted(filter(lambda x: x.cluster == num, self.records), key=lambda x: x.dt)
-    #         cluster_users = set(map(lambda x: x.username, clustered_recs))
-    #         cluster_inds = set(map(lambda x: x.cluster_ind[self.tag], clustered_recs))
-    #         #proceed by case
-    #         #trivial case - cluster found with only existing entries:
-    #         if len(cluster_inds) == 1 and "" not in cluster_inds:
-    #             print "Case 0"
-    #             continue
-    #         #case 1 - new clusters found
-    #         elif len(cluster_inds) == 1:
-    #             #verify clusters have minimum unique authors
-    #             if len(cluster_users) > n_min_users:
-    #                 print "Case 1a"
-    #                 cluster_id = str(uuid.uuid4())
-    #                 self.write_cluster_to_es(cluster_id, len(clustered_recs), len(cluster_users), clustered_recs[0], es_obj, es_clust_index, es_clust_type)
-    #                 for record in clustered_recs:
-    #                     record.cluster_ind[self.tag] = cluster_id
-    #                     record.write_to_es(es_doc_index, es_doc_type, es_obj)
-    #             else:
-    #                 print "Case 1b"
-    #                 for record in clustered_recs:
-    #                     record.write_to_es(es_doc_index, es_doc_type, es_obj)
-    #         #case 2 - new entries associated with existing cluster
-    #         elif len(cluster_inds) == 2:
-    #             print "Case 2"
-    #             c_list = list(cluster_inds)
-    #             cluster_id = c_list[0] if c_list[0] != "" else c_list[1]
-    #             self.write_cluster_to_es(cluster_id, len(clustered_recs), len(cluster_users), clustered_recs[0], es_obj, es_clust_index, es_clust_type, overwrite=True)
-    #             new_recs = filter(lambda x: x.cluster_ind == "", clustered_recs)
-    #             for record in new_recs:
-    #                 record.cluster_ind[self.tag] = cluster_id
-    #                 record.write_to_es(es_doc_index, es_doc_type, es_obj)
-    #         #case 3 - new entries cause existing clusters to merge
-    #         else:
-    #             print "Case 3"
-    #             clusts = []
-    #             for ind in list(cluster_inds):
-    #                 if ind != "":
-    #                     clusts.append(es_obj.get(index=es_clust_index, doc_type=es_clust_type, id=ind))
-    #             clusts = sorted(clusts, key=lambda x: x["_source"]["num_posts"])
-    #             cluster_id = clusts[0]["_id"]
-    #             self.write_cluster_to_es(cluster_id, len(clustered_recs), len(cluster_users), clustered_recs[0], es_obj, es_clust_index, es_clust_type, overwrite=True)
-    #             recs_to_change = filter(lambda x: x.cluster_ind != cluster_id, clustered_recs)
-    #             for record in recs_to_change:
-    #                 record.cluster_ind = cluster_id
-    #                 record.write_to_es(es_doc_index, es_doc_type, es_obj)
-    #             #remove old cluster entries, make sure no older posts were missed
-    #             to_remove = map(lambda x: x["_id"], clusts[1:])
-    #             for ind in to_remove:
-    #                 es_obj.delete(index=es_clust_index, doc_type=es_clust_type, id=ind)
-    #                 count = es_obj.count(index=es_doc_index, doc_type=es_doc_type, q="cluster:"+ind)["count"]
-    #                 if count > 0:
-    #                     res = es_obj.search(index=es_doc_index, doc_type=es_doc_type, body={"query":{"match":{"cluster":ind}}})
-    #                     for hit in res["hits"]["hits"]:
-    #                         sr = ScoreRecord(hit, data_type=1)
-    #                         sr.cluster_ind[self.tag] = cluster_id
-    #                         sr.write_to_es(es_doc_index, es_doc_type, es_obj)
-
-    # def write_cluster_to_es(self, c_id, n_recs, n_users, first_rec, es_obj, es_clust_index, es_clust_type):
-    #     post_date = datetime_to_es_format(first_rec.dt)
-    #     now = datetime.now()
-    #     body = {
-    #         "tag":self.tag,
-    #         "post_date":post_date,
-    #         "indexed_date":datetime_to_es_format(now),
-    #         "num_posts":n_recs,
-    #         "num_users":n_users,
-    #         "location":{
-    #             "type":"point",
-    #             "coordinates":[first_rec.lon, first_rec.lat]
-    #         }
-    #     }
-    #     es_obj.index(index=es_clust_index, doc_type=es_clust_type, id=c_id, body=json.dumps(body))
+    def save_score(self, es, es_clust_ind, es_clust_type):
+        es.index(index=es_clust_ind, doc_type=es_clust_type, id=str(uuid.uuid4()), body = self.to_dict())
