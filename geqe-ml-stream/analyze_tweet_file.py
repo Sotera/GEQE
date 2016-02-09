@@ -69,15 +69,14 @@ def main():
     models = model_loader("./models")
     while run:
         try:
-            if datetime.datetime.now().hour== ana_time.hour:
+            if datetime.datetime.now().hour is not ana_time.hour:
                 ana_time = datetime.datetime.now()
                 analyze_points = True
             if len(os.listdir(file_path)) > 2:
-                print "file found"
                 analyze_recent(file_path, analyze_points, models, es_url="http://scc:9200")
                 analyze_points = False
             else:
-                time.sleep(30)
+                time.sleep(300)
         except:
             continue
 
