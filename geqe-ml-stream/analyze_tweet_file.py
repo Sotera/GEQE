@@ -40,6 +40,7 @@ def analyze_recent(tweet_file_path, analyze_points, models, es_url=None):
     scrollId= scanResp['_scroll_id']
     response= es.scroll(scroll_id=scrollId, scroll= "10m")
     bins = {}
+    print "\tAnalyzing", n_hits, "hits"
     while n_hits>0:
         n_hits = n_hits - len(response["hits"]["hits"])
         for hit in response["hits"]["hits"]:
@@ -53,6 +54,7 @@ def analyze_recent(tweet_file_path, analyze_points, models, es_url=None):
             response= es.scroll(scroll_id=scrollId, scroll= "10m")
 
     full_bins = filter(lambda x: x.users>5, bins.values())
+    print "\tScoring", len(full_bins), "bins"
     for fb in full_bins:
         for k, v in models.iteritems():
             fb.apply_model(k, v)
@@ -70,7 +72,8 @@ def main():
             if datetime.datetime.now().hour is not ana_time.hour:
                 ana_time = datetime.datetime.now()
                 analyze_points = True
-            if len(os.listdir(file_path)) > 2:
+            if len(os.listdir(file_path)) > 2 and analyze_points==True:
+                print "Applying Scores at:", ana_time
                 analyze_recent(file_path, analyze_points, models, es_url="http://scc:9200")
                 analyze_points = False
             else:
