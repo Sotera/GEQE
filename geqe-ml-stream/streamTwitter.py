@@ -44,7 +44,7 @@ def stream_data(response, response_open_time):
     out_file = open("./raw_tweet_data/live_stream/"+current_string, "w", 0)
     for line in response:
         now = datetime.datetime.now()
-        print "response at", str(now)
+        print ".",
         diff = now - current_block
         if diff.seconds > 180:
             out_file.close()
@@ -61,7 +61,7 @@ def stream_data(response, response_open_time):
             dic_line = json.loads(line)
             if (dic_line["geo"] is not None or dic_line["coordinates"] is not None):
                 out_file.write(line.strip()+"\n")
-                print ".",
+                print str(now)
         except:
             print "json load error:", sys.exc_info()[0]
             print line

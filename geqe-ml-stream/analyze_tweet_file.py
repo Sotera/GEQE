@@ -37,8 +37,8 @@ def analyze_recent(tweet_file_path, analyze_points, models, es_url=None):
     query = {"filter":{"bool":{"must":[{"range":{"post_date":{"gte":"now-1h"}}}]}}}
     n_hits = es.search(index="jag_geqestream_documents", doc_type="post", body=query, search_type="count")['hits']['total']
     scanResp = es.search(index="jag_geqestream_documents", doc_type="post", body=query, search_type="scan", scroll="10m")
-    scrollId= scanResp['_scroll_id']
-    response= es.scroll(scroll_id=scrollId, scroll= "10m")
+    scrollId = scanResp['_scroll_id']
+    response = es.scroll(scroll_id=scrollId, scroll= "10m")
     bins = {}
     print "\tAnalyzing", n_hits, "hits"
     while n_hits>0:
