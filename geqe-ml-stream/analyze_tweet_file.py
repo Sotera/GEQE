@@ -59,7 +59,12 @@ def analyze_recent(tweet_file_path, analyze_points, models, es_url=None):
         for k, v in models.iteritems():
             fb.apply_model(k, v)
         if len(fb.model_scores.keys()) > 0:
-            fb.save_score(es, "jag_geqestream_points", "post")
+            write_rec = False
+            for score in fb.model_scores.values():
+                if score > 0.85:
+                    write_rec = True
+            if write_rec == True:
+                fb.save_score(es, "jag_geqestream_points", "post")
 
 def main():
     file_path = "raw_tweet_data"
