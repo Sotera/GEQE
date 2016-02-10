@@ -34,9 +34,6 @@ def analyze_recent(tweet_file_path, analyze_points, models, es_url=None):
             sr.write_to_es("jag_geqestream_documents", "post", es)
         os.rename(tweet_file_path+"/"+file, tweet_file_path+"/analyzed/"+file)
 
-    if analyze_points:
-        return
-
     query = {"filter":{"bool":{"must":[{"range":{"post_date":{"gte":"now-1h"}}}]}}}
     n_hits = es.search(index="jag_geqestream_documents", doc_type="post", body=query, search_type="count")['hits']['total']
     scanResp = es.search(index="jag_geqestream_documents", doc_type="post", body=query, search_type="scan", scroll="10m")
@@ -46,11 +43,12 @@ def analyze_recent(tweet_file_path, analyze_points, models, es_url=None):
     while n_hits>0:
         n_hits = n_hits - len(response["hits"]["hits"])
         for hit in response["hits"]["hits"]:
-            k = rec_to_key(hit)
+            sr = ScoreRecord(hit, 1)
+            k = rec_to_key(sr)
             if k in bins.keys():
-                bins[k].add_record(hit)
+                bins[k].add_record(sr)
             else:
-                bins[k] = ScoreBin(hit)
+                bins[k] = ScoreBin(sr)
         if n_hits > 0:
             response= es.scroll(scroll_id=scrollId, scroll= "10m")
 
