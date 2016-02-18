@@ -27,13 +27,13 @@
 		var shapes = [];
 		var map;
 		var scoredTweetArray = [];
-// 		var savePath = "/home/jlueders/src/geqe/exSrc/"
-		var savePath = "/home/jgartner/findSP/";
-		var fileSubDir = "inputFiles/";
+		var savePath = "[...]";
+		var fileSubDir = "[...]";
 		var geqe = {};
 
 		function initialize() {
 			$("#pSavePath").val(savePath);
+			$("#pfileSubDir").val(fileSubDir);
 
 			var myLatlng = new google.maps.LatLng(41.495753190958816,-81.70090198516846);
 			var mapOptions = {
@@ -81,11 +81,11 @@
 				fileSelector.click();
 			};
 
-			var dropZone = $("#drop_zone").get(0);
+			//var dropZone = $("#drop_zone").get(0);
 
-			dropZone.addEventListener('dragover', _handleDragOver, false);
-			dropZone.addEventListener('drop', _handleDrop, false);
-			$(dropZone).click(_onDropZoneClicked);
+			//dropZone.addEventListener('dragover', _handleDragOver, false);
+			//dropZone.addEventListener('drop', _handleDrop, false);
+			//$(dropZone).click(_onDropZoneClicked);
 
 
 			var drawingManager = new google.maps.drawing.DrawingManager({
@@ -129,7 +129,7 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
 	<div class="container-full">
 		<div class="navbar-header">
-			<a class="navbar-brand" href="#">Geo Event Query by Example Streaming Model Trainer</a>
+			<a class="navbar-brand" href="#">Geo Event Query by Example</a>
 		</div>
 	</div>
 </nav>
@@ -139,16 +139,16 @@
 </div>
 
 <div class="footer">
-	<div class="row">		
+	<div class="row">
 		<div id="controlBox" class="tab-content">
 			<table style="width:100%">
 				<tr>
-					<td><button type="button" class="btn btn-default" onclick="getDatePoints()">Get Date Points</button></td>
+					<td><button type="button" class="btn btn-default" onclick="getDates()">Get Dates</button></td>
 					<td>
 						<select name="dateSelect" id="dateSelect">
 							<option value="0">-Select-</option>
 						</select>
-						<button type="button" class="btn btn-default btn-xs" onclick="drawPolygonFile()">Load File</button>
+						<button type="button" class="btn btn-default btn-xs" onclick="loadDateData()">Load Date</button>
 					</td>
 				</tr>
 				<tr>
@@ -159,27 +159,16 @@
 						</select>
 					</td>
 				</tr>
-				<tr>
-					<td><button type="button" class="btn btn-default" onclick="gatherScores()">Get Scores</button></td>
-					<td>Max Points: <input id="sMaxEntries" value="-1" style="width:40px"></td>
-				</tr>
-				<tr>
-					<td><label><input type="checkbox" id="aggScores" checked>Bin by Lat-Lon</label></td>
-					<td>Bin Size <input type="text" id="sBinSize" value=".005"></td>
-				</tr>
-				<tr>
-					<td><label><input type="checkbox" id="uniqueUser">Count only unique users</label></td>
-					<td></td>
-				</tr>
 			</table>
 		</div>
 	</div>
 	<div class="row">
 		<div id="resultsBox">
-			<b>Posts</b><br>
+			<b>Results</b><br>
 			<div id="resultsText"></div>
 		</div>
 	</div>
+
 </div>
 
 </body>

@@ -24,6 +24,15 @@ def datetime_to_es_format(date):
 def datetime_from_es(str_dt):
     return datetime.strptime(str_dt, "%Y-%m-%dT%H:%M:%SZ")
 
+def rec_to_key(rec, scale=0.005):
+    k_la = str(chop_coord(rec.lat, scale))
+    k_lo = str(chop_coord(rec.lon, scale))
+    k_dt = str(rec.dt.date())+"_"+str(rec.dt.hour)
+    return "_".join([k_la, k_lo, k_dt])
+
+def chop_coord(coord, scale=0.005):
+    return float(int(coord/scale))*scale
+
 def text_to_hashtags(caption):
     term_list = re.sub('[^\w\s#]', '', caption, flags=re.UNICODE).lower().split()
     ret_list = set()
@@ -66,7 +75,7 @@ class ScoreRecord:
             self.text = record["text"]
             self.username = record["user"]["screen_name"]
             self.tags = text_to_hashtags(record["text"])
-            self.indexed_at = datetime_to_es_format(datetime.now())
+            self.indexed_at = datetime.now()
             self.dt = utc_to_local(datetime.strptime(record["created_at"],'%a %b %d %H:%M:%S +0000 %Y'), record["user"]["time_zone"], record["user"]["utc_offset"])
             self.cluster = -1
             tag_dict = {}
@@ -89,6 +98,9 @@ class ScoreRecord:
             self.cluster = -1
             self.cluster_ind = d_cids
 
+    def __str__(self):
+        return str(self.toDict())
+
     def toDict(self):
         tags = []
         tag_ids = []
@@ -100,7 +112,7 @@ class ScoreRecord:
             'user': self.username,
             'caption': self.text,
             'tags':tags,
-            'indexedDate': self.indexed_at,
+            'indexedDate': datetime_to_es_format(self.indexed_at),
             'post_date': datetime_to_es_format(self.dt),
             'location':{
                 "type":"point",
@@ -122,10 +134,20 @@ class ScoreBin:
         self.key = key
         self.model_scores = {}
         self.dt = datetime.now()
+        self.lat = None
+        self.lon = None
         if record is not None:
             self.captions.append(record.text)
             self.users.add(record.username)
             self.dt = record.indexed_at
+            self.lat = chop_coord(record.lat)
+            self.lon = chop_coord(record.lon)
+
+    def __str__(self):
+        return str(self.to_dict())
+
+    def bin_size(self):
+        return len(self.users)
 
     def add_record(self, record):
         self.captions.append(record.text)
@@ -137,7 +159,10 @@ class ScoreBin:
             'nTotal': len(self.captions),
             'key': self.key,
             'model_scores': self.model_scores,
-            'date': datetime_to_es_format(self.dt)
+            'date': datetime_to_es_format(self.dt),
+            'hour': self.dt.hour,
+            'lat': str(self.lat),
+            'lon': str(self.lon)
         }
 
     def apply_model(self, model_name, model_dict):

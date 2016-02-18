@@ -5,17 +5,8 @@ import elasticsearch
 import os
 sys.path.insert(0, './lib/')
 from geqe_models import model_loader
-from clustering import ScoreRecord, ScoreBin
+from clustering import ScoreRecord, ScoreBin, rec_to_key
 
-
-def chop_coord(coord, scale=0.005):
-    return float(int(coord/scale))*scale
-
-def rec_to_key(rec):
-    k_la = str(chop_coord(rec.lat))
-    k_lo = str(chop_coord(rec.lon))
-    k_dt = str(rec.dt.date())+"_"+str(rec.dt.hour)
-    return "_".join([k_la, k_lo, k_dt])
 
 def analyze_recent(tweet_file_path, analyze_points, models, es_url=None):
     if es_url == None:
@@ -53,7 +44,7 @@ def analyze_recent(tweet_file_path, analyze_points, models, es_url=None):
         if n_hits > 0:
             response= es.scroll(scroll_id=scrollId, scroll= "10m")
 
-    full_bins = filter(lambda x: x.users>5, bins.values())
+    full_bins = filter(lambda x: x.bin_size()>5, bins.values())
     print "\tScoring", len(full_bins), "bins"
     for fb in full_bins:
         for k, v in models.iteritems():
@@ -61,7 +52,7 @@ def analyze_recent(tweet_file_path, analyze_points, models, es_url=None):
         if len(fb.model_scores.keys()) > 0:
             write_rec = False
             for score in fb.model_scores.values():
-                if score > 0.85:
+                if score > 0.5:
                     write_rec = True
             if write_rec == True:
                 fb.save_score(es, "jag_geqestream_points", "post")
