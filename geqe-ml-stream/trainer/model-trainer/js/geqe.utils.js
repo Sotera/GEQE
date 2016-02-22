@@ -168,12 +168,12 @@
 //         success: function (response) {
 //             //clean old point array, needed to removed points from map if you decrease number of entries
 //             debugger;
-//             for( ind=0; ind<scoredTweetArray.length; ind++)
+//             for( ind=0; ind<pointArray.length; ind++)
 //             {
-//                 scoredTweetArray[ind].setMap(null);
-//                 scoredTweetArray[ind] = null;
+//                 pointArray[ind].setMap(null);
+//                 pointArray[ind] = null;
 //             }
-//             scoredTweetArray = [];
+//             pointArray = [];
 // 
 //             //create new points
 //             var nTot = response.total;
@@ -194,7 +194,7 @@
 //                 }
 //                 var tweetLatlng = new google.maps.LatLng(shiftLat, shiftLon);
 //                 m = putScoreMarker(tweetLatlng, capPScor);
-//                 scoredTweetArray[i] = m;
+//                 pointArray[i] = m;
 //             }
 // 
 //				//write dictionary to results box
@@ -228,11 +228,13 @@
 // }
 
 function getDates() {
+	$("#waitgif").show()
 	var pPath = $("#pSavePath").val();
     $.ajax({
         url: "./getDates",
         dataType: "json",
         success: function (response) {
+			$("#waitgif").hide()
             var lDates = response.dates;
             var nDates = response.nDates;
             var strRet = '';
@@ -244,12 +246,14 @@ function getDates() {
             }
         },
         error: function(jqxhr, testStatus, reason) {
+			$("#waitgif").hide()
             $("#resultsText").text(reason);
         }
     });
 }
 
 function loadDateData() {
+	$("#waitgif").show()
 	var dtSel = $("#dateSelect").val();
 	var bin_size = 0.005;
     $.ajax({
@@ -260,51 +264,115 @@ function loadDateData() {
         	bin_size: bin_size
         },
         success: function (response) {
-            for( ind=0; ind<scoredTweetArray.length; ind++)
+			$("#waitgif").hide()
+            for( ind=0; ind<pointArray.length; ind++)
         	{
-                scoredTweetArray[ind].setMap(null);
-        		scoredTweetArray[ind] = null;
+                pointArray[ind].setMap(null);
+        		pointArray[ind] = null;
             }
-            scoredTweetArray = [];
+            pointArray = [];
+            geqeKeysArray = [];
+            tweetInfoArray = []
             var lCoords = response.coords;
             var nCoords = response.n_coords;
+            var lTweets = response.tweets;
+            var lg_keys = response.g_keys;
             for(i=0; i<nCoords; i++)
             {
-            	var lat = parseFloat(lCoords[i][0])
-            	var lon = parseFloat(lCoords[i][1])
-            	var shift_lat = lat + bin_size/2
+            	var lat = parseFloat(lCoords[i][0]);
+            	var lon = parseFloat(lCoords[i][1]);
+            	var shift_lat = lat + bin_size/2;
             	if(lat < 0.)
             	{
-            		shift_lat = lat - bin_size/2
+            		shift_lat = lat - bin_size/2;
             	}
-            	var shift_lon = lon + bin_size/2
+            	var shift_lon = lon + bin_size/2;
             	if(lon < 0.)
             	{
-            		shift_lon = lon - bin_size/2
+            		shift_lon = lon - bin_size/2;
             	}
-            	var tweetLatlng = new google.maps.LatLng(shift_lat, shift_lon);
-            	var key = shift_lat.toString() + "_" + shift_lon.toString();
-            	m = putScoreMarker(tweetLatlng, key);
-            	scoredTweetArray[i] = m
+            	var m = putScoreMarker(shift_lat, shift_lon, i);
+            	pointArray[i] = m;
+            	tweetInfoArray[i] = lTweets[i];
+            	geqeKeysArray[i] = lg_keys[i];
             }
         },
         error: function(jqxhr, testStatus, reason) {
+			$("#waitgif").hide();
             $("#resultsText").text(reason);
         }
     });
 }
 
-function putScoreMarker(location, key) {
+function putScoreMarker(shift_lat, shift_lon, ind) {
+	var tweetLatlng = new google.maps.LatLng(shift_lat, shift_lon);
+	var title = shift_lat.toString() + "_" + shift_lon.toString();
     var marker = new google.maps.Marker({
     	map: map,
-        position: location,
-        title:key
-    })
-    marker.addListener('click', function(){getPointData(marker)});
+        position: tweetLatlng,
+        title:title
+    });
+    marker.addListener('click', function(){getPointData(ind)});
     return marker;
 }
 
-function getPointData(cap) {
-	
-	$("#resultsText").text(marker.title);
+function getPointData(ind) {
+	marker = pointArray[ind];
+	tweets = tweetInfoArray[ind];
+	g_keys = geqeKeysArray[ind];
+	checked = []
+	tab = "<table><tr><h3>"+marker.title+"</h3></tr></br>";
+	for (var key in tweets){
+		if (!tweets.hasOwnProperty(key)){
+			continue;
+		}
+		is_added = false;
+ 		for(var gind=0; gind<geqe.length; gind++)
+ 		{
+ 			if( geqe[gind]==g_keys[key]){
+ 				is_added = true;
+ 				break;
+ 			}
+ 		}
+ 		if(is_added==false){
+			tab = tab + "<tr><b style=\"margin-right:10px;\">Hour: " + key + "</b><input id=\"tweet_check_" + key + "\" type=\"checkbox\" onclick=\"addToSet(" + key + ", " + ind + ")\"><b style=\"color:green\" id=\"tweet_hour_" + key + "\"></b></tr></br>";
+		} else {
+			tab = tab + "<tr><b style=\"margin-right:10px;\">Hour: " + key + "</b><input id=\"tweet_check_" + key + "\" type=\"checkbox\" onclick=\"addToSet(" + key + ", " + ind + ")\"><b style=\"color:green\" id=\"tweet_hour_" + key + "\">ADDED!</b></tr></br>";
+			checked.push(key);
+		}
+		theHour = tweets[key];
+		nTweets = theHour.length;
+		for(var i=0; i<nTweets; i++)
+		{
+			tab = tab + "<tr>" + theHour[i] + "</tr></br></br>";
+		}
+	}
+	tab = tab + "</table>"
+	$("#resultsText").html(tab);
+	for(var i=0; i<checked.length; i++){
+		$("#tweet_check_"+checked[i]).prop("checked", true);
+	}
+}
+
+function addToSet(key, ind){
+	g_key = geqeKeysArray[ind][key]
+	if($("#tweet_check_" + key)[0].checked==true){
+		$("#tweet_hour_"+key).text("ADDED!");
+		geqe.push(g_key);
+	} else {
+		$("#tweet_hour_"+key).contents().remove();
+		var gk_rm_ind = -1;
+		for(var gi=0; gi<geqe.length; gi++)
+		{
+			if(geqe[gi]==g_key){
+				gk_rm_ind = gi;
+				break;
+			}
+		}
+		if(gk_rm_ind != -1){
+			geqe.splice(gk_rm_ind, 1);
+		}
+	}
+	var new_key = true;
+
 }

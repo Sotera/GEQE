@@ -26,12 +26,15 @@
 	<script>
 		var shapes = [];
 		var map;
-		var scoredTweetArray = [];
+		var pointArray = [];
+		var tweetInfoArray = [];
+		var geqeKeysArray = [];
+		var geqe = [];
 		var savePath = "[...]";
 		var fileSubDir = "[...]";
-		var geqe = {};
 
 		function initialize() {
+			$("#waitgif").hide();
 			$("#pSavePath").val(savePath);
 			$("#pfileSubDir").val(fileSubDir);
 
@@ -164,9 +167,11 @@
 	</div>
 	<div class="row">
 		<div id="resultsBox">
-			<b>Results</b><br>
 			<div id="resultsText"></div>
 		</div>
+	</div>
+	<div class="row" id="waitgif">
+		<img src="img/atom.gif" width="128" height="128">
 	</div>
 
 </div>
