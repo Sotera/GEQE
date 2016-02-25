@@ -373,6 +373,8 @@ function addToSet(key, ind){
 			geqe.splice(gk_rm_ind, 1);
 		}
 	}
-	var new_key = true;
+}
+
+function trainModel(){
 
 }

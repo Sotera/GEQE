@@ -24,9 +24,11 @@ def datetime_to_es_format(date):
 def datetime_from_es(str_dt):
     return datetime.strptime(str_dt, "%Y-%m-%dT%H:%M:%SZ")
 
-def rec_to_key(rec, scale=0.005):
+def rec_to_key(rec, scale=0.005, drop_date=False):
     k_la = str(chop_coord(rec.lat, scale))
     k_lo = str(chop_coord(rec.lon, scale))
+    if drop_date is True:
+        return "_".join([k_la, k_lo])
     k_dt = str(rec.dt.date())+"_"+str(rec.dt.hour)
     return "_".join([k_la, k_lo, k_dt])
 
@@ -139,7 +141,7 @@ class ScoreBin:
         if record is not None:
             self.captions.append(record.text)
             self.users.add(record.username)
-            self.dt = record.indexed_at
+            self.dt = record.dt
             self.lat = chop_coord(record.lat)
             self.lon = chop_coord(record.lon)
 
@@ -149,6 +151,12 @@ class ScoreBin:
     def bin_size(self):
         return len(self.users)
 
+    def bin_location(self):
+        k = self.key
+        pivot  = k.find("_")
+        pivot2 = k.find("_",pivot+1)
+        return k[:pivot2]
+
     def add_record(self, record):
         self.captions.append(record.text)
         self.users.add(record.username)
@@ -157,12 +165,14 @@ class ScoreBin:
         return {
             'nUnique': len(self.users),
             'nTotal': len(self.captions),
-            'key': self.key,
+            'g_key': self.key,
             'model_scores': self.model_scores,
             'date': datetime_to_es_format(self.dt),
             'hour': self.dt.hour,
-            'lat': str(self.lat),
-            'lon': str(self.lon)
+            'location':{
+                "type":"point",
+                "coordinates":[self.lon, self.lat]
+            }
         }
 
     def apply_model(self, model_name, model_dict):

@@ -58,9 +58,9 @@ def csvToParquet(sc,sqlContext,inputPath,dataType,outputPath,outputPartitions=-1
     :param feildDelimiter:
     :return:
     """
-    print 'inputPath: ',inputPath
-    print 'dataType: ',dataType
-    print 'outputPath: ',outputPath
+    # print 'inputPath: ',inputPath
+    # print 'dataType: ',dataType
+    # print 'outputPath: ',outputPath
     if outputPartitions != -1:
         print 'outputPartitions: ',outputPartitions
 
