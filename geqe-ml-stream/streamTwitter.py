@@ -75,7 +75,7 @@ def main():
     auth_counter = 0
 
     http_method = "GET"
-    url = "https://stream.twitter.com/1.1/statuses/filter.json?stall_warnings=true&geocode=39.8099,-98.556,1400mi"
+    url = "https://stream.twitter.com/1.1/statuses/filter.json?stall_warnings=true&locations=-128.704311,22.96,-65.36,49.25"
     print "Using url", url
     pars = []
     response = twitterreq(auth_info[auth_counter][0], auth_info[auth_counter][1], url, http_method, pars)
