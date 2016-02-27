@@ -300,7 +300,8 @@ function loadDateData() {
         error: function(jqxhr, testStatus, reason) {
 			$("#waitgif").hide();
             $("#resultsText").text(reason);
-        }
+        },
+        timeout:60*60*1000
     });
 }
 

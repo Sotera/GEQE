@@ -60,7 +60,9 @@ def stream_data(response, response_open_time):
             #every 2 hours, close existing connection, open under new key to avoid timeout
         try:
             dic_line = json.loads(line)
-            if (dic_line["geo"] is not None or dic_line["coordinates"] is not None):
+            if dic_line["coordinates"] is not None:
+                if dic_line["text"].lower().find('#jobs') != -1 or dic_line["text"].lower().find('#job') != -1
+                    continue
                 out_file.write(line.strip()+"\n")
                 print str(now)
                 sys.stdout.flush()

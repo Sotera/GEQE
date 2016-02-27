@@ -127,6 +127,12 @@ class ScoreRecord:
     def write_to_es(self, es_index, es_doc_type, es):
         es.index(index=es_index, doc_type=es_doc_type, id=self.id, body=json.dumps(self.toDict()))
 
+    def has_keyword(self, l_str):
+        for w in l_str:
+            if self.text.lower().find(w) != -1:
+                return True
+        return False
+
 
 
 class ScoreBin:
