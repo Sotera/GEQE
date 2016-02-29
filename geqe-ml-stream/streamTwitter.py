@@ -61,7 +61,7 @@ def stream_data(response, response_open_time):
         try:
             dic_line = json.loads(line)
             if dic_line["coordinates"] is not None:
-                if dic_line["text"].lower().find('#jobs') != -1 or dic_line["text"].lower().find('#job') != -1
+                if dic_line["text"].lower().find('#jobs') != -1 or dic_line["text"].lower().find('#job') != -1:
                     continue
                 out_file.write(line.strip()+"\n")
                 print str(now)
