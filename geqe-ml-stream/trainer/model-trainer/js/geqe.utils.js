@@ -231,7 +231,7 @@ function getDates() {
 	$("#waitgif").show()
 	var pPath = $("#pSavePath").val();
     $.ajax({
-        url: "./getDates",
+        url: "./python/getDates",
         dataType: "json",
         success: function (response) {
 			$("#waitgif").hide()
@@ -257,7 +257,7 @@ function loadDateData() {
 	var dtSel = $("#dateSelect").val();
 	var bin_size = 0.005;
     $.ajax({
-        url: "./loadData",
+        url: "./python/loadData",
         dataType: "json",
         data: {
         	date: dtSel,

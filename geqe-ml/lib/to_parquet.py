@@ -131,6 +131,15 @@ def recordToRows(line, dType):
                        user=reader["actor"]["preferredUsername"],
                        source="Twitter",
                        img="")
+        elif dType==66:
+            reader = json.loads(line)
+            return Row(lat=float(reader["geo"]["coordinates"][0]),
+                       lon=float(reader["geo"]["coordinates"][1]),
+                       text= reader["body"].replace("\n", " "),
+                       dt= datetime.datetime.strptime(reader["postedTime"],'%Y-%m-%dT%H:%M:%S.000Z'),
+                       user=reader["actor"]["preferredUsername"],
+                       source="Twitter",
+                       img="")
         elif dType==7:
             reader = None
             if line[0]=='{':
