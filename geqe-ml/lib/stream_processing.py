@@ -1,5 +1,5 @@
 
-def createBin(record):
+def create_bin(record):
     key = record[0]
     p1 = key.find('_')
     p2 = key.find('_', p1+1)
@@ -14,3 +14,4 @@ def createBin(record):
             d_ret['hours'][hour].append(row.text)
         else:
             d_ret['hours'][hour] = [row.text]
+    return (str_dt, d_ret)
