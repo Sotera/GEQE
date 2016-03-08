@@ -5,7 +5,7 @@ def create_bin(record):
     p2 = key.find('_', p1+1)
     str_dt = key[:p1]
     str_lt = key[p1+1:p2]
-    str_ln = key[p2:]
+    str_ln = key[p2+1:]
     d_ret = {'date':str_dt, 'lat':str_lt, 'lon':str_ln, 'hours':{}}
     itt = record[1]
     for row in itt:
@@ -14,4 +14,4 @@ def create_bin(record):
             d_ret['hours'][hour].append(row.text)
         else:
             d_ret['hours'][hour] = [row.text]
-    return (str_dt, d_ret)
+    return (key, d_ret)
