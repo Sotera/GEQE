@@ -15,5 +15,6 @@ def create_bin(record):
             ind = str(max(d_ret['hours'][hour].keys()) + 1)
             d_ret['hours'][hour][ind] = row.text
         else:
+            d_ret['hours'][hour] = {}
             d_ret['hours'][hour]['1'] = row.text
     return (key, json.dumps(d_ret))
