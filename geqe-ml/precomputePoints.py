@@ -1,9 +1,6 @@
 ############# ############# ############# ############# #############
-# findSimilarPlaces
+# precomputePoints
 # by JAG3
-#
-# v2.0 - Analyze structured social media data to
-#       identify similar places.
 #
 ############# ############# ############# ############# #############
 
