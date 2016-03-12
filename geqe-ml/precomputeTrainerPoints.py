@@ -35,7 +35,7 @@ def main():
     n_df = df.count()
     big_print("Binning " + str(n_df) + " entries with scorable words")
 
-    binned = df.map(lambda x: (aggregatedComparison.groupString(x, True, 0.005), x))\
+    binned = df.map(lambda x: (aggregatedComparison.groupString(x, True, 0.01), x))\
                 .groupByKey()\
                 .filter(lambda x: aggregatedComparison.hasMinUsers(x[1],4))\
                 .map(lambda x: create_bin(x))\
