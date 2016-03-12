@@ -17,7 +17,7 @@ def create_bin(record):
             d_ret['hours'][hour]['1'] = row.text
     return (key, d_ret)
 
-def in_time_window(record, dt_low, dt_high):
-    if record.dt.date() < dt_high and record.dt.date() >= dt_low:
+def in_time_window(dt, dt_low, dt_high):
+    if dt.date() < dt_high and dt.date() >= dt_low:
         return True
     return False
