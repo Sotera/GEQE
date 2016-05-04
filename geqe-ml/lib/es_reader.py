@@ -4,7 +4,7 @@
 # Class for handling read/write to elasticsearch
 ############# ############# ############# #############
 from copy import copy
-from datetime import datetime, date
+from datetime import datetime
 from pyspark.sql import Row
 
 class es_reader:
@@ -37,12 +37,22 @@ class es_reader:
 
     def post_df_from_es(self, resource, sc):
         es_rdd = self.read_from_es(resource, sc)
-        return es_rdd.map(lambda x: Row(lat=x[1]['location']['coordinates'][1],
-                                  lon=x[1]['location']['coordinates'][0],
-                                  text=x[1]['message'],
-                                  dt=date(int(x[1]['post_date'][:4]), int(x[1]['post_date'][5:7]), int(x[1]['post_date'][8:10])),
-                                  user=x[1]['user'],
-                                  source='Twitter',
+        return es_rdd.map(lambda x: Row(lat = x[1]['location']['coordinates'][1],
+                                  lon = x[1]['location']['coordinates'][0],
+                                  text = x[1]['message'],
+                                  dt = datetime(
+                                    int(x[1]['post_date'][:4]),
+                                    int(x[1]['post_date'][5:7]),
+                                    int(x[1]['post_date'][8:10]),
+                                    12, 0, 0) if len(x[1]['post_date']) == 10 else datetime(
+                                    int(x[1]['post_date'][:4]),
+                                    int(x[1]['post_date'][5:7]),
+                                    int(x[1]['post_date'][8:10]),
+                                    int(x[1]['post_date'][11:13]),
+                                    int(x[1]['post_date'][14:16]),
+                                    int(x[1]['post_date'][17:19])),
+                                  user = x[1]['user'],
+                                  source = 'Twitter',
                                   img = ''
                                  )
                         )
