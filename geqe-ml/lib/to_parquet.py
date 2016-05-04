@@ -74,10 +74,6 @@ def csvToParquet(sc,sqlContext,inputPath,dataType,outputPath,outputPartitions=-1
     df.saveAsParquetFile(outputPath)
 
 
-
-
-
-
 def recordToRows(line, dType):
     """
     Parse a line from a csv file into a Row object
