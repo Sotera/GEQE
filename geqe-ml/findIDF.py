@@ -10,14 +10,11 @@ from pyspark import SparkConf, SparkContext
 from operator import add
 from datetime import date
 import sys
-import StringIO
 import argparse
 import codecs
 sys.path.insert(0, './lib/')
-import pointClass
-import shapeReader
 import fspLib
-
+from es_reader import es_reader
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()

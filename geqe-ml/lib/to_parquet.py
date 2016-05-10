@@ -157,6 +157,16 @@ def recordToRows(line, dType):
                        source = "Instagram",
                        img = ent["link"]
                        )
+        elif dType==8:
+            #GNIP
+            reader = json.loads(line)
+            return Row(lat=float(reader['gnip']["geo"]["coordinates"][0]),
+                       lon=float(reader['gnip']["geo"]["coordinates"][1]),
+                       text= reader["body"].replace("\n", " "),
+                       dt= datetime.datetime.strptime(reader["postedTime"],'%Y-%m-%dT%H:%M:%S.000Z'),
+                       user=reader["actor"]["preferredUsername"],
+                       source="Twitter",
+                       img="")
         else:
             raise ValueError("Invalid data type.")
     except:

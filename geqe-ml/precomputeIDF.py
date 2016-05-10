@@ -71,7 +71,7 @@ if __name__ == "__main__":
     dIDF = goodRecords.flatMap(lambda x: [(w,1) for w in x]).reduceByKey(lambda x,y: x+y)
     dIDF.cache()
     nTerms = dIDF.count()
-    nThresh = int(float(nGoodTweets)/1000000.)
+    nThresh = int(float(nGoodTweets)/100000.)
     final = dIDF.filter(lambda x: x[1]>nThresh).cache()
     nFinal = final.count()
     t2 = time.time()

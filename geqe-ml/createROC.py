@@ -193,7 +193,7 @@ def run(jobNm, sc, sqlContext, inputFile, lPolygon, dictFile,
 
     else:
         print "GEQE: Generating location model"
-        (tAndP, nInApply, nOutApply) =  locationTest(sc, sqlContext, lPolygon, lStop,modelName=modelName,num_features=num_features)
+        (tAndP, nInApply, nOutApply) =  locationTest(sc, sqlContext, lPolygon, lStop, modelName=modelName,num_features=num_features)
 
     t1 = time.time()
     print "GEQE: Generating ROC from Truth and predictions"
