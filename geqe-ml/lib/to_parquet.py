@@ -12,10 +12,11 @@ import traceback
 from pyspark import SparkConf, SparkContext
 from pyspark.sql import SQLContext, Row
 import json,csv,StringIO
+from math import sqrt
 
 
 
-def csvToDataFrame(sc,sqlContext,inputPath,dataType):
+def csvToDataFrame(sc,sqlContext,inputPath,dataType, max_box=0.1):
     """
     Convert a csv file to a spark dataframe
     :param sc:
@@ -23,7 +24,7 @@ def csvToDataFrame(sc,sqlContext,inputPath,dataType):
     :param dataType:
     :return:
     """
-    rowsRDD = sc.textFile(inputPath).map(lambda x: recordToRows(x,dataType))
+    rowsRDD = sc.textFile(inputPath).map(lambda x: recordToRows(x,dataType, max_box))
     goodRowsRDD = rowsRDD.filter(lambda x: x is not None)
 
     #rowsRDD.cache()
@@ -74,7 +75,7 @@ def csvToParquet(sc,sqlContext,inputPath,dataType,outputPath,outputPartitions=-1
     df.saveAsParquetFile(outputPath)
 
 
-def recordToRows(line, dType):
+def recordToRows(line, dType, max_box=0.1):
     """
     Parse a line from a csv file into a Row object
     :param line:
@@ -158,15 +159,32 @@ def recordToRows(line, dType):
                        img = ent["link"]
                        )
         elif dType==8:
-            #GNIP
             reader = json.loads(line)
-            return Row(lat=float(reader['gnip']["geo"]["coordinates"][0]),
-                       lon=float(reader['gnip']["geo"]["coordinates"][1]),
-                       text= reader["body"].replace("\n", " "),
-                       dt= datetime.datetime.strptime(reader["postedTime"],'%Y-%m-%dT%H:%M:%S.000Z'),
-                       user=reader["actor"]["preferredUsername"],
-                       source="Twitter",
-                       img="")
+            if 'geo' in reader.keys():
+                if 'coordinates' in reader['geo'].keys():
+                    return Row(lat=float(reader["geo"]["coordinates"][0]),
+                            lon=float(reader["geo"]["coordinates"][1]),
+                            text= reader["body"].replace("\n", " "),
+                            dt= datetime.datetime.strptime(reader["postedTime"],'%Y-%m-%dT%H:%M:%S.000Z'),
+                            user=reader["actor"]["preferredUsername"],
+                            source="Twitter",
+                            img="")
+            else:
+                la1 = float(reader['location']['geo']['coordinates'][0][0][0])
+                la2 = float(reader['location']['geo']['coordinates'][0][2][0])
+                lo1 = float(reader['location']['geo']['coordinates'][0][0][1])
+                lo2 = float(reader['location']['geo']['coordinates'][0][2][1])
+                delta = sqrt((la1-la2)*(la1-la2) + (lo1-lo2)*(lo1-lo2))
+                if delta < max_box:
+                    ave_la = (la1+la2)/2.
+                    ave_lo = (lo1_lo2)/2.
+                    return Row(lat=ave_la,
+                            lon=ave_lo,
+                            text= reader["body"].replace("\n", " "),
+                            dt= datetime.datetime.strptime(reader["postedTime"],'%Y-%m-%dT%H:%M:%S.000Z'),
+                            user=reader["actor"]["preferredUsername"],
+                            source="Twitter",
+                            img="")
         else:
             raise ValueError("Invalid data type.")
     except:
