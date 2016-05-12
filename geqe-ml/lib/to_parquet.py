@@ -170,11 +170,11 @@ def recordToRows(line, dType, max_box=0.1):
                             source="Twitter",
                             img="")
             else:
-    la1 = float(reader['location']['geo']['coordinates'][0][0][0])
-    la2 = float(reader['location']['geo']['coordinates'][0][2][0])
-    lo1 = float(reader['location']['geo']['coordinates'][0][0][1])
-    lo2 = float(reader['location']['geo']['coordinates'][0][2][1])
-    delta = sqrt((la1-la2)*(la1-la2) + (lo1-lo2)*(lo1-lo2))
+                la1 = float(reader['location']['geo']['coordinates'][0][0][0])
+                la2 = float(reader['location']['geo']['coordinates'][0][2][0])
+                lo1 = float(reader['location']['geo']['coordinates'][0][0][1])
+                lo2 = float(reader['location']['geo']['coordinates'][0][2][1])
+                delta = sqrt((la1-la2)*(la1-la2) + (lo1-lo2)*(lo1-lo2))
                 if delta < max_box:
                     ave_la = (la1+la2)/2.
                     ave_lo = (lo1+lo2)/2.
