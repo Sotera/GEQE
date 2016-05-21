@@ -45,6 +45,6 @@ def generateROCCurve(tAndP, nPos, nNeg, jobNm):
 
     plt.xlabel("False Positive Rate (1-Specificity)")
     plt.ylabel("True Positive Rate (Sensitivity)")
-    plt.plot(fpr, tpr, label="ROC for job:"+jobNm)
+    plt.step(fpr, tpr, label="ROC for job:"+jobNm)
     plt.plot([0,1],[0,1], 'r--')
     plt.savefig("monitorFiles/"+jobNm+".png")

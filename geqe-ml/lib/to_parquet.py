@@ -164,6 +164,7 @@ def recordToRows(line, dType, max_box=0.1):
                 if 'coordinates' in reader['geo'].keys():
                     return Row(lat=float(reader["geo"]["coordinates"][0]),
                             lon=float(reader["geo"]["coordinates"][1]),
+                            geo_size=0.0,
                             text= reader["body"].replace("\n", " "),
                             dt= datetime.datetime.strptime(reader["postedTime"],'%Y-%m-%dT%H:%M:%S.000Z'),
                             user=reader["actor"]["preferredUsername"],
@@ -180,6 +181,7 @@ def recordToRows(line, dType, max_box=0.1):
                     ave_lo = (lo1+lo2)/2.
                     return Row(lat=ave_la,
                             lon=ave_lo,
+                            geo_size=delta,
                             text= reader["body"].replace("\n", " "),
                             dt= datetime.datetime.strptime(reader["postedTime"],'%Y-%m-%dT%H:%M:%S.000Z'),
                             user=reader["actor"]["preferredUsername"],
