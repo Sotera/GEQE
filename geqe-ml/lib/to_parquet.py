@@ -187,8 +187,6 @@ def recordToRows(line, dType, max_box=0.1):
                             user=reader["actor"]["preferredUsername"],
                             source="Twitter",
                             img="")
-        else:
-            raise ValueError("Invalid data type.")
         elif dType==9:
             reader = json.loads(line)['_source']['doc']
             if 'geo' in reader.keys():
