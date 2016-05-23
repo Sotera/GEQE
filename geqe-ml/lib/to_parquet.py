@@ -189,6 +189,37 @@ def recordToRows(line, dType, max_box=0.1):
                             img="")
         else:
             raise ValueError("Invalid data type.")
+        elif dType==9:
+            reader = json.loads(line)['_source']['doc']
+            if 'geo' in reader.keys():
+                if 'coordinates' in reader['geo'].keys():
+                    return Row(lat=float(reader["geo"]["coordinates"][0]),
+                            lon=float(reader["geo"]["coordinates"][1]),
+                            geo_size=0.0,
+                            text= reader["body"].replace("\n", " "),
+                            dt= datetime.datetime.strptime(reader["postedTime"],'%Y-%m-%dT%H:%M:%S.000Z'),
+                            user=reader["actor"]["preferredUsername"],
+                            source="Twitter",
+                            img="")
+            else:
+                la1 = float(reader['location']['geo']['coordinates'][0][0][0])
+                la2 = float(reader['location']['geo']['coordinates'][0][2][0])
+                lo1 = float(reader['location']['geo']['coordinates'][0][0][1])
+                lo2 = float(reader['location']['geo']['coordinates'][0][2][1])
+                delta = sqrt((la1-la2)*(la1-la2) + (lo1-lo2)*(lo1-lo2))
+                if delta < max_box:
+                    ave_la = (la1+la2)/2.
+                    ave_lo = (lo1+lo2)/2.
+                    return Row(lat=ave_la,
+                            lon=ave_lo,
+                            geo_size=delta,
+                            text= reader["body"].replace("\n", " "),
+                            dt= datetime.datetime.strptime(reader["postedTime"],'%Y-%m-%dT%H:%M:%S.000Z'),
+                            user=reader["actor"]["preferredUsername"],
+                            source="Twitter",
+                            img="")
+        else:
+            raise ValueError("Invalid data type.")
     except:
         traceback.print_exc()
         return None
