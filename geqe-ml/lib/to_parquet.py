@@ -189,14 +189,17 @@ def recordToRows(line, dType, max_box=0.1):
                             img="")
         elif dType==9:
             reader = json.loads(line)['_source']['doc']
-            if 'geo' in reader.keys():
-                if 'coordinates' in reader['geo'].keys():
-                    return Row(lat=float(reader["geo"]["coordinates"][0]),
+            try:
+                temp = reader['geo']
+            except:
+                temp = None
+            if temp is not None:
+                return Row(lat=float(reader["geo"]["coordinates"][0]),
                             lon=float(reader["geo"]["coordinates"][1]),
                             geo_size=0.0,
-                            text= reader["body"].replace("\n", " "),
-                            dt= datetime.datetime.strptime(reader["postedTime"],'%Y-%m-%dT%H:%M:%S.000Z'),
-                            user=reader["actor"]["preferredUsername"],
+                            text= reader["text"].replace("\n", " "),
+                            dt= datetime.strptime(reader["created_at"],'%a %b %d %H:%M:%S +0000 %Y'),
+                            user=reader["user"]["screen_name"],
                             source="Twitter",
                             img="")
             else:
@@ -211,11 +214,13 @@ def recordToRows(line, dType, max_box=0.1):
                     return Row(lat=ave_la,
                             lon=ave_lo,
                             geo_size=delta,
-                            text= reader["body"].replace("\n", " "),
-                            dt= datetime.datetime.strptime(reader["postedTime"],'%Y-%m-%dT%H:%M:%S.000Z'),
-                            user=reader["actor"]["preferredUsername"],
+                            text= reader["text"].replace("\n", " "),
+                            dt= datetime.strptime(reader["created_at"],'%a %b %d %H:%M:%S +0000 %Y'),
+                            user=reader["user"]["screen_name"],
                             source="Twitter",
                             img="")
+                else:
+                    return None
         else:
             raise ValueError("Invalid data type.")
     except:
