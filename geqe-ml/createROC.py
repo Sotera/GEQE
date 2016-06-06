@@ -70,7 +70,8 @@ def getTrainModelFunc(modelName):
 def locationTest(sc, sqlContext, lPolygon, lStop,modelName='random forest',num_features=-1):
     #Partition data into 4 parts: train (positive examples), train (negative examples), test (pos), test (neg)
     t1 = time.time()
-    lAllPoly = lPolygon[0]
+    lAllPoly = []
+    lAllPoly.extend(lPolygon[0])
     lAllPoly.extend(lPolygon[1])
     lAllPoly.extend(lPolygon[2])
     bc_AllPoly = sc.broadcast(lAllPoly)

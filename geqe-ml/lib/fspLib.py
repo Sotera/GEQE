@@ -253,7 +253,7 @@ def tfIdfTermScore(record, nTot, bc_dIDF):
 def writeDict(lTermScore, dictFile):
     dArrPos = {}
     nPos = 0
-    fDict = codecs.open( dictFile, encoding="utf-8", mode="w")
+    fDict = codecs.open(dictFile, encoding="utf-8", mode="w")
     for (word,score) in lTermScore:
         dArrPos[word] = nPos
         nPos +=1
