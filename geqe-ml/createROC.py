@@ -22,14 +22,14 @@ import plotting
 import time
 
 
-def trainRandomForestModel(data):
+def trainRandomForestModel(data, n_trees=100):
     """
     Train a random forest regression model and return it
     :param data: RDD[LabeledPoint]
     :return: random forest regression model
     """
     from pyspark.mllib.tree import RandomForest
-    model = RandomForest.trainRegressor(data, categoricalFeaturesInfo={}, numTrees=2000, featureSubsetStrategy="auto", impurity="variance", maxDepth=4, maxBins=32)
+    model = RandomForest.trainRegressor(data, categoricalFeaturesInfo={}, numTrees=n_trees, featureSubsetStrategy="auto", impurity="variance", maxDepth=4, maxBins=32)
     return model
 
 

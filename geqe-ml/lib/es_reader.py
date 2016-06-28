@@ -35,9 +35,31 @@ class es_reader:
             conf = this_index
         )
 
-    def post_df_from_es(self, resource, sc):
+    def post_df_from_es(self, resource, sc, b_has_size = False):
         es_rdd = self.read_from_es(resource, sc)
-        return es_rdd.map(lambda x: Row(lat = x[1]['location']['coordinates'][1],
+        if b_has_size:
+            return  es_rdd.map(lambda x: Row(lat = x[1]['location']['coordinates'][1],
+                                  lon = x[1]['location']['coordinates'][0],
+                                  geo_size = x[1]['geo_size'],
+                                  text = x[1]['message'],
+                                  dt = datetime(
+                                    int(x[1]['post_date'][:4]),
+                                    int(x[1]['post_date'][5:7]),
+                                    int(x[1]['post_date'][8:10]),
+                                    12, 0, 0) if len(x[1]['post_date']) == 10 else datetime(
+                                    int(x[1]['post_date'][:4]),
+                                    int(x[1]['post_date'][5:7]),
+                                    int(x[1]['post_date'][8:10]),
+                                    int(x[1]['post_date'][11:13]),
+                                    int(x[1]['post_date'][14:16]),
+                                    int(x[1]['post_date'][17:19])),
+                                  user = x[1]['user'],
+                                  source = 'Twitter',
+                                  img = ''
+                                 )
+                        )
+        else:
+            return es_rdd.map(lambda x: Row(lat = x[1]['location']['coordinates'][1],
                                   lon = x[1]['location']['coordinates'][0],
                                   text = x[1]['message'],
                                   dt = datetime(

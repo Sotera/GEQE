@@ -141,7 +141,7 @@ class Polygon:
         return True
 
 class spaceTimePlane:
-    def __init__(self, polyRep, dList, name, fromPoly = False):
+    def __init__(self, polyRep, dList, name, fromPoly = False, desc = None):
         # polyRep is how you are representing your polygon.
         # the typical way of making this is via a list of polygons
         # to form from an existing polygon, set fromPoly to True
@@ -154,6 +154,7 @@ class spaceTimePlane:
                 for pair in dList:
                     self.dates.append( (pair[0],pair[1]) )
             self.name = name
+            self.desc = desc
         else:
             self.poly = polyRep
             self.dates = []
@@ -163,9 +164,13 @@ class spaceTimePlane:
                 for pair in dList:
                     self.dates.append((pair[0],pair[1]))
             self.name = name
+            self.desc = desc
 
     def __str__(self):
-        strRet = "Site name: " + self.name + "\n"
+        strRet = "Site name: " + self.name
+        if self.desc != None:
+
+        strRet = strRet + "\n"
         for pair in self.dates:
             strRet = strRet + "Min time: " + str(pair[0]) + ", Max time: " + str(pair[1]) + "\n"
         strRet = strRet + str(self.poly)
